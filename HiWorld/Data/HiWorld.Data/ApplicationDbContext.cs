@@ -24,7 +24,41 @@
         {
         }
 
-        public DbSet<Setting> Settings { get; set; }
+        public DbSet<City> Cities { get; set; }
+
+        public DbSet<Comment> Comments { get; set; }
+
+        public DbSet<CommentLike> CommentLikes { get; set; }
+
+        public DbSet<Country> Countries { get; set; }
+
+        public DbSet<Group> Groups { get; set; }
+
+        public DbSet<GroupMember> GroupMembers { get; set; }
+
+        public DbSet<Image> Images { get; set; }
+
+        public DbSet<Message> Messages { get; set; }
+
+        public DbSet<Page> Pages { get; set; }
+
+        public DbSet<PageFollower> PageFollowers { get; set; }
+
+        public DbSet<PageTag> PageTags { get; set; }
+
+        public DbSet<Post> Posts { get; set; }
+
+        public DbSet<PostLike> PostLikes { get; set; }
+
+        public DbSet<PostTag> PostTags { get; set; }
+
+        public DbSet<Profile> Profiles { get; set; }
+
+        public DbSet<ProfileFollower> ProfileFollowers { get; set; }
+
+        public DbSet<ProfileFriend> ProfileFriend { get; set; }
+
+        public DbSet<Tag> Tags { get; set; }
 
         public override int SaveChanges() => this.SaveChanges(true);
 
@@ -55,6 +89,14 @@
             EntityIndexesConfiguration.Configure(builder);
 
             var entityTypes = builder.Model.GetEntityTypes().ToList();
+
+            builder.Entity<ProfileFollower>().HasOne(x => x.Profile).WithMany(x => x.Followers).HasForeignKey(x => x.ProfileId);
+            builder.Entity<ProfileFollower>().HasOne(x => x.Follower).WithMany(x => x.Following).HasForeignKey(x => x.FollowerId);
+
+            builder.Entity<ProfileFriend>().HasOne(x => x.Profile).WithMany(x => x.FriendsSent).HasForeignKey(x => x.ProfileId);
+            builder.Entity<ProfileFriend>().HasOne(x => x.Friend).WithMany(x => x.FriendsRecieved).HasForeignKey(x => x.FriendId);
+
+            builder.Entity<Profile>().HasOne(x => x.User).WithOne(x => x.Profile).HasForeignKey<Profile>(x => x.UserId);
 
             // Set global query filter for not deleted entities only
             var deletableEntityTypes = entityTypes

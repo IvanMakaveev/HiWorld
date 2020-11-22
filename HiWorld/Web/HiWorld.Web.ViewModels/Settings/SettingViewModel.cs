@@ -1,9 +1,8 @@
 ﻿namespace HiWorld.Web.ViewModels.Settings
 {
+    using AutoMapper;
     using HiWorld.Data.Models;
     using HiWorld.Services.Mapping;
-
-    using AutoMapper;
 
     public class SettingViewModel : IMapFrom<Setting>, IHaveCustomMappings
     {

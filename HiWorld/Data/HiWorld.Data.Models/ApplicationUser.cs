@@ -33,5 +33,9 @@ namespace HiWorld.Data.Models
         public virtual ICollection<IdentityUserClaim<string>> Claims { get; set; }
 
         public virtual ICollection<IdentityUserLogin<string>> Logins { get; set; }
+
+        public int ProfileId { get; set; }
+
+        public virtual Profile Profile { get; set; }
     }
 }

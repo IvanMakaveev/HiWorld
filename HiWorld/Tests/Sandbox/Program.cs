@@ -5,6 +5,7 @@
     using System.IO;
     using System.Threading.Tasks;
 
+    using CommandLine;
     using HiWorld.Data;
     using HiWorld.Data.Common;
     using HiWorld.Data.Common.Repositories;
@@ -13,9 +14,6 @@
     using HiWorld.Data.Seeding;
     using HiWorld.Services.Data;
     using HiWorld.Services.Messaging;
-
-    using CommandLine;
-
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
