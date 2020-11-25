@@ -21,6 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Data\HiWorld.Data.Models\HiWorld.Data.Models.csproj" />
     <ProjectReference Include="..\..\Services\HiWorld.Services.Mapping\HiWorld.Services.Mapping.csproj" />
+    <ProjectReference Include="..\HiWorld.Web.Infrastructure\HiWorld.Web.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

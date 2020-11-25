@@ -1,11 +1,11 @@
-﻿namespace HiWorld.Data.Models
+﻿using HiWorld.Data.Common.Models;
+using HiWorld.Data.Models.Enums;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace HiWorld.Data.Models
 {
-    using System;
-    using System.Collections.Generic;
-
-    using HiWorld.Data.Common.Models;
-    using HiWorld.Data.Models.Enums;
-
     public class Profile : BaseDeletableModel<int>
     {
         public Profile()
@@ -38,10 +38,6 @@
 
         public virtual Image Image { get; set; }
 
-        public string UserId { get; set; }
-
-        public virtual ApplicationUser User { get; set; }
-
         public int CityId { get; set; }
 
         public virtual City City { get; set; }
@@ -69,5 +65,7 @@
         public virtual ICollection<GroupMember> GroupMembers { get; set; }
 
         public virtual ICollection<Message> Messages { get; set; }
+
+        public virtual ApplicationUser User { get; set; }
     }
 }

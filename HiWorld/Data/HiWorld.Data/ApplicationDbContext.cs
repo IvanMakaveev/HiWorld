@@ -96,7 +96,7 @@
             builder.Entity<ProfileFriend>().HasOne(x => x.Profile).WithMany(x => x.FriendsSent).HasForeignKey(x => x.ProfileId);
             builder.Entity<ProfileFriend>().HasOne(x => x.Friend).WithMany(x => x.FriendsRecieved).HasForeignKey(x => x.FriendId);
 
-            builder.Entity<Profile>().HasOne(x => x.User).WithOne(x => x.Profile).HasForeignKey<Profile>(x => x.UserId);
+            builder.Entity<ApplicationUser>().HasOne(x => x.Profile).WithOne(x => x.User).HasForeignKey<ApplicationUser>(x => x.ProfileId);
 
             // Set global query filter for not deleted entities only
             var deletableEntityTypes = entityTypes
