@@ -35,5 +35,9 @@
                 nameof(Gender.Female),
                 nameof(Gender.Other),
         };
+
+        [Required]
+        [Display(Name = "Country")]
+        public int CountryId { get; set; }
     }
 }

@@ -24,8 +24,6 @@
         {
         }
 
-        public DbSet<City> Cities { get; set; }
-
         public DbSet<Comment> Comments { get; set; }
 
         public DbSet<CommentLike> CommentLikes { get; set; }
@@ -90,15 +88,7 @@
 
             var entityTypes = builder.Model.GetEntityTypes().ToList();
 
-            builder.Entity<ProfileFollower>().HasOne(x => x.Profile).WithMany(x => x.Followers).HasForeignKey(x => x.ProfileId);
-            builder.Entity<ProfileFollower>().HasOne(x => x.Follower).WithMany(x => x.Following).HasForeignKey(x => x.FollowerId);
-
-            builder.Entity<ProfileFriend>().HasOne(x => x.Profile).WithMany(x => x.FriendsSent).HasForeignKey(x => x.ProfileId);
-            builder.Entity<ProfileFriend>().HasOne(x => x.Friend).WithMany(x => x.FriendsRecieved).HasForeignKey(x => x.FriendId);
-
-            builder.Entity<ApplicationUser>().HasOne(x => x.Profile).WithOne(x => x.User).HasForeignKey<ApplicationUser>(x => x.ProfileId);
-
-            // Set global query filter for not deleted entities only
+           // Set global query filter for not deleted entities only
             var deletableEntityTypes = entityTypes
                 .Where(et => et.ClrType != null && typeof(IDeletableEntity).IsAssignableFrom(et.ClrType));
             foreach (var deletableEntityType in deletableEntityTypes)

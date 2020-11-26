@@ -2,6 +2,7 @@
 @model RegisterModel
 @{
     ViewData["Title"] = "Register";
+    var countries = this.Model.Input.CountriesItems.Select(x => new SelectListItem(x.Value, x.Key.ToString()));
 }
 
 <h1>@ViewData["Title"]</h1>
@@ -56,6 +57,11 @@
                         <span>@gender</span>
                     </label>
                 }
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.CountryId"></label>
+                <select asp-for="Input.CountryId" class="form-control" asp-items="countries"></select>
+                <span asp-validation-for="Input.CountryId" class="text-danger"></span>
             </div>
             <button type="submit" class="btn btn-primary">Register</button>
         </form>
