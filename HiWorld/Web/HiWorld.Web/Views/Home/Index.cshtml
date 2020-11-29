@@ -1,9 +1,36 @@
 ﻿@using HiWorld.Common
 @{
     this.ViewData["Title"] = "Home Page";
+    this.Layout = "_HomePageLayout";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome to @GlobalConstants.SystemName!</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="text-center home-title">
+    <div class="container">
+        <h1 class="display-3 font-weight-normal">Welcome to <span class="navbar-brand-primary--dark">Hi</span><span class="navbar-brand-secondary">World</span></h1>
+        <p class="lead font-weight-normal">A fast and reliable social network that connects you with the world!</p>
+        <ul class="d-inline mx-auto list-unstyled list-group h4 align-items-start">
+            <li class="mt-5">
+                <i class="fas fa-search"></i> Discover interesting events
+            </li>
+            <li class="mt-5">
+                <i class="fas fa-users"></i> Meet new friends
+            </li>
+            <li class="mt-5">
+                <i class="fas fa-comments"></i> Share your own stories
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="jumbotron jumbotron-fluid info-block mb-0">
+    <div class="container">
+        <h1 class="display-4">Say Hi to the World!</h1>
+        <p class="lead">Meet and chat with people all over the globe. No matter the distance, your relationships will last forever!</p>
+    </div>
+</div>
+<div class="jumbotron jumbotron-fluid mb-0">
+    <div class="container">
+        <h1 class="display-4 text-center mb-5">What are you waiting for?</h1>
+        <a class="btn btn-primary btn-block btn-register" asp-area="Identity" asp-page="/Account/Register">Register Now</a>
+    </div>
 </div>

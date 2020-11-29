@@ -11,7 +11,7 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow">
             <div class="container">
                 <a class="navbar-brand navbar-brand-logo" asp-area="" asp-controller="Home" asp-action="Index">
                     <span class="navbar-brand-primary">Hi</span><span class="navbar-brand-secondary">World</span>
@@ -38,9 +38,9 @@
         </nav>
     </header>
 
-    <div class="container">
+    <div>
         <partial name="_CookieConsentPartial" />
-        <main role="main" class="pb-3">
+        <main role="main">
             @this.RenderBody()
         </main>
     </div>

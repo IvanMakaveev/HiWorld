@@ -12,6 +12,7 @@ a.navbar-brand {
 html {
     font-size: 14px;
 }
+
 @media (min-width: 768px) {
     html {
         font-size: 16px;
@@ -21,6 +22,7 @@ html {
 .border-top {
     border-top: 1px solid #e5e5e5;
 }
+
 .border-bottom {
     border-bottom: 1px solid #e5e5e5;
 }
@@ -45,6 +47,7 @@ body {
     /* Margin bottom by footer height */
     margin-bottom: 60px;
 }
+
 .footer {
     position: absolute;
     bottom: 0;
@@ -53,4 +56,84 @@ body {
     /* Set the fixed height of the footer here */
     height: 60px;
     line-height: 60px; /* Vertically center the text there */
+}
+
+.home-title {
+    position: relative;
+    z-index:-2;
+
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-image: url(/img/website/home-background.jpg);
+
+    color:rgb(255, 255, 255);
+    
+    padding: 50px 0;
+}
+
+.home-title:before {
+    background-color: rgba(0, 0, 0, 0.37);
+    content: '';
+    display: block;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index:-1;
+}
+
+.nav-button {
+    border-radius: 5px;
+    padding: 0 5px;
+    transition: all 0.5s ease-out;
+}
+
+.nav-button .nav-button-link {
+    color: #343a40 !important;
+    transition: all 0.5s ease-out;
+}
+
+.nav-button:hover {
+    background-color: #333;
+    transition: all 0.5s ease-out;
+}
+
+.nav-button:hover .nav-button-link{
+    color: #ddd !important;
+    transition: all 0.5s ease-out;
+}
+
+.navbar-brand-logo{
+    font-size: 27px;
+}
+
+.navbar-brand-primary {
+    color: rgb(149, 45, 224) !important;
+    font-weight: bold;
+    padding-right: 2px;
+}
+
+.navbar-brand-primary--dark {
+    color: rgb(114, 18, 216);
+    font-weight: bold;
+    padding-right: 2px;
+}
+
+.navbar-brand-secondary{
+    color:rgb(32, 32, 32);
+    font-weight:normal;
+}
+
+.navbar-links{
+    height:100%;
+}
+
+.info-block{
+    border-bottom: 2px rgb(160, 160, 160) solid;
+    background-color:white;
+}
+
+.btn-register{
+    font-size:20px;
 }
