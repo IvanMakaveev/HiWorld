@@ -137,3 +137,18 @@ body {
 .btn-register{
     font-size:20px;
 }
+
+.img-container{
+    max-width:200px;
+}
+
+.profile-name {
+    background: rgba(141, 21, 192, 85%);
+    color: white;
+}
+
+.profile-container {
+    border-top: 2px rgb(160, 160, 160) solid;
+    padding: 50px 0;
+    background: #e9ecef;
+}

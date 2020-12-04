@@ -6,6 +6,8 @@
 
     public interface IProfilesService
     {
+        DisplayProfileViewModel GetById(int id);
+
         Task<int> Create(BaseInfoInputModel input);
     }
 }

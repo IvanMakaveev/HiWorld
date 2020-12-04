@@ -24,4 +24,8 @@
     <ProjectReference Include="..\HiWorld.Web.Infrastructure\HiWorld.Web.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Posts\" />
+  </ItemGroup>
+
 </Project>
