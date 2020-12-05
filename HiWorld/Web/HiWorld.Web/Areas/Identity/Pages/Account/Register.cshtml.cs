@@ -48,8 +48,17 @@
             this.countriesService = countriesService;
         }
 
-        [BindProperty(SupportsGet = true)]
+        [BindProperty]
         public RegisterInputModel Input { get; set; }
+
+        public IEnumerable<KeyValuePair<int, string>> CountriesItems { get; set; }
+
+        public IEnumerable<string> Genders { get; set; } = new[]
+        {
+                nameof(Gender.Male),
+                nameof(Gender.Female),
+                nameof(Gender.Other),
+        };
 
         public string ReturnUrl { get; set; }
 
@@ -57,7 +66,7 @@
 
         public async Task OnGetAsync(string returnUrl = null)
         {
-            this.Input.CountriesItems = this.countriesService.GetAllAsKvp();
+            this.CountriesItems = this.countriesService.GetAllAsKvp();
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
@@ -119,7 +128,7 @@
                 ModelState.AddModelError(string.Empty, exceptionMessage);
             }
 
-            this.Input.CountriesItems = this.countriesService.GetAllAsKvp();
+            this.CountriesItems = this.countriesService.GetAllAsKvp();
             // If we got this far, something failed, redisplay form
             return Page();
         }

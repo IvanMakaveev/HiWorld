@@ -29,13 +29,6 @@
         [Display(Name = "Gender")]
         public string SelectedGender { get; set; } = nameof(Gender.Male);
 
-        public IEnumerable<string> Genders { get; set; } = new[]
-        {
-                nameof(Gender.Male),
-                nameof(Gender.Female),
-                nameof(Gender.Other),
-        };
-
         [Required]
         [Display(Name = "Country")]
         public int CountryId { get; set; }

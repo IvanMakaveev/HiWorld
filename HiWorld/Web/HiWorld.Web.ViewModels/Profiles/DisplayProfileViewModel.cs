@@ -6,9 +6,15 @@
 
     public class DisplayProfileViewModel
     {
-        public string OwnerUserId { get; set; }
+        public int Id { get; set; }
 
-        public string AccessorId { get; set; }
+        public bool IsOwner { get; set; }
+
+        public bool IsFriend { get; set; }
+
+        public bool IsPending { get; set; }
+
+        public bool IsFollowing { get; set; }
 
         public string FirstName { get; set; }
 

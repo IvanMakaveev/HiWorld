@@ -41,15 +41,51 @@
             <p><b>Followers: </b>@Model.FollowersCount</p>
         </div>
     </section>
-    @if (Model.OwnerUserId == Model.AccessorId)
-    {
-        <section class="container d-flex flex-row justify-content-around pb-3">
+    <section class="container d-flex flex-row justify-content-around pb-3">
+        @if (Model.IsOwner)
+        {
             <a class="btn btn-primary" asp-area="" asp-controller="Profiles" asp-action="Edit">Edit Profile</a>
             <a class="btn btn-primary" asp-area="" asp-controller="Posts" asp-action="Create">Create New Post</a>
-            <a class="btn btn-primary" asp-area="" asp-controller="Friends" asp-action="Invitations">Friend Invitations</a>
+            <a class="btn btn-primary" asp-area="" asp-controller="Profiles" asp-action="FriendRequests">Friend Invitations</a>
             <a class="btn btn-primary" asp-area="Identity" asp-controller="Account" asp-action="Manage">Manage Account</a>
-        </section>
-    }
+        }
+        else
+        {
+            if (Model.IsPending)
+            {
+                <a class="btn btn-secondary">Pending Request</a>
+                <form asp-action="RemoveFriend" asp-route-id="@Model.Id" method="post">
+                    <button class="btn btn-danger">Remove Friend</button>
+                </form>
+            }
+            else if (!Model.IsFriend)
+            {
+                <form asp-action="AddFriend" asp-route-id="@Model.Id" method="post">
+                    <button class="btn btn-success">Add Friend</button>
+                </form>
+            }
+            else
+            {
+                <a class="btn btn-info">Friends</a>
+                <form asp-action="RemoveFriend" asp-route-id="@Model.Id" method="post">
+                    <button class="btn btn-danger">Remove Friend</button>
+                </form>
+            }
+
+            if (!Model.IsFollowing)
+            {
+                <form asp-action="Follow" asp-route-id="@Model.Id" method="post">
+                    <button class="btn btn-primary">Follow</button>
+                </form>
+            }
+            else
+            {
+                <form asp-action="Follow" asp-route-id="@Model.Id" method="post">
+                    <button class="btn btn-secondary">Unfollow</button>
+                </form>
+            }
+        }
+    </section>
 </div>
 
 <div class="profile-container">

@@ -2,7 +2,7 @@
 @model RegisterModel
 @{
     ViewData["Title"] = "Register";
-    var countries = this.Model.Input.CountriesItems.Select(x => new SelectListItem(x.Value, x.Key.ToString()));
+    var countries = this.Model.CountriesItems.Select(x => new SelectListItem(x.Value, x.Key.ToString()));
 }
 
 <h1>@ViewData["Title"]</h1>
@@ -50,7 +50,7 @@
             </div>
             <div class="form-group">
                 <p class="mb-1">Gender</p>
-                @foreach (var gender in Model.Input.Genders)
+                @foreach (var gender in Model.Genders)
                 {
                     <label for="@gender" class="mr-3">
                         <input type="radio" asp-for="Input.SelectedGender" id="@gender" value="@gender" />

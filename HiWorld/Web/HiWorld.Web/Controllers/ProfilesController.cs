@@ -19,9 +19,42 @@ namespace HiWorld.Web.Controllers
 
         public IActionResult ById(int id)
         {
-            var viewModel = this.profilesService.GetById(id);
-            viewModel.AccessorId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var viewModel = this.profilesService.GetById(id, userId);
+
+            if (viewModel == null)
+            {
+                return this.NotFound();
+            }
+
             return this.View(viewModel);
+        }
+
+        public async Task<IActionResult> AddFriend(int id)
+        {
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            await this.profilesService.SendFriendRequest(id, userId);
+
+            return this.RedirectToAction(nameof(this.ById), new { id });
+        }
+
+        public async Task<IActionResult> Follow(int id)
+        {
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            await this.profilesService.FollowProfile(id, userId);
+
+            return this.RedirectToAction(nameof(this.ById), new { id });
+        }
+
+        public async Task<IActionResult> RemoveFriend(int id)
+        {
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            await this.profilesService.RemoveFriend(id, userId);
+
+            return this.RedirectToAction(nameof(this.ById), new { id });
         }
     }
 }
