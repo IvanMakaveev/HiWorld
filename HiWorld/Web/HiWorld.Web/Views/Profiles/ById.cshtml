@@ -15,7 +15,7 @@
             }
             else
             {
-                <img src="@Model.ImagePath" class="img-thumbnail rounded-circle mx-auto d-block" alt="Profile Picture" />
+                <img src="/img/users/@Model.ImagePath" class="img-thumbnail rounded-circle mx-auto d-block" alt="Profile Picture" />
             }
         </section>
         <h1 class="mb-4">@Model.FirstName @Model.LastName</h1>
@@ -44,7 +44,7 @@
     <section class="container d-flex flex-row justify-content-around pb-3">
         @if (Model.IsOwner)
         {
-            <a class="btn btn-primary" asp-area="" asp-controller="Profiles" asp-action="Edit">Edit Profile</a>
+            <a class="btn btn-primary" asp-area="" asp-controller="Profiles" asp-action="Edit" asp-route-id="@Model.Id">Edit Profile</a>
             <a class="btn btn-primary" asp-area="" asp-controller="Posts" asp-action="Create">Create New Post</a>
             <a class="btn btn-primary" asp-area="" asp-controller="Profiles" asp-action="FriendRequests">Friend Invitations</a>
             <a class="btn btn-primary" asp-area="Identity" asp-controller="Account" asp-action="Manage">Manage Account</a>

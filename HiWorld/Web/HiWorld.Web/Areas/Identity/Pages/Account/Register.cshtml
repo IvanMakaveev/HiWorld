@@ -53,7 +53,7 @@
                 @foreach (var gender in Model.Genders)
                 {
                     <label for="@gender" class="mr-3">
-                        <input type="radio" asp-for="Input.SelectedGender" id="@gender" value="@gender" />
+                        <input type="radio" asp-for="Input.Gender" id="@gender" value="@gender" />
                         <span>@gender</span>
                     </label>
                 }

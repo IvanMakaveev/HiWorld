@@ -6,14 +6,18 @@
 
     public interface IProfilesService
     {
-        DisplayProfileViewModel GetById(int id, string accessorId);
+        T GetById<T>(int id);
+
+        DisplayProfileViewModel GetByIdForAccessor(int id, string accessorId);
 
         Task<int> Create(BaseInfoInputModel input);
 
         Task SendFriendRequest(int profileId, string senderId);
-        
+
         Task RemoveFriend(int profileId, string senderId);
 
         Task FollowProfile(int profileId, string senderId);
+
+        Task UpdateAsync(int id, EditProfileInputModel input, string path);
     }
 }

@@ -84,7 +84,7 @@
                 {
                     profileId = await this.profileService.Create(this.Input);
                 }
-                catch (Exception e)
+                catch (ArgumentException e)
                 {
                     exceptionMessage = e.Message;
                 }

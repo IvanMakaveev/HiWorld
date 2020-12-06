@@ -1,8 +1,10 @@
 ﻿using HiWorld.Data.Common.Repositories;
 using HiWorld.Data.Models;
 using HiWorld.Data.Models.Enums;
+using HiWorld.Services.Mapping;
 using HiWorld.Web.ViewModels.Profiles;
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,17 +16,20 @@ namespace HiWorld.Services.Data
         private readonly IRepository<Country> countriesRepository;
         private readonly IRepository<ProfileFriend> friendsRepository;
         private readonly IRepository<ProfileFollower> followersRepository;
+        private readonly IRepository<Image> imageRepository;
 
         public ProfilesService(
             IDeletableEntityRepository<Profile> profileRepository,
             IRepository<Country> countriesRepository,
             IRepository<ProfileFriend> friendsRepository,
-            IRepository<ProfileFollower> followersRepository)
+            IRepository<ProfileFollower> followersRepository,
+            IRepository<Image> imageRepository)
         {
             this.profileRepository = profileRepository;
             this.countriesRepository = countriesRepository;
             this.friendsRepository = friendsRepository;
             this.followersRepository = followersRepository;
+            this.imageRepository = imageRepository;
         }
 
         public async Task<int> Create(BaseInfoInputModel input)
@@ -34,7 +39,12 @@ namespace HiWorld.Services.Data
                 throw new ArgumentException("The selected Country must be valid");
             }
 
-            Enum.TryParse<Gender>(input.SelectedGender, out Gender gender);
+            Enum.TryParse<Gender>(input.Gender, out Gender gender);
+            if (gender == 0)
+            {
+                throw new ArgumentException("The selected Gender must be valid");
+            }
+
             var profile = new Profile()
             {
                 BirthDate = input.BirthDate,
@@ -50,7 +60,7 @@ namespace HiWorld.Services.Data
             return profile.Id;
         }
 
-        public DisplayProfileViewModel GetById(int id, string accessorId)
+        public DisplayProfileViewModel GetByIdForAccessor(int id, string accessorId)
         {
             return this.profileRepository.AllAsNoTracking().Where(x => x.Id == id).Select(x => new DisplayProfileViewModel()
             {
@@ -69,7 +79,7 @@ namespace HiWorld.Services.Data
                 FollowersCount = x.Followers.Count,
                 FriendsCount = x.FriendsRecieved.Where(x => x.IsAccepted == true).Count() + x.FriendsSent.Where(x => x.IsAccepted == true).Count(),
                 Gender = x.Gender.ToString(),
-                ImagePath = x.Image == null ? null : x.Image.Id + x.Image.Extension,
+                ImagePath = x.Image == null ? null : $"{x.Image.Id}.{x.Image.Extension}",
                 Posts = x.Posts.Select(post => new ProfilePostViewModel()
                 {
                     Text = post.Text,
@@ -138,6 +148,58 @@ namespace HiWorld.Services.Data
 
                 await this.friendsRepository.SaveChangesAsync();
             }
+        }
+
+        public T GetById<T>(int id)
+        {
+            return this.profileRepository.All().Where(x => x.Id == id).To<T>().FirstOrDefault();
+        }
+
+        public async Task UpdateAsync(int id, EditProfileInputModel input, string path)
+        {
+            var profile = this.profileRepository.All().FirstOrDefault(x => x.Id == id);
+            Enum.TryParse<Gender>(input.Gender, out Gender gender);
+
+            if (this.countriesRepository.AllAsNoTracking().FirstOrDefault(x => x.Id == input.CountryId) == null)
+            {
+                throw new ArgumentException("The selected Country must be valid");
+            }
+
+            if (gender == 0)
+            {
+                throw new ArgumentException("The selected Gender must be valid");
+            }
+
+            profile.FirstName = input.FirstName;
+            profile.LastName = input.LastName;
+            profile.Gender = gender;
+            profile.BirthDate = input.BirthDate;
+            profile.About = input.About;
+            profile.CountryId = input.CountryId;
+
+            if (input.Image != null && input.Image.Length > 0)
+            {
+                Directory.CreateDirectory($"{path}/");
+                var extension = Path.GetExtension(input.Image.FileName).TrimStart('.');
+
+                var image = new Image
+                {
+                    Extension = extension,
+                };
+                await this.imageRepository.AddAsync(image);
+                await this.imageRepository.SaveChangesAsync();
+
+                var physicalPath = $"{path}/{image.Id}.{extension}";
+                using (Stream fileStream = new FileStream(physicalPath, FileMode.Create))
+                {
+                    await input.Image.CopyToAsync(fileStream);
+                }
+
+                profile.ImageId = image.Id;
+            }
+
+            this.profileRepository.Update(profile);
+            await this.profileRepository.SaveChangesAsync();
         }
     }
 }

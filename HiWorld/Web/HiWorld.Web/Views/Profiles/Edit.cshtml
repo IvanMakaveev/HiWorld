@@ -1,1 +1,54 @@
-﻿
+﻿@using HiWorld.Web.ViewModels.Profiles;
+@model EditProfileInputModel
+@{
+    ViewData["Title"] = "Edit Profile";
+    var countries = this.Model.CountriesItems.Select(x => new SelectListItem(x.Value, x.Key.ToString()));
+}
+
+<h1>@ViewData["Title"]</h1>
+<form method="post" enctype="multipart/form-data">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="FirstName"></label>
+        <input asp-for="FirstName" class="form-control" />
+        <span asp-validation-for="FirstName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="LastName"></label>
+        <input asp-for="LastName" class="form-control" />
+        <span asp-validation-for="LastName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="BirthDate"></label>
+        <input asp-for="BirthDate" class="form-control" />
+        <span asp-validation-for="BirthDate" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="About"></label>
+        <input asp-for="About" class="form-control" />
+        <span asp-validation-for="About" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Image"></label>
+        <input asp-for="Image" />
+        <span asp-validation-for="Image" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <p class="mb-1">Gender</p>
+        @foreach (var gender in Model.Genders)
+        {
+            <label for="@gender" class="mr-3">
+                <input type="radio" asp-for="Gender" id="@gender" value="@gender" />
+                <span>@gender</span>
+            </label>
+        }
+    </div>
+    <div class="form-group">
+        <label asp-for="CountryId"></label>
+        <select asp-for="CountryId" class="form-control" asp-items="countries"></select>
+        <span asp-validation-for="CountryId" class="text-danger"></span>
+    </div>
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-primary">Edit</button>
+    <a asp-action="ById" asp-route-id="@Model.Id">Cancel</a>
+</form>

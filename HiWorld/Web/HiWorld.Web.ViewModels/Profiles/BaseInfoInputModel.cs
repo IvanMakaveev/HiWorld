@@ -3,8 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-
-    using HiWorld.Data.Models.Enums;
     using HiWorld.Web.Infrastructure.Attributes;
 
     public class BaseInfoInputModel
@@ -27,10 +25,12 @@
 
         [Required]
         [Display(Name = "Gender")]
-        public string SelectedGender { get; set; } = nameof(Gender.Male);
+        public string Gender { get; set; }
 
         [Required]
         [Display(Name = "Country")]
         public int CountryId { get; set; }
+
+        public IEnumerable<KeyValuePair<int, string>> CountriesItems { get; set; }
     }
 }
