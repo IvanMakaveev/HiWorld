@@ -9,6 +9,8 @@
         public Post()
         {
             this.PostTags = new HashSet<PostTag>();
+            this.Comments = new HashSet<Comment>();
+            this.PostLikes = new HashSet<PostLike>();
         }
 
         public string Text { get; set; }
@@ -26,5 +28,10 @@
         public virtual Page Page { get; set; }
 
         public virtual ICollection<PostTag> PostTags { get; set; }
+
+        public virtual ICollection<Comment> Comments { get; set; }
+
+        public virtual ICollection<PostLike> PostLikes { get; set; }
+
     }
 }

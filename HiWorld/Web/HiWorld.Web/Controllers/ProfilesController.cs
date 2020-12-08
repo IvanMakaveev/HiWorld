@@ -73,10 +73,31 @@ namespace HiWorld.Web.Controllers
         }
 
         [Authorize]
-        public IActionResult Edit(int id)
+        [HttpPost]
+        public async Task<IActionResult> DenyFriend(int id)
         {
-            var inputModel = this.profilesService.GetById<EditProfileInputModel>(id);
+            await this.profilesService.DenyFriendship(id);
+
+            return this.RedirectToAction(nameof(FriendRequests));
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> AcceptFriend(int id)
+        {
+            await this.profilesService.AcceptFriendship(id);
+
+            return this.RedirectToAction(nameof(FriendRequests));
+        }
+
+        [Authorize]
+        public IActionResult Edit()
+        {
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var inputModel = this.profilesService.GetByUserId<EditProfileInputModel>(userId);
             inputModel.CountriesItems = this.countriesService.GetAllAsKvp();
+
             return this.View(inputModel);
         }
 
@@ -90,9 +111,11 @@ namespace HiWorld.Web.Controllers
                 return this.View(input);
             }
 
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             try
             {
-                await this.profilesService.UpdateAsync(id, input, $"{this.webHost.WebRootPath}/img/users");
+                await this.profilesService.UpdateAsync(userId, input, $"{this.webHost.WebRootPath}/img/users");
             }
             catch (ArgumentException ae)
             {
@@ -102,6 +125,15 @@ namespace HiWorld.Web.Controllers
             }
 
             return this.RedirectToAction(nameof(this.ById), new { id });
+        }
+
+        public IActionResult FriendRequests()
+        {
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var viewModel = this.profilesService.GetFriendRequests<FriendRequestViewModel>(userId);
+
+            return this.View(viewModel);
         }
     }
 }

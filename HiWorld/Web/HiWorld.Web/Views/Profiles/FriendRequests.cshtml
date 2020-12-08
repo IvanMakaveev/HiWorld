@@ -1,11 +1,43 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace HiWorld.Web.Views.Profiles
-{
-    public class FriendRequests
-    {
-    }
+﻿@using HiWorld.Web.ViewModels.Profiles;
+@model IEnumerable<FriendRequestViewModel>
+@{
+    ViewData["Title"] = "Friend Requests";
 }
+
+<div class="offset-2 col-md-8">
+    @if (Model.Count() > 0)
+    {
+        <h1 class="mb-3">@ViewData["Title"]</h1>
+        @foreach (var request in Model)
+        {
+
+            <div class="media">
+                @if (request.ImagePath != null)
+                {
+                    <img src="/img/users/@request.ImagePath" class="align-self-start rounded-circle d-block media-image" alt="Profile Image">
+                }
+                else
+                {
+                    <img src="/img/users/@GlobalConstants.DefaultImage" class="align-self-start rounded-circle d-block media-image" alt="Profile Image">
+
+                }
+                <div class="media-body ml-3 mt-1">
+                    <h5 class="mt-0">@request.ProfileFirstName @request.ProfileLastName</h5>
+                    @request.CreatedOn.ToShortDateString()
+                </div>
+                <div class="mr-auto align-self-center">
+                    <form class="d-inline" asp-action="AcceptFriend" asp-route-id="@request.Id" method="post">
+                        <button class="btn btn-success">Accept</button>
+                    </form>
+                    <form class="d-inline" asp-action="DenyFriend" asp-route-id="@request.Id" method="post">
+                        <button class="btn btn-danger">Deny</button>
+                    </form>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <h2 class="mt-5">You don't have any friend requests. <i class="far fa-frown-open"></i></h2>
+    }
+</div>

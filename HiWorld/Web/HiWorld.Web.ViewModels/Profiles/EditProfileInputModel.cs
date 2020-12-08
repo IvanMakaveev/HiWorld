@@ -12,6 +12,7 @@
     {
         public int Id { get; set; }
 
+        [StringLength(250, ErrorMessage = "{0} must be at most {1} characters long.")]
         public string About { get; set; }
 
         [IgnoreMap]

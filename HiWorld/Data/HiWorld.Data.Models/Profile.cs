@@ -18,7 +18,7 @@ namespace HiWorld.Data.Models
             this.Followers = new HashSet<ProfileFollower>();
             this.FriendsRecieved = new HashSet<ProfileFriend>();
             this.FriendsSent = new HashSet<ProfileFriend>();
-            this.Page = new HashSet<Page>();
+            this.Pages = new HashSet<Page>();
             this.PageFollows = new HashSet<PageFollower>();
             this.GroupMembers = new HashSet<GroupMember>();
             this.Messages = new HashSet<Message>();
@@ -58,7 +58,7 @@ namespace HiWorld.Data.Models
 
         public virtual ICollection<ProfileFriend> FriendsRecieved { get; set; }
 
-        public virtual ICollection<Page> Page { get; set; }
+        public virtual ICollection<Page> Pages { get; set; }
 
         public virtual ICollection<PageFollower> PageFollows { get; set; }
 

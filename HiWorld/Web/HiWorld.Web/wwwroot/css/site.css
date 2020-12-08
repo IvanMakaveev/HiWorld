@@ -142,13 +142,19 @@ body {
     max-width:200px;
 }
 
+.profile-header{
+    background: rgb(239, 237, 239);
+}
+
 .profile-name {
-    background: rgba(141, 21, 192, 85%);
+    background: rgba(134, 19, 183, 0.85);
     color: white;
 }
 
 .profile-container {
     border-top: 2px rgb(160, 160, 160) solid;
-    padding: 50px 0;
-    background: #e9ecef;
+}
+
+.media-image {
+    max-width:64px;
 }

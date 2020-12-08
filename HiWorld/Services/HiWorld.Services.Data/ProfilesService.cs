@@ -4,6 +4,7 @@ using HiWorld.Data.Models.Enums;
 using HiWorld.Services.Mapping;
 using HiWorld.Web.ViewModels.Profiles;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -34,16 +35,9 @@ namespace HiWorld.Services.Data
 
         public async Task<int> Create(BaseInfoInputModel input)
         {
-            if (this.countriesRepository.AllAsNoTracking().FirstOrDefault(x => x.Id == input.CountryId) == null)
-            {
-                throw new ArgumentException("The selected Country must be valid");
-            }
+            this.ValidateCountryId(input.CountryId);
 
-            Enum.TryParse<Gender>(input.Gender, out Gender gender);
-            if (gender == 0)
-            {
-                throw new ArgumentException("The selected Gender must be valid");
-            }
+            var gender = this.GetGender(input.Gender);
 
             var profile = new Profile()
             {
@@ -80,12 +74,15 @@ namespace HiWorld.Services.Data
                 FriendsCount = x.FriendsRecieved.Where(x => x.IsAccepted == true).Count() + x.FriendsSent.Where(x => x.IsAccepted == true).Count(),
                 Gender = x.Gender.ToString(),
                 ImagePath = x.Image == null ? null : $"{x.Image.Id}.{x.Image.Extension}",
-                Posts = x.Posts.Select(post => new ProfilePostViewModel()
+                Posts = x.Posts.OrderByDescending(x => x.CreatedOn).Select(post => new ProfilePostViewModel()
                 {
+                    Id = post.Id,
                     Text = post.Text,
-                    PostTags = post.PostTags.Select(tag => tag.Tag.Name).ToList(),
-                    ImagePath = post.Image == null ? null : post.Image.Id + x.Image.Extension,
+                    PostTags = post.PostTags.Select(tag => new KeyValuePair<int, string>(tag.Tag.Id, tag.Tag.Name)).ToList(),
+                    ImagePath = post.Image == null ? null : $"{post.Image.Id}.{post.Image.Extension}",
                     CreatedOn = post.CreatedOn,
+                    IsLiked = post.PostLikes.Any(x => x.Profile.User.Id == accessorId),
+                    Likes = post.PostLikes.Count(),
                 }).ToList(),
             }).FirstOrDefault();
         }
@@ -123,14 +120,13 @@ namespace HiWorld.Services.Data
                     Profile = recieverProfile,
                     Follower = senderProfile,
                 });
-
-                await this.followersRepository.SaveChangesAsync();
             }
             else
             {
                 this.followersRepository.Delete(followRelation);
-                await this.followersRepository.SaveChangesAsync();
             }
+
+            await this.followersRepository.SaveChangesAsync();
         }
 
         public async Task RemoveFriend(int profileId, string senderId)
@@ -150,26 +146,48 @@ namespace HiWorld.Services.Data
             }
         }
 
+        public async Task DenyFriendship(int id)
+        {
+            var friendship = this.friendsRepository.All().FirstOrDefault(x => x.Id == id);
+
+            if (friendship != null)
+            {
+                this.friendsRepository.Delete(friendship);
+
+                await this.friendsRepository.SaveChangesAsync();
+            }
+        }
+
+        public async Task AcceptFriendship(int id)
+        {
+            var friendship = this.friendsRepository.All().FirstOrDefault(x => x.Id == id);
+
+            if (friendship != null)
+            {
+                friendship.IsAccepted = true;
+                this.friendsRepository.Update(friendship);
+
+                await this.friendsRepository.SaveChangesAsync();
+            }
+        }
+
         public T GetById<T>(int id)
         {
             return this.profileRepository.All().Where(x => x.Id == id).To<T>().FirstOrDefault();
         }
 
-        public async Task UpdateAsync(int id, EditProfileInputModel input, string path)
+        public T GetByUserId<T>(string id)
         {
-            var profile = this.profileRepository.All().FirstOrDefault(x => x.Id == id);
-            Enum.TryParse<Gender>(input.Gender, out Gender gender);
+            return this.profileRepository.All().Where(x => x.User.Id == id).To<T>().FirstOrDefault();
+        }
 
-            if (this.countriesRepository.AllAsNoTracking().FirstOrDefault(x => x.Id == input.CountryId) == null)
-            {
-                throw new ArgumentException("The selected Country must be valid");
-            }
+        public async Task UpdateAsync(string id, EditProfileInputModel input, string path)
+        {
+            this.ValidateCountryId(input.CountryId);
 
-            if (gender == 0)
-            {
-                throw new ArgumentException("The selected Gender must be valid");
-            }
+            var gender = this.GetGender(input.Gender);
 
+            var profile = this.profileRepository.All().FirstOrDefault(x => x.User.Id == id);
             profile.FirstName = input.FirstName;
             profile.LastName = input.LastName;
             profile.Gender = gender;
@@ -200,6 +218,35 @@ namespace HiWorld.Services.Data
 
             this.profileRepository.Update(profile);
             await this.profileRepository.SaveChangesAsync();
+        }
+
+        public bool IsOwner(string userId, int profileId)
+        {
+            return this.profileRepository.AllAsNoTracking().FirstOrDefault(x => x.Id == profileId && x.User.Id == userId) != null;
+        }
+
+        public IEnumerable<T> GetFriendRequests<T>(string userId)
+        {
+            return this.friendsRepository.All().Where(x => x.Friend.User.Id == userId && x.IsAccepted == false).To<T>().ToList();
+        }
+
+        private Gender GetGender(string genderValue)
+        {
+            Enum.TryParse<Gender>(genderValue, out Gender gender);
+            if (gender == 0)
+            {
+                throw new ArgumentException("The selected Gender must be valid");
+            }
+
+            return gender;
+        }
+
+        private void ValidateCountryId(int id)
+        {
+            if (this.countriesRepository.AllAsNoTracking().FirstOrDefault(x => x.Id == id) == null)
+            {
+                throw new ArgumentException("The selected Country must be valid");
+            }
         }
     }
 }
