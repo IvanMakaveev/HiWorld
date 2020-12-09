@@ -1,10 +1,7 @@
 ﻿namespace HiWorld.Data.Seeding
 {
     using System;
-    using System.Linq;
     using System.Threading.Tasks;
-
-    using HiWorld.Data.Models;
 
     internal class SettingsSeeder : ISeeder
     {

@@ -1,26 +1,30 @@
-﻿using HiWorld.Services.Data;
-using HiWorld.Web.ViewModels.Profiles;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-
-namespace HiWorld.Web.Controllers
+﻿namespace HiWorld.Web.Controllers
 {
+    using System;
+    using System.Security.Claims;
+    using System.Threading.Tasks;
+
+    using HiWorld.Services.Data;
+    using HiWorld.Web.ViewModels.Profiles;
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Mvc;
+
     public class ProfilesController : Controller
     {
         private readonly IProfilesService profilesService;
+        private readonly IPostsService postsService;
         private readonly ICountriesService countriesService;
         private readonly IWebHostEnvironment webHost;
 
-        public ProfilesController(IProfilesService profilesService, ICountriesService countriesService, IWebHostEnvironment webHost)
+        public ProfilesController(
+            IProfilesService profilesService,
+            IPostsService postsService,
+            ICountriesService countriesService,
+            IWebHostEnvironment webHost)
         {
             this.profilesService = profilesService;
+            this.postsService = postsService;
             this.countriesService = countriesService;
             this.webHost = webHost;
         }
@@ -29,12 +33,26 @@ namespace HiWorld.Web.Controllers
         public IActionResult ById(int id)
         {
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var viewModel = this.profilesService.GetByIdForAccessor(id, userId);
+            var viewModel = this.profilesService.GetById<DisplayProfileViewModel>(id);
 
             if (viewModel == null)
             {
                 return this.NotFound();
             }
+
+            viewModel.IsOwner = this.profilesService.IsOwner(userId, id);
+            if (!viewModel.IsOwner)
+            {
+                viewModel.IsFollowing = this.profilesService.IsFollowing(id, userId);
+                viewModel.IsFriend = this.profilesService.IsFriend(id, userId);
+
+                if (!viewModel.IsFriend)
+                {
+                    viewModel.IsPending = this.profilesService.IsPending(id, userId);
+                }
+            }
+
+            viewModel.Posts.ForEach(x => x.IsLiked = this.postsService.IsLiked(x.Id, userId));
 
             return this.View(viewModel);
         }
@@ -78,7 +96,7 @@ namespace HiWorld.Web.Controllers
         {
             await this.profilesService.DenyFriendship(id);
 
-            return this.RedirectToAction(nameof(FriendRequests));
+            return this.RedirectToAction(nameof(this.FriendRequests));
         }
 
         [Authorize]
@@ -87,7 +105,7 @@ namespace HiWorld.Web.Controllers
         {
             await this.profilesService.AcceptFriendship(id);
 
-            return this.RedirectToAction(nameof(FriendRequests));
+            return this.RedirectToAction(nameof(this.FriendRequests));
         }
 
         [Authorize]

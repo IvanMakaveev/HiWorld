@@ -1,11 +1,11 @@
-﻿using HiWorld.Data.Common.Repositories;
-using HiWorld.Data.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace HiWorld.Services.Data
+﻿namespace HiWorld.Services.Data
 {
+    using System.Collections.Generic;
+    using System.Linq;
+
+    using HiWorld.Data.Common.Repositories;
+    using HiWorld.Data.Models;
+
     public class CountriesService : ICountriesService
     {
         private readonly IRepository<Country> countriesRepository;

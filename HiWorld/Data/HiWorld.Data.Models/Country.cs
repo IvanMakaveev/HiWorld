@@ -1,6 +1,5 @@
 ﻿namespace HiWorld.Data.Models
 {
-    using System.Collections.Generic;
 
     using HiWorld.Data.Common.Models;
 

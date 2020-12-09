@@ -1,11 +1,11 @@
-﻿using HiWorld.Data.Common.Models;
-using HiWorld.Data.Models.Enums;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace HiWorld.Data.Models
+﻿namespace HiWorld.Data.Models
 {
+    using System;
+    using System.Collections.Generic;
+
+    using HiWorld.Data.Common.Models;
+    using HiWorld.Data.Models.Enums;
+
     public class Profile : BaseDeletableModel<int>
     {
         public Profile()

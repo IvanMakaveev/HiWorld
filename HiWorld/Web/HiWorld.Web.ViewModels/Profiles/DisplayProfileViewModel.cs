@@ -2,18 +2,27 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using System.Linq;
 
-    public class DisplayProfileViewModel
+    using AutoMapper;
+    using HiWorld.Services.Mapping;
+    using HiWorld.Web.ViewModels.Posts;
+
+    public class DisplayProfileViewModel : IMapFrom<Data.Models.Profile>, IHaveCustomMappings
     {
         public int Id { get; set; }
 
+        [NotMapped]
         public bool IsOwner { get; set; }
 
+        [NotMapped]
         public bool IsFriend { get; set; }
 
+        [NotMapped]
         public bool IsPending { get; set; }
 
+        [NotMapped]
         public bool IsFollowing { get; set; }
 
         public string FirstName { get; set; }
@@ -28,12 +37,23 @@
 
         public string ImagePath { get; set; }
 
-        public string Country { get; set; }
+        public string CountryName { get; set; }
 
         public int FriendsCount { get; set; }
 
         public int FollowersCount { get; set; }
 
-        public ICollection<ProfilePostViewModel> Posts { get; set; }
+        public List<PostViewModel> Posts { get; set; }
+
+        public void CreateMappings(IProfileExpression configuration)
+        {
+            configuration.CreateMap<Data.Models.Profile, DisplayProfileViewModel>()
+                .ForMember(x => x.Gender, opt =>
+                    opt.MapFrom(x => x.Gender.ToString()))
+                .ForMember(x => x.ImagePath, opt =>
+                    opt.MapFrom(x => x.Image == null ? null : $"{x.Image.Id}.{x.Image.Extension}"))
+                .ForMember(x => x.FriendsCount, opt =>
+                    opt.MapFrom(x => x.FriendsRecieved.Where(x => x.IsAccepted == true).Count() + x.FriendsSent.Where(x => x.IsAccepted == true).Count()));
+        }
     }
 }

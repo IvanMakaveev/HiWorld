@@ -1,13 +1,11 @@
-﻿using HiWorld.Data.Common.Repositories;
-using HiWorld.Data.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace HiWorld.Services.Data
+﻿namespace HiWorld.Services.Data
 {
+    using System.Linq;
+    using System.Threading.Tasks;
+
+    using HiWorld.Data.Common.Repositories;
+    using HiWorld.Data.Models;
+
     public class TagsService : ITagsService
     {
         private readonly IRepository<Tag> tagsRepository;

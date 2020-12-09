@@ -1,0 +1,55 @@
+﻿@model HiWorld.Web.ViewModels.Posts.PostViewModel
+
+<div class="card-body">
+    @if (Model.IsProfilePost)
+    {
+        <a asp-controller="Profiles" asp-action="ById" asp-route-id="@Model.OwnerId" class="card-title h5">@Model.OwnerName</a>
+    }
+    else
+    {
+        <a asp-controller="Pages" asp-action="ById" asp-route-id="@Model.OwnerId" class="card-title h5">@Model.OwnerName</a>
+    }
+    <p class="card-text">
+        @Model.Text
+        @foreach (var tag in Model.PostTags)
+        {
+            <a asp-controller="Tags" asp-action="ById" asp-route-id="@tag.Key">#@tag.Value</a>
+        }
+    </p>
+    <p class="card-text"><small class="text-muted">Created on: @Model.CreatedOn.ToString("dd/MM/yyyy HH:mm")</small></p>
+</div>
+@if (Model.ImagePath != null)
+{
+    <img src="/img/posts/@Model.ImagePath" class="card-img-bottom" alt="Post Image">
+}
+<div class="card-footer">
+    <div class="row mx-0">
+        <form class="likeButton" liked="@(Model.IsLiked?"true":"false")" asp-controller="Posts" asp-action="Like" asp-route-id="@Model.Id" method="post">
+            @if (!Model.IsLiked)
+            {
+                <button class="btn btn-outline-primary">Like <i class="fas fa-heart"></i></button>
+            }
+            else
+            {
+                <button class="btn btn-outline-danger">Dislike <i class="fas fa-heart-broken"></i></button>
+            }
+            <span class="ml-1 card-text">@Model.Likes</span>
+        </form>
+        <form class="commentButton row ml-auto" asp-controller="Posts" asp-action="AddComment" asp-route-postid="@Model.Id" method="post">
+            <a class="btn btn-primary mr-2" data-toggle="collapse" href="#comments_@Model.Id" role="button" aria-expanded="false" aria-controls="comments_@Model.Id">Show</a>
+            <button class="btn btn-primary mr-1">Comment <i class="fas fa-comments"></i></button>
+            <input type="text" name="text" placeholder="Comment..." class="form-control w-auto" />
+        </form>
+    </div>
+</div>
+<div class="collapse" id="comments_@Model.Id">
+    @foreach (var comment in Model.Comments)
+    {
+        <div class="card card-body">
+            <a class="card-title h5" asp-controller="Profiles" asp-action="ById" asp-route-id="@comment.ProfileId">@comment.ProfileFirstName @comment.ProfileLastName</a>
+            <p class="card-text">
+                @comment.Text
+            </p>
+        </div>
+    }
+</div>

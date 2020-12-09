@@ -1,35 +1,35 @@
-﻿using HiWorld.Data.Models;
-using HiWorld.Services.Data;
-using HiWorld.Web.ViewModels.Posts;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-
-namespace HiWorld.Web.Controllers
+﻿namespace HiWorld.Web.Controllers
 {
+    using System.Security.Claims;
+    using System.Threading.Tasks;
+    using HiWorld.Services.Data;
+    using HiWorld.Web.ViewModels.Posts;
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Mvc;
+
     public class PostsController : Controller
     {
         private readonly IPostsService postsService;
+        private readonly IProfilesService profilesService;
         private readonly IWebHostEnvironment webHost;
-        private readonly UserManager<ApplicationUser> userManager;
 
-        public PostsController(UserManager<ApplicationUser> userManager, IPostsService postsService, IWebHostEnvironment webHost)
+        public PostsController(IPostsService postsService, IProfilesService profilesService,  IWebHostEnvironment webHost)
         {
             this.postsService = postsService;
+            this.profilesService = profilesService;
             this.webHost = webHost;
-            this.userManager = userManager;
         }
 
         [Authorize]
         public IActionResult Create()
         {
+            var userid = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var profileId = this.profilesService.GetId(userid);
+
             var viewModel = new CreatePostInputModel();
+            viewModel.ReturnId = profileId;
+
             return this.View(viewModel);
         }
 
@@ -42,8 +42,8 @@ namespace HiWorld.Web.Controllers
                 return this.View(input);
             }
 
-            var user = await this.userManager.GetUserAsync(this.User);
-            var profileId = user.ProfileId;
+            var userid = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var profileId = this.profilesService.GetId(userid);
 
             await this.postsService.CreateForProfile(profileId, input, $"{this.webHost.WebRootPath}/img/posts");
 
@@ -54,10 +54,31 @@ namespace HiWorld.Web.Controllers
         [HttpPost]
         public async Task Like(int id)
         {
-            var user = await this.userManager.GetUserAsync(this.User);
-            var profileId = user.ProfileId;
+            var userid = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var profileId = this.profilesService.GetId(userid);
 
             await this.postsService.LikePost(profileId, id);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task DeleteFromProfile(int id)
+        {
+            var userid = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var profileId = this.profilesService.GetId(userid);
+
+            await this.postsService.DeletePostFromProfile(profileId, id);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<ActionResult<PostCommentResponceModel>> AddComment(PostCommentInputModel input)
+        {
+            var userid = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var profileId = this.profilesService.GetId(userid);
+
+            var viewModel = await this.postsService.AddComment<PostCommentResponceModel>(profileId, input);
+            return viewModel;
         }
     }
 }

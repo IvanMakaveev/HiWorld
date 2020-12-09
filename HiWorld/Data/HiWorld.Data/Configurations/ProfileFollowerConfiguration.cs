@@ -1,12 +1,10 @@
-﻿using HiWorld.Data.Models;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace HiWorld.Data.Configurations
+﻿namespace HiWorld.Data.Configurations
 {
+
+    using HiWorld.Data.Models;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
     public class ProfileFollowerConfiguration : IEntityTypeConfiguration<ProfileFollower>
     {
         public void Configure(EntityTypeBuilder<ProfileFollower> builder)

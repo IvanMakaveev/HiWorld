@@ -1,8 +1,9 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
-
-namespace HiWorld.Data.Migrations
+﻿namespace HiWorld.Data.Migrations
 {
+    using System;
+
+    using Microsoft.EntityFrameworkCore.Migrations;
+
     public partial class RemovedTableCities : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)

@@ -1,12 +1,11 @@
 ﻿namespace HiWorld.Data.Models
 {
-    using System;
 
     using HiWorld.Data.Common.Models;
 
     public class Comment : BaseDeletableModel<int>
     {
-        public int Text { get; set; }
+        public string Text { get; set; }
 
         public int PostId { get; set; }
 

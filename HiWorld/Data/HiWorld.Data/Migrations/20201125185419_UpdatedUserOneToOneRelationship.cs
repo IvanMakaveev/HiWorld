@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-
-namespace HiWorld.Data.Migrations
+﻿namespace HiWorld.Data.Migrations
 {
+    using Microsoft.EntityFrameworkCore.Migrations;
+
     public partial class UpdatedUserOneToOneRelationship : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)

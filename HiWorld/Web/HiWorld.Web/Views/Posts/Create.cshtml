@@ -20,8 +20,11 @@
     <div class="form-group" id="TagsContainer">
         <label asp-for="Tags"></label>
         <a class="btn btn-outline-success ml-2" onclick="AddTagField()">+</a>
+        <a class="btn btn-outline-danger ml-2 px-3" onclick="RemoveTagField()">-</a>
     </div>
+    <input type="hidden" name="ReturnId" value="@Model.ReturnId" />
     <button type="submit" class="btn btn-primary">Create</button>
+    <a asp-controller="Profiles" asp-action="ById" asp-route-id="@Model.ReturnId">Cancel</a>
 </form>
 
 @section Scripts{
@@ -32,6 +35,12 @@
                 .append("<input type='text' name='Tags[" + tagIndex + "]' class='form-control mt-1'/>");
 
             tagIndex += 1;
+        }
+        function RemoveTagField() {
+            $("#TagsContainer")
+                .children().last().remove();
+
+            tagIndex -= 1;
         }
     </script>
 }

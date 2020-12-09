@@ -1,16 +1,18 @@
-﻿using HiWorld.Data.Common.Repositories;
-using HiWorld.Data.Models;
-using HiWorld.Data.Models.Enums;
-using HiWorld.Services.Mapping;
-using HiWorld.Web.ViewModels.Profiles;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace HiWorld.Services.Data
+﻿namespace HiWorld.Services.Data
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Threading.Tasks;
+
+    using HiWorld.Data.Common.Repositories;
+    using HiWorld.Data.Models;
+    using HiWorld.Data.Models.Enums;
+    using HiWorld.Services.Mapping;
+    using HiWorld.Web.ViewModels.Profiles;
+    using Microsoft.EntityFrameworkCore;
+
     public class ProfilesService : IProfilesService
     {
         private readonly IDeletableEntityRepository<Profile> profileRepository;
@@ -31,6 +33,14 @@ namespace HiWorld.Services.Data
             this.friendsRepository = friendsRepository;
             this.followersRepository = followersRepository;
             this.imageRepository = imageRepository;
+        }
+
+        public int GetId(string userId)
+        {
+            return this.profileRepository.AllAsNoTracking()
+                .Where(x => x.User.Id == userId)
+                .Select(x => x.Id)
+                .FirstOrDefault();
         }
 
         public async Task<int> Create(BaseInfoInputModel input)
@@ -54,37 +64,23 @@ namespace HiWorld.Services.Data
             return profile.Id;
         }
 
-        public DisplayProfileViewModel GetByIdForAccessor(int id, string accessorId)
+        public bool IsFriend(int profileId, string userId)
         {
-            return this.profileRepository.AllAsNoTracking().Where(x => x.Id == id).Select(x => new DisplayProfileViewModel()
-            {
-                Id = x.Id,
-                IsOwner = x.User.Id == accessorId,
-                IsFriend = x.FriendsRecieved.Any(x => x.Profile.User.Id == accessorId && x.IsAccepted == true)
-                        || x.FriendsSent.Any(x => x.Friend.User.Id == accessorId && x.IsAccepted == true),
-                IsPending = x.FriendsRecieved.Any(x => x.Profile.User.Id == accessorId && x.IsAccepted == false)
-                        || x.FriendsSent.Any(x => x.Friend.User.Id == accessorId && x.IsAccepted == false),
-                IsFollowing = x.Followers.Any(x => x.Follower.User.Id == accessorId),
-                FirstName = x.FirstName,
-                LastName = x.LastName,
-                About = x.About,
-                BirthDate = x.BirthDate,
-                Country = x.Country.Name,
-                FollowersCount = x.Followers.Count,
-                FriendsCount = x.FriendsRecieved.Where(x => x.IsAccepted == true).Count() + x.FriendsSent.Where(x => x.IsAccepted == true).Count(),
-                Gender = x.Gender.ToString(),
-                ImagePath = x.Image == null ? null : $"{x.Image.Id}.{x.Image.Extension}",
-                Posts = x.Posts.OrderByDescending(x => x.CreatedOn).Select(post => new ProfilePostViewModel()
-                {
-                    Id = post.Id,
-                    Text = post.Text,
-                    PostTags = post.PostTags.Select(tag => new KeyValuePair<int, string>(tag.Tag.Id, tag.Tag.Name)).ToList(),
-                    ImagePath = post.Image == null ? null : $"{post.Image.Id}.{post.Image.Extension}",
-                    CreatedOn = post.CreatedOn,
-                    IsLiked = post.PostLikes.Any(x => x.Profile.User.Id == accessorId),
-                    Likes = post.PostLikes.Count(),
-                }).ToList(),
-            }).FirstOrDefault();
+            return this.profileRepository.AllAsNoTracking().Any(x => x.Id == profileId &&
+                (x.FriendsRecieved.Any(y => y.Profile.User.Id == userId && y.IsAccepted == true) ||
+                 x.FriendsSent.Any(y => y.Friend.User.Id == userId && y.IsAccepted == true)));
+        }
+
+        public bool IsPending(int profileId, string userId)
+        {
+            return this.profileRepository.AllAsNoTracking().Any(x => x.Id == profileId &&
+                (x.FriendsRecieved.Any(y => y.Profile.User.Id == userId && y.IsAccepted == false) ||
+                 x.FriendsSent.Any(y => y.Friend.User.Id == userId && y.IsAccepted == false)));
+        }
+
+        public bool IsFollowing(int profileId, string userId)
+        {
+            return this.followersRepository.All().Any(x => x.ProfileId == profileId && x.Follower.User.Id == userId);
         }
 
         public async Task SendFriendRequest(int profileId, string senderId)
@@ -92,18 +88,21 @@ namespace HiWorld.Services.Data
             var senderProfile = this.profileRepository.All().FirstOrDefault(x => x.User.Id == senderId);
             var recieverProfile = this.profileRepository.All().FirstOrDefault(x => x.Id == profileId);
 
-            if (!this.friendsRepository.AllAsNoTracking()
+            if (senderProfile.Id != recieverProfile.Id)
+            {
+                if (!this.friendsRepository.AllAsNoTracking()
                 .Any(x => (x.Profile == senderProfile && x.Friend == recieverProfile)
                        || (x.Profile == recieverProfile && x.Friend == senderProfile)))
-            {
-                await this.friendsRepository.AddAsync(new ProfileFriend
                 {
-                    Profile = senderProfile,
-                    Friend = recieverProfile,
-                    IsAccepted = false,
-                });
+                    await this.friendsRepository.AddAsync(new ProfileFriend
+                    {
+                        Profile = senderProfile,
+                        Friend = recieverProfile,
+                        IsAccepted = false,
+                    });
 
-                await this.friendsRepository.SaveChangesAsync();
+                    await this.friendsRepository.SaveChangesAsync();
+                }
             }
         }
 
@@ -112,21 +111,24 @@ namespace HiWorld.Services.Data
             var senderProfile = this.profileRepository.All().FirstOrDefault(x => x.User.Id == senderId);
             var recieverProfile = this.profileRepository.All().FirstOrDefault(x => x.Id == profileId);
 
-            var followRelation = this.followersRepository.All().FirstOrDefault(x => x.Follower == senderProfile && x.Profile == recieverProfile);
-            if (followRelation == null)
+            if (senderProfile.Id != recieverProfile.Id)
             {
-                await this.followersRepository.AddAsync(new ProfileFollower
+                var followRelation = this.followersRepository.All().FirstOrDefault(x => x.Follower == senderProfile && x.Profile == recieverProfile);
+                if (followRelation == null)
                 {
-                    Profile = recieverProfile,
-                    Follower = senderProfile,
-                });
-            }
-            else
-            {
-                this.followersRepository.Delete(followRelation);
-            }
+                    await this.followersRepository.AddAsync(new ProfileFollower
+                    {
+                        Profile = recieverProfile,
+                        Follower = senderProfile,
+                    });
+                }
+                else
+                {
+                    this.followersRepository.Delete(followRelation);
+                }
 
-            await this.followersRepository.SaveChangesAsync();
+                await this.followersRepository.SaveChangesAsync();
+            }
         }
 
         public async Task RemoveFriend(int profileId, string senderId)
