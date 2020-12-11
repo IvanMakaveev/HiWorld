@@ -4,6 +4,6 @@
 
     public interface ITagsService
     {
-        Task<int> GetId(string text);
+        Task<int> GetIdAsync(string text);
     }
 }

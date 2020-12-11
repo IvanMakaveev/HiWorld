@@ -73,6 +73,7 @@
             services.AddTransient<ICountriesService, CountriesService>();
             services.AddTransient<IPostsService, PostsService>();
             services.AddTransient<ITagsService, TagsService>();
+            services.AddTransient<ICommentsService, CommentsService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

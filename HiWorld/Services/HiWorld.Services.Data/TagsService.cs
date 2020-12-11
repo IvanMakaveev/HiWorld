@@ -15,7 +15,7 @@
             this.tagsRepository = tagsRepository;
         }
 
-        public async Task<int> GetId(string name)
+        public async Task<int> GetIdAsync(string name)
         {
             name = name.Trim().ToLower().Replace(" ", "_");
             var tag = this.tagsRepository.All().FirstOrDefault(x => x.Name == name);

@@ -13,27 +13,25 @@
 
         T GetByUserId<T>(string id);
 
-        Task<int> Create(BaseInfoInputModel input);
+        Task<int> CreateAsync(BaseInfoInputModel input);
 
-        Task SendFriendRequest(int profileId, string senderId);
+        Task SendFriendRequestAsync(int profileId, string senderId);
 
-        Task RemoveFriend(int profileId, string senderId);
+        Task RemoveFriendAsync(int profileId, string senderId);
 
-        Task DenyFriendship(int id);
+        Task DenyFriendshipAsync(int id);
 
-        Task AcceptFriendship(int id);
+        Task AcceptFriendshipAsync(int id);
 
-        Task FollowProfile(int profileId, string senderId);
+        Task FollowProfileAsync(int profileId, string senderId);
 
         Task UpdateAsync(string id, EditProfileInputModel input, string path);
 
-        bool IsOwner(string userId, int profileId);
+        bool IsFriend(int profileId, int accessorId);
 
-        bool IsFriend(int profileId, string userId);
+        bool IsPending(int profileId, int accessorId);
 
-        bool IsPending(int profileId, string userId);
-
-        bool IsFollowing(int profileId, string userId);
+        bool IsFollowing(int profileId, int accessorId);
 
         IEnumerable<T> GetFriendRequests<T>(string userId);
     }

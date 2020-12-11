@@ -11,7 +11,7 @@
         public int ReturnId { get; set; }
 
         [Required]
-        [StringLength(500, ErrorMessage = "{0} must be at most {1} characters long.")]
+        [StringLength(750, ErrorMessage = "{0} must be at most {1} characters long.")]
         public string Text { get; set; }
 
         [Display(Name = "Profile Picture")]

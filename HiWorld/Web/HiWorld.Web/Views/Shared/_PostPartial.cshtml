@@ -3,11 +3,11 @@
 <div class="card-body">
     @if (Model.IsProfilePost)
     {
-        <a asp-controller="Profiles" asp-action="ById" asp-route-id="@Model.OwnerId" class="card-title h5">@Model.OwnerName</a>
+        <a asp-controller="Profiles" asp-action="ById" asp-route-id="@Model.OwnerId" class="card-title h5 text-dark">@Model.OwnerName</a>
     }
     else
     {
-        <a asp-controller="Pages" asp-action="ById" asp-route-id="@Model.OwnerId" class="card-title h5">@Model.OwnerName</a>
+        <a asp-controller="Pages" asp-action="ById" asp-route-id="@Model.OwnerId" class="card-title h5 text-dark">@Model.OwnerName</a>
     }
     <p class="card-text">
         @Model.Text
@@ -31,14 +31,14 @@
             }
             else
             {
-                <button class="btn btn-outline-danger">Dislike <i class="fas fa-heart-broken"></i></button>
+                <button class="btn btn-primary">Liked <i class="fas fa-heart"></i></button>
             }
             <span class="ml-1 card-text">@Model.Likes</span>
         </form>
-        <form class="commentButton row ml-auto" asp-controller="Posts" asp-action="AddComment" asp-route-postid="@Model.Id" method="post">
+        <form class="commentButton row ml-auto w-75" asp-controller="Posts" asp-action="AddComment" asp-route-postid="@Model.Id" method="post">
             <a class="btn btn-primary mr-2" data-toggle="collapse" href="#comments_@Model.Id" role="button" aria-expanded="false" aria-controls="comments_@Model.Id">Show</a>
             <button class="btn btn-primary mr-1">Comment <i class="fas fa-comments"></i></button>
-            <input type="text" name="text" placeholder="Comment..." class="form-control w-auto" />
+            <input type="text" name="text" placeholder="Comment..." class="form-control w-auto flex-grow-1" />
         </form>
     </div>
 </div>
@@ -46,10 +46,21 @@
     @foreach (var comment in Model.Comments)
     {
         <div class="card card-body">
-            <a class="card-title h5" asp-controller="Profiles" asp-action="ById" asp-route-id="@comment.ProfileId">@comment.ProfileFirstName @comment.ProfileLastName</a>
+            <a class="card-title h5 mb-0 text-dark align-self-start" asp-controller="Profiles" asp-action="ById" asp-route-id="@comment.ProfileId">@comment.ProfileFirstName @comment.ProfileLastName</a>
             <p class="card-text">
                 @comment.Text
             </p>
+            <form class="likeCommentButton" liked="@(comment.IsLiked?"true":"false")" asp-controller="Comments" asp-action="Like" asp-route-id="@comment.Id" method="post">
+                @if (!comment.IsLiked)
+                {
+                    <button class="btn btn-outline-primary">Like <i class="fas fa-heart"></i></button>
+                }
+                else
+                {
+                    <button class="btn btn-primary">Liked <i class="fas fa-heart"></i></button>
+                }
+                <span class="ml-1 card-text">@comment.Likes</span>
+            </form>
         </div>
     }
 </div>

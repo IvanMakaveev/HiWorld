@@ -32,7 +32,7 @@
 
         public int Likes { get; set; }
 
-        public ICollection<PostCommentResponceModel> Comments { get; set; }
+        public List<PostCommentResponceModel> Comments { get; set; }
 
         public void CreateMappings(IProfileExpression configuration)
         {

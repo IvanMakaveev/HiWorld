@@ -6,14 +6,12 @@
 
     public interface IPostsService
     {
-        Task CreateForProfile(int id, CreatePostInputModel input, string path);
+        Task CreateForProfileAsync(int id, CreatePostInputModel input, string path);
 
-        Task LikePost(int profileId, int id);
+        Task LikePostAsync(int profileId, int id);
 
-        Task DeletePostFromProfile(int profileId, int id);
+        Task DeletePostFromProfileAsync(int profileId, int id);
 
-        Task<T> AddComment<T>(int profileId, PostCommentInputModel input);
-
-        bool IsLiked(int postId, string userId);
+        bool IsLiked(int postId, int accessorId);
     }
 }

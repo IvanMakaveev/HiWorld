@@ -15,24 +15,26 @@
         private readonly IProfilesService profilesService;
         private readonly IPostsService postsService;
         private readonly ICountriesService countriesService;
+        private readonly ICommentsService commentsService;
         private readonly IWebHostEnvironment webHost;
 
         public ProfilesController(
             IProfilesService profilesService,
             IPostsService postsService,
             ICountriesService countriesService,
+            ICommentsService commentsService,
             IWebHostEnvironment webHost)
         {
             this.profilesService = profilesService;
             this.postsService = postsService;
             this.countriesService = countriesService;
+            this.commentsService = commentsService;
             this.webHost = webHost;
         }
 
         [Authorize]
         public IActionResult ById(int id)
         {
-            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var viewModel = this.profilesService.GetById<DisplayProfileViewModel>(id);
 
             if (viewModel == null)
@@ -40,19 +42,23 @@
                 return this.NotFound();
             }
 
-            viewModel.IsOwner = this.profilesService.IsOwner(userId, id);
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var profileId = this.profilesService.GetId(userId);
+            viewModel.IsOwner = profileId == id;
+
             if (!viewModel.IsOwner)
             {
-                viewModel.IsFollowing = this.profilesService.IsFollowing(id, userId);
-                viewModel.IsFriend = this.profilesService.IsFriend(id, userId);
+                viewModel.IsFollowing = this.profilesService.IsFollowing(id, profileId);
+                viewModel.IsFriend = this.profilesService.IsFriend(id, profileId);
 
                 if (!viewModel.IsFriend)
                 {
-                    viewModel.IsPending = this.profilesService.IsPending(id, userId);
+                    viewModel.IsPending = this.profilesService.IsPending(id, profileId);
                 }
             }
 
-            viewModel.Posts.ForEach(x => x.IsLiked = this.postsService.IsLiked(x.Id, userId));
+            viewModel.Posts.ForEach(x => x.IsLiked = this.postsService.IsLiked(x.Id, profileId));
+            viewModel.Posts.ForEach(x => x.Comments.ForEach(y => y.IsLiked = this.commentsService.IsLiked(y.Id, profileId)));
 
             return this.View(viewModel);
         }
@@ -63,7 +69,7 @@
         {
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            await this.profilesService.SendFriendRequest(id, userId);
+            await this.profilesService.SendFriendRequestAsync(id, userId);
 
             return this.RedirectToAction(nameof(this.ById), new { id });
         }
@@ -74,7 +80,7 @@
         {
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            await this.profilesService.FollowProfile(id, userId);
+            await this.profilesService.FollowProfileAsync(id, userId);
 
             return this.RedirectToAction(nameof(this.ById), new { id });
         }
@@ -85,7 +91,7 @@
         {
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            await this.profilesService.RemoveFriend(id, userId);
+            await this.profilesService.RemoveFriendAsync(id, userId);
 
             return this.RedirectToAction(nameof(this.ById), new { id });
         }
@@ -94,7 +100,7 @@
         [HttpPost]
         public async Task<IActionResult> DenyFriend(int id)
         {
-            await this.profilesService.DenyFriendship(id);
+            await this.profilesService.DenyFriendshipAsync(id);
 
             return this.RedirectToAction(nameof(this.FriendRequests));
         }
@@ -103,7 +109,7 @@
         [HttpPost]
         public async Task<IActionResult> AcceptFriend(int id)
         {
-            await this.profilesService.AcceptFriendship(id);
+            await this.profilesService.AcceptFriendshipAsync(id);
 
             return this.RedirectToAction(nameof(this.FriendRequests));
         }

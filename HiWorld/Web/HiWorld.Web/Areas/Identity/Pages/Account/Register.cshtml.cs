@@ -80,7 +80,7 @@
 
                 try
                 {
-                    profileId = await this.profileService.Create(this.Input);
+                    profileId = await this.profileService.CreateAsync(this.Input);
                 }
                 catch (ArgumentException e)
                 {

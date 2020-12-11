@@ -15,7 +15,6 @@
         private readonly IRepository<PostTag> postTagsRepository;
         private readonly IRepository<PostLike> postLikesRepository;
         private readonly IRepository<Image> imageRepository;
-        private readonly IDeletableEntityRepository<Comment> commentsRepository;
         private readonly ITagsService tagsService;
 
         public PostsService(
@@ -23,18 +22,16 @@
             IRepository<PostTag> postTagsRepository,
             IRepository<PostLike> postLikesRepository,
             IRepository<Image> imageRepository,
-            IDeletableEntityRepository<Comment> commentsRepository,
             ITagsService tagsService)
         {
             this.postsRepository = postsRepository;
             this.postTagsRepository = postTagsRepository;
             this.postLikesRepository = postLikesRepository;
             this.imageRepository = imageRepository;
-            this.commentsRepository = commentsRepository;
             this.tagsService = tagsService;
         }
 
-        public async Task CreateForProfile(int id, CreatePostInputModel input, string path)
+        public async Task CreateForProfileAsync(int id, CreatePostInputModel input, string path)
         {
             var post = new Post()
             {
@@ -68,7 +65,7 @@
 
             foreach (var tag in input.Tags)
             {
-                var tagId = await this.tagsService.GetId(tag);
+                var tagId = await this.tagsService.GetIdAsync(tag);
                 var postTag = new PostTag()
                 {
                     TagId = tagId,
@@ -80,7 +77,7 @@
             }
         }
 
-        public async Task DeletePostFromProfile(int profileId, int id)
+        public async Task DeletePostFromProfileAsync(int profileId, int id)
         {
             var post = this.postsRepository.All().Where(x => x.Id == id).FirstOrDefault();
             if (post != null && post.ProfileId == profileId)
@@ -90,7 +87,7 @@
             }
         }
 
-        public async Task LikePost(int profileId, int id)
+        public async Task LikePostAsync(int profileId, int id)
         {
             var postLike = this.postLikesRepository.All().FirstOrDefault(x => x.PostId == id && x.ProfileId == profileId);
             if (postLike == null)
@@ -111,24 +108,9 @@
             await this.postLikesRepository.SaveChangesAsync();
         }
 
-        public async Task<T> AddComment<T>(int profileId, PostCommentInputModel input)
+        public bool IsLiked(int postId, int accessorId)
         {
-            var comment = new Comment()
-            {
-                PostId = input.PostId,
-                ProfileId = profileId,
-                Text = input.Text,
-            };
-
-            await this.commentsRepository.AddAsync(comment);
-            await this.commentsRepository.SaveChangesAsync();
-
-            return this.commentsRepository.All().Where(x => x.Id == comment.Id).To<T>().FirstOrDefault();
-        }
-
-        public bool IsLiked(int postId, string userId)
-        {
-            return this.postLikesRepository.AllAsNoTracking().Any(x => x.PostId == postId && x.Profile.User.Id == userId);
+            return this.postLikesRepository.AllAsNoTracking().Any(x => x.PostId == postId && x.ProfileId == accessorId);
         }
     }
 }

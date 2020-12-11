@@ -43,7 +43,7 @@
                 .FirstOrDefault();
         }
 
-        public async Task<int> Create(BaseInfoInputModel input)
+        public async Task<int> CreateAsync(BaseInfoInputModel input)
         {
             this.ValidateCountryId(input.CountryId);
 
@@ -64,26 +64,26 @@
             return profile.Id;
         }
 
-        public bool IsFriend(int profileId, string userId)
+        public bool IsFriend(int profileId, int accessorId)
         {
             return this.profileRepository.AllAsNoTracking().Any(x => x.Id == profileId &&
-                (x.FriendsRecieved.Any(y => y.Profile.User.Id == userId && y.IsAccepted == true) ||
-                 x.FriendsSent.Any(y => y.Friend.User.Id == userId && y.IsAccepted == true)));
+                (x.FriendsRecieved.Any(y => y.ProfileId == accessorId && y.IsAccepted == true) ||
+                 x.FriendsSent.Any(y => y.FriendId == accessorId && y.IsAccepted == true)));
         }
 
-        public bool IsPending(int profileId, string userId)
+        public bool IsPending(int profileId, int accessorId)
         {
             return this.profileRepository.AllAsNoTracking().Any(x => x.Id == profileId &&
-                (x.FriendsRecieved.Any(y => y.Profile.User.Id == userId && y.IsAccepted == false) ||
-                 x.FriendsSent.Any(y => y.Friend.User.Id == userId && y.IsAccepted == false)));
+                (x.FriendsRecieved.Any(y => y.ProfileId == accessorId && y.IsAccepted == false) ||
+                 x.FriendsSent.Any(y => y.FriendId == accessorId && y.IsAccepted == false)));
         }
 
-        public bool IsFollowing(int profileId, string userId)
+        public bool IsFollowing(int profileId, int accessorId)
         {
-            return this.followersRepository.All().Any(x => x.ProfileId == profileId && x.Follower.User.Id == userId);
+            return this.followersRepository.All().Any(x => x.ProfileId == profileId && x.FollowerId == accessorId);
         }
 
-        public async Task SendFriendRequest(int profileId, string senderId)
+        public async Task SendFriendRequestAsync(int profileId, string senderId)
         {
             var senderProfile = this.profileRepository.All().FirstOrDefault(x => x.User.Id == senderId);
             var recieverProfile = this.profileRepository.All().FirstOrDefault(x => x.Id == profileId);
@@ -106,7 +106,7 @@
             }
         }
 
-        public async Task FollowProfile(int profileId, string senderId)
+        public async Task FollowProfileAsync(int profileId, string senderId)
         {
             var senderProfile = this.profileRepository.All().FirstOrDefault(x => x.User.Id == senderId);
             var recieverProfile = this.profileRepository.All().FirstOrDefault(x => x.Id == profileId);
@@ -131,7 +131,7 @@
             }
         }
 
-        public async Task RemoveFriend(int profileId, string senderId)
+        public async Task RemoveFriendAsync(int profileId, string senderId)
         {
             var senderProfile = this.profileRepository.All().FirstOrDefault(x => x.User.Id == senderId);
             var recieverProfile = this.profileRepository.All().FirstOrDefault(x => x.Id == profileId);
@@ -148,7 +148,7 @@
             }
         }
 
-        public async Task DenyFriendship(int id)
+        public async Task DenyFriendshipAsync(int id)
         {
             var friendship = this.friendsRepository.All().FirstOrDefault(x => x.Id == id);
 
@@ -160,7 +160,7 @@
             }
         }
 
-        public async Task AcceptFriendship(int id)
+        public async Task AcceptFriendshipAsync(int id)
         {
             var friendship = this.friendsRepository.All().FirstOrDefault(x => x.Id == id);
 
@@ -220,11 +220,6 @@
 
             this.profileRepository.Update(profile);
             await this.profileRepository.SaveChangesAsync();
-        }
-
-        public bool IsOwner(string userId, int profileId)
-        {
-            return this.profileRepository.AllAsNoTracking().FirstOrDefault(x => x.Id == profileId && x.User.Id == userId) != null;
         }
 
         public IEnumerable<T> GetFriendRequests<T>(string userId)
