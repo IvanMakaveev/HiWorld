@@ -1,6 +1,7 @@
 ﻿namespace HiWorld.Web.Controllers
 {
     using System;
+    using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
 
@@ -59,6 +60,7 @@
 
             viewModel.Posts.ForEach(x => x.IsLiked = this.postsService.IsLiked(x.Id, profileId));
             viewModel.Posts.ForEach(x => x.Comments.ForEach(y => y.IsLiked = this.commentsService.IsLiked(y.Id, profileId)));
+            viewModel.Posts.ForEach(x => x.Comments.OrderByDescending(x => x.CreatedOn));
 
             return this.View(viewModel);
         }

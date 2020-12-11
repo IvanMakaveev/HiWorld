@@ -14,20 +14,20 @@
         private readonly IDeletableEntityRepository<Post> postsRepository;
         private readonly IRepository<PostTag> postTagsRepository;
         private readonly IRepository<PostLike> postLikesRepository;
-        private readonly IRepository<Image> imageRepository;
+        private readonly IImagesService imagesService;
         private readonly ITagsService tagsService;
 
         public PostsService(
             IDeletableEntityRepository<Post> postsRepository,
             IRepository<PostTag> postTagsRepository,
             IRepository<PostLike> postLikesRepository,
-            IRepository<Image> imageRepository,
+            IImagesService imagesService,
             ITagsService tagsService)
         {
             this.postsRepository = postsRepository;
             this.postTagsRepository = postTagsRepository;
             this.postLikesRepository = postLikesRepository;
-            this.imageRepository = imageRepository;
+            this.imagesService = imagesService;
             this.tagsService = tagsService;
         }
 
@@ -41,23 +41,7 @@
 
             if (input.Image != null && input.Image.Length > 0)
             {
-                Directory.CreateDirectory($"{path}/");
-                var extension = Path.GetExtension(input.Image.FileName).TrimStart('.');
-
-                var image = new Image
-                {
-                    Extension = extension,
-                };
-                await this.imageRepository.AddAsync(image);
-                await this.imageRepository.SaveChangesAsync();
-
-                var physicalPath = $"{path}/{image.Id}.{extension}";
-                using (Stream fileStream = new FileStream(physicalPath, FileMode.Create))
-                {
-                    await input.Image.CopyToAsync(fileStream);
-                }
-
-                post.ImageId = image.Id;
+                post.ImageId = await this.imagesService.Create(input.Image, path);
             }
 
             await this.postsRepository.AddAsync(post);

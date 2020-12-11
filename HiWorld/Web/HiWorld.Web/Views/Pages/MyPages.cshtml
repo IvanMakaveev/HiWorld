@@ -1,0 +1,41 @@
+﻿@using HiWorld.Web.ViewModels.Pages;
+@model IEnumerable<PageInfoViewModel>
+@{
+    ViewData["Title"] = "My Pages";
+}
+
+<div class="offset-2 col-md-8">
+    @if (Model.Count() > 0)
+    {
+        <h1 class="mb-3">@ViewData["Title"]</h1>
+        @foreach (var userPage in Model)
+        {
+
+            <div class="media">
+                @if (userPage.ImagePath != null)
+                {
+                    <img src="/img/users/@userPage.ImagePath" class="align-self-start rounded-circle d-block media-image" alt="Profile Image">
+                }
+                else
+                {
+                    <img src="/img/users/@GlobalConstants.DefaultImage" class="align-self-start rounded-circle d-block media-image" alt="Profile Image">
+
+                }
+                <div class="media-body ml-3 mt-1">
+                    <h5 class="mt-0">@userPage.Name</h5>
+                    <p>@userPage.Description</p>
+                </div>
+                <div class="mr-auto align-self-center">
+                    <form class="d-inline" asp-action="ById" asp-route-id="@userPage.Id" method="post">
+                        <button class="btn btn-success">View</button>
+                    </form>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <h2 class="mt-5 text-center">You don't have any pages</h2>
+        <a asp-action="Create" class="btn btn-primary btn-lg btn-block">Create Page</a>
+    }
+</div>

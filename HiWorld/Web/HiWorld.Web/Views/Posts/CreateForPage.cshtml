@@ -1,0 +1,46 @@
+﻿@using HiWorld.Web.ViewModels.Posts;
+@model CreatePostInputModel
+@{
+    ViewData["Title"] = "Create Post";
+}
+
+<h1>@ViewData["Title"]</h1>
+<form method="post" enctype="multipart/form-data">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="Text"></label>
+        <textarea asp-for="Text" class="form-control"></textarea>
+        <span asp-validation-for="Text" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Image"></label>
+        <input asp-for="Image" />
+        <span asp-validation-for="Image" class="text-danger"></span>
+    </div>
+    <div class="form-group" id="TagsContainer">
+        <label asp-for="Tags"></label>
+        <a class="btn btn-outline-success ml-2" onclick="AddTagField()">+</a>
+        <a class="btn btn-outline-danger ml-2 px-3" onclick="RemoveTagField()">-</a>
+    </div>
+    <input type="hidden" name="ReturnId" value="@Model.ReturnId" />
+    <button type="submit" class="btn btn-primary">Create</button>
+    <a asp-controller="Pages" asp-action="ById" asp-route-id="@Model.ReturnId">Cancel</a>
+</form>
+
+@section Scripts{
+    <script>
+        var tagIndex = 0
+        function AddTagField() {
+            $("#TagsContainer")
+                .append("<input type='text' name='Tags[" + tagIndex + "]' class='form-control mt-1'/>");
+
+            tagIndex += 1;
+        }
+        function RemoveTagField() {
+            $("#TagsContainer")
+                .children().last().remove();
+
+            tagIndex -= 1;
+        }
+    </script>
+}

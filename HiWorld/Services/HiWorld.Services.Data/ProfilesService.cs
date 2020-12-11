@@ -19,20 +19,20 @@
         private readonly IRepository<Country> countriesRepository;
         private readonly IRepository<ProfileFriend> friendsRepository;
         private readonly IRepository<ProfileFollower> followersRepository;
-        private readonly IRepository<Image> imageRepository;
+        private readonly IImagesService imagesService;
 
         public ProfilesService(
             IDeletableEntityRepository<Profile> profileRepository,
             IRepository<Country> countriesRepository,
             IRepository<ProfileFriend> friendsRepository,
             IRepository<ProfileFollower> followersRepository,
-            IRepository<Image> imageRepository)
+            IImagesService imagesService)
         {
             this.profileRepository = profileRepository;
             this.countriesRepository = countriesRepository;
             this.friendsRepository = friendsRepository;
             this.followersRepository = followersRepository;
-            this.imageRepository = imageRepository;
+            this.imagesService = imagesService;
         }
 
         public int GetId(string userId)
@@ -199,23 +199,7 @@
 
             if (input.Image != null && input.Image.Length > 0)
             {
-                Directory.CreateDirectory($"{path}/");
-                var extension = Path.GetExtension(input.Image.FileName).TrimStart('.');
-
-                var image = new Image
-                {
-                    Extension = extension,
-                };
-                await this.imageRepository.AddAsync(image);
-                await this.imageRepository.SaveChangesAsync();
-
-                var physicalPath = $"{path}/{image.Id}.{extension}";
-                using (Stream fileStream = new FileStream(physicalPath, FileMode.Create))
-                {
-                    await input.Image.CopyToAsync(fileStream);
-                }
-
-                profile.ImageId = image.Id;
+                profile.ImageId = await this.imagesService.Create(input.Image, path);
             }
 
             this.profileRepository.Update(profile);

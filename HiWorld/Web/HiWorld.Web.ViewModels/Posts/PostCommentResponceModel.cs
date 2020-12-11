@@ -1,5 +1,6 @@
 ﻿namespace HiWorld.Web.ViewModels.Posts
 {
+    using System;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Linq;
 
@@ -20,6 +21,8 @@
         public string Text { get; set; }
 
         public int Likes { get; set; }
+
+        public DateTime CreatedOn { get; set; }
 
         [NotMapped]
         public bool IsLiked { get; set; }

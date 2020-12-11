@@ -28,7 +28,7 @@
         }
 
         [Authorize]
-        public IActionResult Create()
+        public IActionResult CreateForProfile()
         {
             var userid = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var profileId = this.profilesService.GetId(userid);
@@ -41,7 +41,7 @@
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> Create(CreatePostInputModel input)
+        public async Task<IActionResult> CreateForProfile(CreatePostInputModel input)
         {
             if (!this.ModelState.IsValid)
             {
