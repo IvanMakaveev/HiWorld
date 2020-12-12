@@ -17,20 +17,17 @@
     {
         private readonly IDeletableEntityRepository<Profile> profileRepository;
         private readonly IRepository<Country> countriesRepository;
-        private readonly IRepository<ProfileFriend> friendsRepository;
         private readonly IRepository<ProfileFollower> followersRepository;
         private readonly IImagesService imagesService;
 
         public ProfilesService(
             IDeletableEntityRepository<Profile> profileRepository,
             IRepository<Country> countriesRepository,
-            IRepository<ProfileFriend> friendsRepository,
             IRepository<ProfileFollower> followersRepository,
             IImagesService imagesService)
         {
             this.profileRepository = profileRepository;
             this.countriesRepository = countriesRepository;
-            this.friendsRepository = friendsRepository;
             this.followersRepository = followersRepository;
             this.imagesService = imagesService;
         }
@@ -83,26 +80,6 @@
             return this.followersRepository.All().Any(x => x.ProfileId == profileId && x.FollowerId == accessorId);
         }
 
-        public async Task SendFriendRequestAsync(int profileId, int senderId)
-        {
-            if (senderId != profileId)
-            {
-                if (!this.friendsRepository.AllAsNoTracking()
-                .Any(x => (x.ProfileId == senderId && x.FriendId == profileId)
-                       || (x.ProfileId == profileId && x.FriendId == senderId)))
-                {
-                    await this.friendsRepository.AddAsync(new ProfileFriend
-                    {
-                        ProfileId = senderId,
-                        FriendId = profileId,
-                        IsAccepted = false,
-                    });
-
-                    await this.friendsRepository.SaveChangesAsync();
-                }
-            }
-        }
-
         public async Task FollowProfileAsync(int profileId, int senderId)
         {
             if (senderId != profileId)
@@ -122,45 +99,6 @@
                 }
 
                 await this.followersRepository.SaveChangesAsync();
-            }
-        }
-
-        public async Task RemoveFriendAsync(int profileId, int senderId)
-        {
-            var friendship = this.friendsRepository.All()
-                .FirstOrDefault(x => (x.ProfileId == senderId && x.FriendId == profileId)
-                       || (x.ProfileId == profileId && x.FriendId == senderId));
-
-            if (friendship != null)
-            {
-                this.friendsRepository.Delete(friendship);
-
-                await this.friendsRepository.SaveChangesAsync();
-            }
-        }
-
-        public async Task DenyFriendshipAsync(int id)
-        {
-            var friendship = this.friendsRepository.All().FirstOrDefault(x => x.Id == id);
-
-            if (friendship != null)
-            {
-                this.friendsRepository.Delete(friendship);
-
-                await this.friendsRepository.SaveChangesAsync();
-            }
-        }
-
-        public async Task AcceptFriendshipAsync(int id)
-        {
-            var friendship = this.friendsRepository.All().FirstOrDefault(x => x.Id == id);
-
-            if (friendship != null)
-            {
-                friendship.IsAccepted = true;
-                this.friendsRepository.Update(friendship);
-
-                await this.friendsRepository.SaveChangesAsync();
             }
         }
 
@@ -199,11 +137,6 @@
                 this.profileRepository.Update(profile);
                 await this.profileRepository.SaveChangesAsync();
             }
-        }
-
-        public IEnumerable<T> GetFriendRequests<T>(string userId)
-        {
-            return this.friendsRepository.All().Where(x => x.Friend.User.Id == userId && x.IsAccepted == false).To<T>().ToList();
         }
 
         private Gender GetGender(string genderValue)

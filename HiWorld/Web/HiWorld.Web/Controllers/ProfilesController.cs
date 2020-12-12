@@ -66,17 +66,6 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddFriend(int id)
-        {
-            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var profileId = this.profilesService.GetId(userId);
-
-            await this.profilesService.SendFriendRequestAsync(id, profileId);
-
-            return this.RedirectToAction(nameof(this.ById), new { id });
-        }
-
-        [HttpPost]
         public async Task<IActionResult> Follow(int id)
         {
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -85,33 +74,6 @@
             await this.profilesService.FollowProfileAsync(id, profileId);
 
             return this.RedirectToAction(nameof(this.ById), new { id });
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> RemoveFriend(int id)
-        {
-            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var profileId = this.profilesService.GetId(userId);
-
-            await this.profilesService.RemoveFriendAsync(id, profileId);
-
-            return this.RedirectToAction(nameof(this.ById), new { id });
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> DenyFriend(int id)
-        {
-            await this.profilesService.DenyFriendshipAsync(id);
-
-            return this.RedirectToAction(nameof(this.FriendRequests));
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> AcceptFriend(int id)
-        {
-            await this.profilesService.AcceptFriendshipAsync(id);
-
-            return this.RedirectToAction(nameof(this.FriendRequests));
         }
 
         public IActionResult Edit()
@@ -147,15 +109,6 @@
             }
 
             return this.RedirectToAction(nameof(this.ById), new { input.Id });
-        }
-
-        public IActionResult FriendRequests()
-        {
-            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            var viewModel = this.profilesService.GetFriendRequests<FriendRequestViewModel>(userId);
-
-            return this.View(viewModel);
         }
     }
 }

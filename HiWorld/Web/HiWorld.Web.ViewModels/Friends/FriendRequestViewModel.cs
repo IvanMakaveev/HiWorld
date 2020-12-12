@@ -1,4 +1,4 @@
-﻿namespace HiWorld.Web.ViewModels.Profiles
+﻿namespace HiWorld.Web.ViewModels.Friends
 {
     using System;
 

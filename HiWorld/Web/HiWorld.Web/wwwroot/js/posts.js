@@ -24,6 +24,16 @@
 }
 
 
+function escapeHtml(unsafe) {
+    return unsafe
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+
 $('.likeButton').submit(function (event) {
     event.preventDefault();
     var antiForgeryToken = $(this).find('input[name=__RequestVerificationToken]').val();
@@ -86,7 +96,7 @@ $('.commentButton').submit(function (event) {
             var createdOnString = data.createdOnString
             var likes = data.likes
             form.parent().parent().parent().find('.collapse').append('<div class="card card-body"><a href="/Profiles/ById/' + profileId + '" class="card-title h5 mb-0 text-dark align-self-start"">' +
-                firstName + ' ' + lastName + '</a><p class="card-text">' + text + '</p><p class="card-text"><small class="text-muted">Created on: ' +
+                escapeHtml(firstName) + ' ' + escapeHtml(lastName) + '</a><p class="card-text">' + escapeHtml(text) + '</p><p class="card-text"><small class="text-muted">Created on: ' +
                 createdOnString + '</small></p><form class="likeCommentButton" liked="false" action="/Comments/Like/' + id + '" method="post"><input name="__RequestVerificationToken" type="hidden" value="' +
                 antiForgeryToken + '"/><button class="btn btn-outline-primary">Like <i class="fas fa-heart"></i></button><span class="ml-1 card-text">' +
                 likes + '</span></form></div>')

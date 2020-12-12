@@ -15,14 +15,6 @@
 
         Task<int> CreateAsync(BaseInfoInputModel input);
 
-        Task SendFriendRequestAsync(int profileId, int senderId);
-
-        Task RemoveFriendAsync(int profileId, int senderId);
-
-        Task DenyFriendshipAsync(int id);
-
-        Task AcceptFriendshipAsync(int id);
-
         Task FollowProfileAsync(int profileId, int senderId);
 
         Task UpdateAsync(string id, EditProfileInputModel input, string path);
@@ -32,7 +24,5 @@
         bool IsPending(int profileId, int accessorId);
 
         bool IsFollowing(int profileId, int accessorId);
-
-        IEnumerable<T> GetFriendRequests<T>(string userId);
     }
 }

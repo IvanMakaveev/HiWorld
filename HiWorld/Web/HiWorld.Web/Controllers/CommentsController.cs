@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
 
     using HiWorld.Services.Data;
+    using HiWorld.Web.ViewModels.Posts;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
@@ -29,6 +30,21 @@
             var profileId = this.profilesService.GetId(userid);
 
             await this.commentsService.LikeCommentAsync(id, profileId);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<PostCommentResponceModel>> AddComment(PostCommentInputModel input)
+        {
+            if (this.ModelState.IsValid)
+            {
+                var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var profileId = this.profilesService.GetId(userId);
+
+                var viewModel = await this.commentsService.AddCommentAsync<PostCommentResponceModel>(profileId, input);
+                return viewModel;
+            }
+
+            return this.BadRequest();
         }
     }
 }

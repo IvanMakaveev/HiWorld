@@ -21,14 +21,12 @@
             IPostsService postsService,
             IProfilesService profilesService,
             IPagesService pagesService,
-            IWebHostEnvironment webHost,
-            ICommentsService commentsService)
+            IWebHostEnvironment webHost)
         {
             this.postsService = postsService;
             this.profilesService = profilesService;
             this.pagesService = pagesService;
             this.webHost = webHost;
-            this.commentsService = commentsService;
         }
 
         public IActionResult CreateForProfile()
@@ -109,21 +107,6 @@
             var profileId = this.profilesService.GetId(userid);
 
             await this.postsService.DeletePostFromProfileAsync(profileId, id);
-        }
-
-        [HttpPost]
-        public async Task<ActionResult<PostCommentResponceModel>> AddComment(PostCommentInputModel input)
-        {
-            if (this.ModelState.IsValid)
-            {
-                var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-                var profileId = this.profilesService.GetId(userId);
-
-                var viewModel = await this.commentsService.AddCommentAsync<PostCommentResponceModel>(profileId, input);
-                return viewModel;
-            }
-
-            return this.BadRequest();
         }
     }
 }

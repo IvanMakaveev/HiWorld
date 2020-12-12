@@ -11,7 +11,7 @@
         <section class="img-container">
             @if (Model.ImagePath == null)
             {
-                <img src="/img/users/default.png" class="img-thumbnail rounded-circle mx-auto d-block" alt="Profile Picture" />
+                <img src="/img/users/@GlobalConstants.DefaultImage" class="img-thumbnail rounded-circle mx-auto d-block" alt="Profile Picture" />
             }
             else
             {
@@ -46,7 +46,8 @@
         {
             <a class="btn btn-primary" asp-area="" asp-action="Edit">Edit Profile</a>
             <a class="btn btn-primary" asp-area="" asp-controller="Posts" asp-action="CreateForProfile">Create New Post</a>
-            <a class="btn btn-primary" asp-area="" asp-controller="Profiles" asp-action="FriendRequests">Friend Requests</a>
+            <a class="btn btn-primary" asp-area="" asp-controller="Friends" asp-action="FriendRequests">Friend Requests</a>
+            <a class="btn btn-primary" asp-area="" asp-controller="Friends" asp-action="FriendsList">Friends List</a>
             <a class="btn btn-primary" asp-area="" asp-controller="Pages" asp-action="Create">Create Page</a>
             <a class="btn btn-primary" asp-area="" asp-controller="Pages" asp-action="MyPages">My Pages</a>
             <a class="btn btn-primary" asp-area="Identity" asp-controller="Account" asp-action="Manage">Manage Account</a>
@@ -56,20 +57,20 @@
             if (Model.IsPending)
             {
                 <a class="btn btn-secondary">Pending Request</a>
-                <form asp-action="RemoveFriend" asp-route-id="@Model.Id" method="post">
+                <form asp-controller="Friends" asp-action="RemoveFriend" asp-route-id="@Model.Id" method="post">
                     <button class="btn btn-danger">Remove Friend</button>
                 </form>
             }
             else if (!Model.IsFriend)
             {
-                <form asp-action="AddFriend" asp-route-id="@Model.Id" method="post">
+                <form asp-controller="Friends" asp-action="AddFriend" asp-route-id="@Model.Id" method="post">
                     <button class="btn btn-success">Add Friend</button>
                 </form>
             }
             else
             {
                 <a class="btn btn-info">Friends</a>
-                <form asp-action="RemoveFriend" asp-route-id="@Model.Id" method="post">
+                <form asp-controller="Friends" asp-action="RemoveFriend" asp-route-id="@Model.Id" method="post">
                     <button class="btn btn-danger">Remove Friend</button>
                 </form>
             }
