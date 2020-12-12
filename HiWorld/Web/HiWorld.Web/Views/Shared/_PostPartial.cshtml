@@ -37,8 +37,8 @@
         </form>
         <form class="commentButton row ml-auto w-75" asp-controller="Comments" asp-action="AddComment" asp-route-postid="@Model.Id" method="post">
             <a class="btn btn-primary mr-2" data-toggle="collapse" href="#comments_@Model.Id" role="button" aria-expanded="false" aria-controls="comments_@Model.Id">Show</a>
-            <button class="btn btn-primary mr-1">Comment <i class="fas fa-comments"></i></button>
-            <input type="text" name="text" placeholder="Comment..." class="form-control w-auto flex-grow-1" />
+            <button class="btn btn-primary flex-grow-1 flex-lg-grow-0 mr-1">Comment <i class="fas fa-comments"></i></button>
+            <input type="text" name="text" placeholder="Comment..." class="form-control w-auto flex-grow-1 mt-sm-0 mt-md-1 mt-lg-0" />
         </form>
     </div>
 </div>

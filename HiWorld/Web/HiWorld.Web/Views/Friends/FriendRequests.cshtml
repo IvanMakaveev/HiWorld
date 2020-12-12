@@ -23,7 +23,7 @@
                 }
                 <div class="media-body ml-3 mt-1">
                     <h5 class="mt-0">@request.ProfileFirstName @request.ProfileLastName</h5>
-                    @request.CreatedOn.ToShortDateString()
+                    Request since: @request.CreatedOn
                 </div>
                 <div class="mr-auto align-self-center">
                     <form class="d-inline" asp-action="AcceptFriend" asp-route-id="@request.Id" method="post">

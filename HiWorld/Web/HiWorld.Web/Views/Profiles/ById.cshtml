@@ -44,13 +44,13 @@
     <section class="container d-flex flex-row justify-content-around pb-3 mt-2">
         @if (Model.IsOwner)
         {
-            <a class="btn btn-primary" asp-area="" asp-action="Edit">Edit Profile</a>
-            <a class="btn btn-primary" asp-area="" asp-controller="Posts" asp-action="CreateForProfile">Create New Post</a>
-            <a class="btn btn-primary" asp-area="" asp-controller="Friends" asp-action="FriendRequests">Friend Requests</a>
-            <a class="btn btn-primary" asp-area="" asp-controller="Friends" asp-action="FriendsList">Friends List</a>
-            <a class="btn btn-primary" asp-area="" asp-controller="Pages" asp-action="Create">Create Page</a>
-            <a class="btn btn-primary" asp-area="" asp-controller="Pages" asp-action="MyPages">My Pages</a>
-            <a class="btn btn-primary" asp-area="Identity" asp-controller="Account" asp-action="Manage">Manage Account</a>
+            <a class="btn mx-1 btn-primary" asp-area="" asp-action="Edit">Edit Profile</a>
+            <a class="btn mx-1 btn-primary" asp-area="" asp-controller="Posts" asp-action="CreateForProfile">Create New Post</a>
+            <a class="btn mx-1 btn-primary" asp-area="" asp-controller="Friends" asp-action="FriendRequests">Friend Requests</a>
+            <a class="btn mx-1 btn-primary" asp-area="" asp-controller="Friends" asp-action="FriendsList">Friends List</a>
+            <a class="btn mx-1 btn-primary" asp-area="" asp-controller="Pages" asp-action="Create">Create Page</a>
+            <a class="btn mx-1 btn-primary" asp-area="" asp-controller="Pages" asp-action="MyPages">My Pages</a>
+            <a class="btn mx-1 btn-primary" asp-area="Identity" asp-controller="Account" asp-action="Manage">Manage Account</a>
         }
         else
         {
@@ -92,22 +92,24 @@
 </div>
 
 <div class="profile-container">
-    <div class="mx-auto col-md-6">
-        @foreach (var post in Model.Posts.OrderByDescending(x => x.CreatedOn))
-        {
-            <div class="card mt-3">
-                @if (Model.IsOwner)
-                {
-                    <div class="card-header text-right p-1">
-                        <form class="deleteButton" asp-controller="Posts" asp-action="DeleteFromProfile" asp-route-id="@post.Id" method="post">
-                            <button class="btn btn-danger">Delete</button>
-                        </form>
-                    </div>
-                }
-                
-                <partial name="_PostPartial" model="post" />
-            </div>
-        }
+    <div class="container">
+        <div class="mx-auto col-md-8">
+            @foreach (var post in Model.Posts.OrderByDescending(x => x.CreatedOn))
+            {
+                <div class="card mt-3">
+                    @if (Model.IsOwner)
+                    {
+                        <div class="card-header text-right p-1">
+                            <form class="deleteButton" asp-controller="Posts" asp-action="DeleteFromProfile" asp-route-id="@post.Id" method="post">
+                                <button class="btn btn-danger">Delete</button>
+                            </form>
+                        </div>
+                    }
+
+                    <partial name="_PostPartial" model="post" />
+                </div>
+            }
+        </div>
     </div>
 </div>
 

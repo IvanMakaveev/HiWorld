@@ -1,1 +1,68 @@
-﻿
+﻿@using HiWorld.Web.ViewModels.Home;
+@model BrowseViewModel
+@{
+    this.ViewData["Title"] = "Browse";
+}
+
+<div class="row">
+    <div class="col-md-4 mt-2">
+        <h2 class="mb-3">Following:</h2>
+        @if (Model.Following.Count() > 0)
+        {
+            @foreach (var link in Model.Following)
+            {
+                <div class="media mb-3 border-box row">
+                    @if (link.ImagePath != null)
+                    {
+                        @if (link.IsProfile)
+                        {
+                            <img src="/img/users/@link.ImagePath" class="align-self-start rounded-circle d-block media-image" alt="Profile Image">
+                        }
+                        else
+                        {
+                            <img src="/img/pages/@link.ImagePath" class="align-self-start rounded-circle d-block media-image" alt="Profile Image">
+                        }
+                    }
+                    else
+                    {
+                        <img src="/img/pages/@GlobalConstants.DefaultImage" class="align-self-start rounded-circle d-block media-image" alt="Profile Image">
+
+                    }
+                    <div class="media-body ml-3 mt-1">
+                        <h5 class="mt-0">@link.Name</h5>
+                    </div>
+                    <div class="mr-auto align-self-center mt-1">
+                        @if (link.IsProfile)
+                        {
+                            <a class="btn btn-success" asp-controller="Profiles" asp-action="ById" asp-route-id="@link.Id">View</a>
+                        }
+                        else
+                        {
+                            <a class="btn btn-success" asp-controller="Pages" asp-action="ById" asp-route-id="@link.Id">View</a>
+                        }
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <h5>You aren't following anyone</h5>
+        }
+    </div>
+    <div class="col-md-8">
+        <h1 class="text-right">Newest posts</h1>
+        @if (Model.Posts.Count() > 0)
+        {
+            @foreach (var post in Model.Posts)
+            {
+                <div class="card mt-3">
+                    <partial name="_PostPartial" model="post" />
+                </div>
+            }
+        }
+        else
+        {
+            <h5 class="text-right">No posts to show. Follow some people and come back!</h5>
+        }
+    </div>
+</div>

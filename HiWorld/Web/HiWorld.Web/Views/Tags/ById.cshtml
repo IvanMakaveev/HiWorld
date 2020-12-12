@@ -4,39 +4,53 @@
     this.ViewData["Title"] = $"Tagged - {Model.Name}";
 }
 
-<h1>Results for tag - @Model.Name</h1>
-<div class="container row">
-    <div class="col-md-7">
-        <h2>Posts:</h2>
-        @foreach (var post in Model.Posts)
+<h1 class="text-center">Results for tag - @Model.Name</h1>
+<div class="row">
+    <div class="col-md-4">
+        <h2 class="mb-3">Pages:</h2>
+        @if (Model.Pages.Count() > 0)
         {
-            <div class="card mt-3">
-                <partial name="_PostPartial" model="post" />
-            </div>
+            @foreach (var userPage in Model.Pages)
+            {
+                <div class="media mb-2 border-box row">
+                    @if (userPage.ImagePath != null)
+                    {
+                        <img src="/img/pages/@userPage.ImagePath" class="align-self-start rounded-circle d-block media-image" alt="Profile Image">
+                    }
+                    else
+                    {
+                        <img src="/img/pages/@GlobalConstants.DefaultImage" class="align-self-start rounded-circle d-block media-image" alt="Profile Image">
+
+                    }
+                    <div class="media-body ml-3 mt-1">
+                        <h5 class="mt-0">@userPage.Name</h5>
+                        <p>@userPage.Description</p>
+                    </div>
+                    <div class="mr-auto align-self-center mt-1">
+                        <a class="btn btn-success" asp-controller="Pages" asp-action="ById" asp-route-id="@userPage.Id">View</a>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <h5>No pages found!</h5>
         }
     </div>
-    <div class="col-md-5">
-        <h2 class="mb-3">Pages:</h2>
-        @foreach (var userPage in Model.Pages)
+    <div class="col-md-8">
+        <h2>Posts:</h2>
+        @if (Model.Posts.Count() > 0)
         {
-            <div class="media border-secondary">
-                @if (userPage.ImagePath != null)
-                {
-                    <img src="/img/pages/@userPage.ImagePath" class="align-self-start rounded-circle d-block media-image" alt="Profile Image">
-                }
-                else
-                {
-                    <img src="/img/pages/@GlobalConstants.DefaultImage" class="align-self-start rounded-circle d-block media-image" alt="Profile Image">
-
-                }
-                <div class="media-body ml-3 mt-1">
-                    <h5 class="mt-0">@userPage.Name</h5>
-                    <p>@userPage.Description</p>
+            @foreach (var post in Model.Posts)
+            {
+                <div class="card mt-3">
+                    <partial name="_PostPartial" model="post" />
                 </div>
-                <div class="mr-auto align-self-center">
-                    <a class="btn btn-success" asp-controller="Pages" asp-action="ById" asp-route-id="@userPage.Id">View</a>
-                </div>
-            </div>
+            }
+        }
+        else
+        {
+            <h5>No posts found!</h5>
         }
     </div>
 </div>

@@ -23,7 +23,7 @@
                 }
                 <div class="media-body ml-3 mt-1">
                     <h5 class="mt-0">@friend.FirstName @friend.LastName</h5>
-                    @friend.CreatedOn.ToShortDateString()
+                    Friends since: @friend.CreatedOn
                 </div>
                 <div class="mr-auto align-self-center">
                     <a class="btn btn-success" asp-controller="Profiles" asp-action="ById" asp-route-id="@friend.FriendId">View Profile</a>

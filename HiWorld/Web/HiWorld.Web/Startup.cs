@@ -76,6 +76,7 @@
             services.AddTransient<IImagesService, ImagesService>();
             services.AddTransient<IPagesService, PagesService>();
             services.AddTransient<IFriendsService, FriendsService>();
+            services.AddTransient<IBrowseService, BrowseService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
