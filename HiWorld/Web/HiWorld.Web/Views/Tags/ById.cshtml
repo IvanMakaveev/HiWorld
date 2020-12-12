@@ -1,0 +1,45 @@
+﻿@using HiWorld.Web.ViewModels.Tags;
+@model TagSearchViewModel
+@{
+    this.ViewData["Title"] = $"Tagged - {Model.Name}";
+}
+
+<h1>Results for tag - @Model.Name</h1>
+<div class="container row">
+    <div class="col-md-7">
+        <h2>Posts:</h2>
+        @foreach (var post in Model.Posts)
+        {
+            <div class="card mt-3">
+                <partial name="_PostPartial" model="post" />
+            </div>
+        }
+    </div>
+    <div class="col-md-5">
+        <h2 class="mb-3">Pages:</h2>
+        @foreach (var userPage in Model.Pages)
+        {
+            <div class="media border-secondary">
+                @if (userPage.ImagePath != null)
+                {
+                    <img src="/img/pages/@userPage.ImagePath" class="align-self-start rounded-circle d-block media-image" alt="Profile Image">
+                }
+                else
+                {
+                    <img src="/img/pages/@GlobalConstants.DefaultImage" class="align-self-start rounded-circle d-block media-image" alt="Profile Image">
+
+                }
+                <div class="media-body ml-3 mt-1">
+                    <h5 class="mt-0">@userPage.Name</h5>
+                    <p>@userPage.Description</p>
+                </div>
+                <div class="mr-auto align-self-center">
+                    <a class="btn btn-success" asp-controller="Pages" asp-action="ById" asp-route-id="@userPage.Id">View</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+@section Scripts{
+    <script src="~/js/posts.js" asp-append-version="true"></script>
+}

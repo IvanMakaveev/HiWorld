@@ -5,6 +5,7 @@
 
     using HiWorld.Data.Common.Repositories;
     using HiWorld.Data.Models;
+    using HiWorld.Services.Mapping;
 
     public class TagsService : ITagsService
     {
@@ -31,6 +32,11 @@
             }
 
             return tag.Id;
+        }
+
+        public T SearchByTag<T>(int id)
+        {
+            return this.tagsRepository.AllAsNoTracking().Where(x => x.Id == id).To<T>().FirstOrDefault();
         }
     }
 }

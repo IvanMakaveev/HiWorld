@@ -5,5 +5,7 @@
     public interface ITagsService
     {
         Task<int> GetIdAsync(string text);
+
+        T SearchByTag<T>(int id);
     }
 }
