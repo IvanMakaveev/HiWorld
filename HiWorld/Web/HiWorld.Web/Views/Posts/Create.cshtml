@@ -2,10 +2,20 @@
 @model CreatePostInputModel
 @{
     ViewData["Title"] = "Create Post";
+    var actionName = string.Empty;
+
+    if (Model.IsProfile)
+    {
+        actionName = "CreateForProfile";
+    }
+    else
+    {
+        actionName = "CreateForPage";
+    }
 }
 
 <h1>@ViewData["Title"]</h1>
-<form method="post" enctype="multipart/form-data">
+<form asp-action="@actionName" method="post" enctype="multipart/form-data">
     <div asp-validation-summary="All" class="text-danger"></div>
     <div class="form-group">
         <label asp-for="Text"></label>
@@ -24,23 +34,17 @@
     </div>
     <input type="hidden" name="ReturnId" value="@Model.ReturnId" />
     <button type="submit" class="btn btn-primary">Create</button>
-    <a asp-controller="Pages" asp-action="ById" asp-route-id="@Model.ReturnId">Cancel</a>
+
+    @if (Model.IsProfile)
+    {
+        <a asp-controller="Profiles" asp-action="ById" asp-route-id="@Model.ReturnId">Cancel</a>
+    }
+    else
+    {
+        <a asp-controller="Pages" asp-action="ById" asp-route-id="@Model.ReturnId">Cancel</a>
+    }
 </form>
 
 @section Scripts{
-    <script>
-        var tagIndex = 0
-        function AddTagField() {
-            $("#TagsContainer")
-                .append("<input type='text' name='Tags[" + tagIndex + "]' class='form-control mt-1'/>");
-
-            tagIndex += 1;
-        }
-        function RemoveTagField() {
-            $("#TagsContainer")
-                .children().last().remove();
-
-            tagIndex -= 1;
-        }
-    </script>
+    <script src="/js/tags.js" current-tags="0"></script>
 }

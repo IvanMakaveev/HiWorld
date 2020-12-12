@@ -50,14 +50,28 @@
             }
         </div>
         <div class="col-md-3">
-            <p><b>Followers: </b>@Model.FollowersCount</p>
+            <p><b>Followers: </b>@Model.PageFollowersCount</p>
+            <p>
+                <b>Tags: </b>
+                @if (Model.PageTags.Count > 0)
+                {
+                    @foreach (var tag in Model.PageTags)
+                    {
+                        <a asp-controller="Tags" asp-action="ById" asp-route-id="@tag.Key">#@tag.Value </a>
+                    }
+                }
+                else
+                {
+                    <text>No tags</text>
+                }
+            </p>
         </div>
     </section>
     <section class="container d-flex flex-row justify-content-around pb-3 mt-2">
         @if (Model.IsOwner)
         {
-            <a class="btn btn-primary" asp-area="" asp-controller="Pages" asp-action="Edit">Edit Page</a>
-            <a class="btn btn-primary" asp-area="" asp-controller="Posts" asp-action="CreateForPage">Create New Post</a>
+            <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model.Id">Edit Page</a>
+            <a class="btn btn-primary" asp-controller="Posts" asp-action="CreateForPage" asp-route-id="@Model.Id">Create New Post</a>
         }
         else
         {

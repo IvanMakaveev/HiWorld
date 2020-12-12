@@ -83,21 +83,18 @@
             return this.followersRepository.All().Any(x => x.ProfileId == profileId && x.FollowerId == accessorId);
         }
 
-        public async Task SendFriendRequestAsync(int profileId, string senderId)
+        public async Task SendFriendRequestAsync(int profileId, int senderId)
         {
-            var senderProfile = this.profileRepository.All().FirstOrDefault(x => x.User.Id == senderId);
-            var recieverProfile = this.profileRepository.All().FirstOrDefault(x => x.Id == profileId);
-
-            if (senderProfile.Id != recieverProfile.Id)
+            if (senderId != profileId)
             {
                 if (!this.friendsRepository.AllAsNoTracking()
-                .Any(x => (x.Profile == senderProfile && x.Friend == recieverProfile)
-                       || (x.Profile == recieverProfile && x.Friend == senderProfile)))
+                .Any(x => (x.ProfileId == senderId && x.FriendId == profileId)
+                       || (x.ProfileId == profileId && x.FriendId == senderId)))
                 {
                     await this.friendsRepository.AddAsync(new ProfileFriend
                     {
-                        Profile = senderProfile,
-                        Friend = recieverProfile,
+                        ProfileId = senderId,
+                        FriendId = profileId,
                         IsAccepted = false,
                     });
 
@@ -106,20 +103,17 @@
             }
         }
 
-        public async Task FollowProfileAsync(int profileId, string senderId)
+        public async Task FollowProfileAsync(int profileId, int senderId)
         {
-            var senderProfile = this.profileRepository.All().FirstOrDefault(x => x.User.Id == senderId);
-            var recieverProfile = this.profileRepository.All().FirstOrDefault(x => x.Id == profileId);
-
-            if (senderProfile.Id != recieverProfile.Id)
+            if (senderId != profileId)
             {
-                var followRelation = this.followersRepository.All().FirstOrDefault(x => x.Follower == senderProfile && x.Profile == recieverProfile);
+                var followRelation = this.followersRepository.All().FirstOrDefault(x => x.FollowerId == senderId && x.ProfileId == profileId);
                 if (followRelation == null)
                 {
                     await this.followersRepository.AddAsync(new ProfileFollower
                     {
-                        Profile = recieverProfile,
-                        Follower = senderProfile,
+                        ProfileId = profileId,
+                        FollowerId = senderId,
                     });
                 }
                 else
@@ -131,14 +125,11 @@
             }
         }
 
-        public async Task RemoveFriendAsync(int profileId, string senderId)
+        public async Task RemoveFriendAsync(int profileId, int senderId)
         {
-            var senderProfile = this.profileRepository.All().FirstOrDefault(x => x.User.Id == senderId);
-            var recieverProfile = this.profileRepository.All().FirstOrDefault(x => x.Id == profileId);
-
             var friendship = this.friendsRepository.All()
-                .FirstOrDefault(x => (x.Profile == senderProfile && x.Friend == recieverProfile)
-                       || (x.Profile == recieverProfile && x.Friend == senderProfile));
+                .FirstOrDefault(x => (x.ProfileId == senderId && x.FriendId == profileId)
+                       || (x.ProfileId == profileId && x.FriendId == senderId));
 
             if (friendship != null)
             {
@@ -185,25 +176,29 @@
 
         public async Task UpdateAsync(string id, EditProfileInputModel input, string path)
         {
-            this.ValidateCountryId(input.CountryId);
-
-            var gender = this.GetGender(input.Gender);
-
             var profile = this.profileRepository.All().FirstOrDefault(x => x.User.Id == id);
-            profile.FirstName = input.FirstName;
-            profile.LastName = input.LastName;
-            profile.Gender = gender;
-            profile.BirthDate = input.BirthDate;
-            profile.About = input.About;
-            profile.CountryId = input.CountryId;
 
-            if (input.Image != null && input.Image.Length > 0)
+            if (profile != null)
             {
-                profile.ImageId = await this.imagesService.Create(input.Image, path);
-            }
+                this.ValidateCountryId(input.CountryId);
 
-            this.profileRepository.Update(profile);
-            await this.profileRepository.SaveChangesAsync();
+                var gender = this.GetGender(input.Gender);
+
+                profile.FirstName = input.FirstName;
+                profile.LastName = input.LastName;
+                profile.Gender = gender;
+                profile.BirthDate = input.BirthDate;
+                profile.About = input.About;
+                profile.CountryId = input.CountryId;
+
+                if (input.Image != null && input.Image.Length > 0)
+                {
+                    profile.ImageId = await this.imagesService.Create(input.Image, path);
+                }
+
+                this.profileRepository.Update(profile);
+                await this.profileRepository.SaveChangesAsync();
+            }
         }
 
         public IEnumerable<T> GetFriendRequests<T>(string userId)

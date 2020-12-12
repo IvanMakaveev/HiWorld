@@ -50,7 +50,7 @@
             <p class="card-text">
                 @comment.Text
             </p>
-            <p class="card-text"><small class="text-muted">Created on: @comment.CreatedOn.ToString("dd/MM/yyyy HH:mm")</small></p>
+            <p class="card-text"><small class="text-muted">Created on: @comment.CreatedOnString</small></p>
             <form class="likeCommentButton" liked="@(comment.IsLiked?"true":"false")" asp-controller="Comments" asp-action="Like" asp-route-id="@comment.Id" method="post">
                 @if (!comment.IsLiked)
                 {

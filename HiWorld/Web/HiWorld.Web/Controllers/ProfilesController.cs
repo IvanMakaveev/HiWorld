@@ -11,6 +11,7 @@
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
 
+    [Authorize]
     public class ProfilesController : Controller
     {
         private readonly IProfilesService profilesService;
@@ -33,7 +34,6 @@
             this.webHost = webHost;
         }
 
-        [Authorize]
         public IActionResult ById(int id)
         {
             var viewModel = this.profilesService.GetById<DisplayProfileViewModel>(id);
@@ -65,40 +65,39 @@
             return this.View(viewModel);
         }
 
-        [Authorize]
         [HttpPost]
         public async Task<IActionResult> AddFriend(int id)
         {
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var profileId = this.profilesService.GetId(userId);
 
-            await this.profilesService.SendFriendRequestAsync(id, userId);
+            await this.profilesService.SendFriendRequestAsync(id, profileId);
 
             return this.RedirectToAction(nameof(this.ById), new { id });
         }
 
-        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Follow(int id)
         {
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var profileId = this.profilesService.GetId(userId);
 
-            await this.profilesService.FollowProfileAsync(id, userId);
+            await this.profilesService.FollowProfileAsync(id, profileId);
 
             return this.RedirectToAction(nameof(this.ById), new { id });
         }
 
-        [Authorize]
         [HttpPost]
         public async Task<IActionResult> RemoveFriend(int id)
         {
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var profileId = this.profilesService.GetId(userId);
 
-            await this.profilesService.RemoveFriendAsync(id, userId);
+            await this.profilesService.RemoveFriendAsync(id, profileId);
 
             return this.RedirectToAction(nameof(this.ById), new { id });
         }
 
-        [Authorize]
         [HttpPost]
         public async Task<IActionResult> DenyFriend(int id)
         {
@@ -107,7 +106,6 @@
             return this.RedirectToAction(nameof(this.FriendRequests));
         }
 
-        [Authorize]
         [HttpPost]
         public async Task<IActionResult> AcceptFriend(int id)
         {
@@ -116,7 +114,6 @@
             return this.RedirectToAction(nameof(this.FriendRequests));
         }
 
-        [Authorize]
         public IActionResult Edit()
         {
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -127,9 +124,8 @@
             return this.View(inputModel);
         }
 
-        [Authorize]
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, EditProfileInputModel input)
+        public async Task<IActionResult> Edit(EditProfileInputModel input)
         {
             if (!this.ModelState.IsValid)
             {
@@ -150,7 +146,7 @@
                 return this.View(input);
             }
 
-            return this.RedirectToAction(nameof(this.ById), new { id });
+            return this.RedirectToAction(nameof(this.ById), new { input.Id });
         }
 
         public IActionResult FriendRequests()

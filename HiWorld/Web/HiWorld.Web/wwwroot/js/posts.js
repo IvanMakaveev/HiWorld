@@ -1,4 +1,30 @@
-﻿$('.likeButton').submit(function (event) {
+﻿var likeCommentFunction = function (event) {
+    event.preventDefault();
+    var antiForgeryToken = $(this).find('input[name=__RequestVerificationToken]').val();
+    var form = $(this);
+    $.ajax({
+        type: 'POST',
+        url: form.attr('action'),
+        headers: {
+            'X-CSRF-TOKEN': antiForgeryToken
+        },
+        success: function (data) {
+            if (form.attr('liked') === "false") {
+                form.attr('liked', "true")
+                form.find("button").removeClass('btn-outline-primary').addClass('btn-primary').html('Liked <i class="fas fa-heart"></i>');
+                form.find("span").text(parseInt(form.find("span").text()) + 1)
+            }
+            else {
+                form.attr('liked', "false")
+                form.find("button").removeClass('btn-primary').addClass('btn-outline-primary').html('Like <i class="fas fa-heart"></i>');
+                form.find("span").text(parseInt(form.find("span").text()) - 1)
+            }
+        },
+    });
+}
+
+
+$('.likeButton').submit(function (event) {
     event.preventDefault();
     var antiForgeryToken = $(this).find('input[name=__RequestVerificationToken]').val();
     var form = $(this);
@@ -52,37 +78,23 @@ $('.commentButton').submit(function (event) {
             'X-CSRF-TOKEN': antiForgeryToken
         },
         success: function (data) {
-            var id = data.profileId
+            var profileId = data.profileId
+            var id = data.id
             var firstName = data.profileFirstName
             var lastName = data.profileLastName
             var text = data.text
-            form.parent().parent().parent().find('.collapse').append('<div class="card card-body"><a href="/Profiles/ById/' + id + '" class="card-title h5 mb-0 text-dark">' +
-                firstName + ' ' + lastName + '</a><p class="card-text">' + text + '</p></div>')
+            var createdOnString = data.createdOnString
+            var likes = data.likes
+            form.parent().parent().parent().find('.collapse').append('<div class="card card-body"><a href="/Profiles/ById/' + profileId + '" class="card-title h5 mb-0 text-dark align-self-start"">' +
+                firstName + ' ' + lastName + '</a><p class="card-text">' + text + '</p><p class="card-text"><small class="text-muted">Created on: ' +
+                createdOnString + '</small></p><form class="likeCommentButton" liked="false" action="/Comments/Like/' + id + '" method="post"><input name="__RequestVerificationToken" type="hidden" value="' +
+                antiForgeryToken + '"/><button class="btn btn-outline-primary">Like <i class="fas fa-heart"></i></button><span class="ml-1 card-text">' +
+                likes + '</span></form></div>')
+
+            var newForm = form.parent().parent().parent().find('.likeCommentButton')
+            newForm.submit(likeCommentFunction)
         },
     });
 });
 
-$('.likeCommentButton').submit(function (event) {
-    event.preventDefault();
-    var antiForgeryToken = $(this).find('input[name=__RequestVerificationToken]').val();
-    var form = $(this);
-    $.ajax({
-        type: 'POST',
-        url: form.attr('action'),
-        headers: {
-            'X-CSRF-TOKEN': antiForgeryToken
-        },
-        success: function (data) {
-            if (form.attr('liked') === "false") {
-                form.attr('liked', "true")
-                form.find("button").removeClass('btn-outline-primary').addClass('btn-primary').html('Liked <i class="fas fa-heart"></i>');
-                form.find("span").text(parseInt(form.find("span").text()) + 1)
-            }
-            else {
-                form.attr('liked', "false")
-                form.find("button").removeClass('btn-primary').addClass('btn-outline-primary').html('Like <i class="fas fa-heart"></i>');
-                form.find("span").text(parseInt(form.find("span").text()) - 1)
-            }
-        },
-    });
-});
+$('.likeCommentButton').submit(likeCommentFunction);

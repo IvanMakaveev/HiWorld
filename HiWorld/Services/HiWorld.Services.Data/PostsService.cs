@@ -47,6 +47,40 @@
             await this.postsRepository.AddAsync(post);
             await this.postsRepository.SaveChangesAsync();
 
+            if (input.Tags != null && input.Tags.Count() > 0)
+            {
+                foreach (var tag in input.Tags)
+                {
+                    var tagId = await this.tagsService.GetIdAsync(tag);
+                    var postTag = new PostTag()
+                    {
+                        TagId = tagId,
+                        PostId = post.Id,
+                    };
+
+                    await this.postTagsRepository.AddAsync(postTag);
+                }
+
+                await this.postTagsRepository.SaveChangesAsync();
+            }
+        }
+
+        public async Task CreateForPageAsync(int id, CreatePostInputModel input, string path)
+        {
+            var post = new Post()
+            {
+                PageId = id,
+                Text = input.Text,
+            };
+
+            if (input.Image != null && input.Image.Length > 0)
+            {
+                post.ImageId = await this.imagesService.Create(input.Image, path);
+            }
+
+            await this.postsRepository.AddAsync(post);
+            await this.postsRepository.SaveChangesAsync();
+
             foreach (var tag in input.Tags)
             {
                 var tagId = await this.tagsService.GetIdAsync(tag);

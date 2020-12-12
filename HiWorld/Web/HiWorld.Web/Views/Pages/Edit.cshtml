@@ -1,7 +1,7 @@
 ﻿@using HiWorld.Web.ViewModels.Pages;
-@model CreatePageInputModel
+@model EditPageInputModel
 @{
-    ViewData["Title"] = "Create Page";
+    ViewData["Title"] = "Edit Page";
 }
 
 <h1>@ViewData["Title"]</h1>
@@ -36,12 +36,16 @@
         <label asp-for="Tags"></label>
         <a class="btn btn-outline-success ml-2" onclick="AddTagField()">+</a>
         <a class="btn btn-outline-danger ml-2 px-3" onclick="RemoveTagField()">-</a>
+        @for (var i = 0; i < Model.Tags.Count; i++)
+        {
+            <input type='text' name='Tags[@i]' class='form-control mt-1' value="@Model.Tags[i]"/>
+        }
     </div>
-    <input type="hidden" name="ReturnId" value="@Model.ReturnId" />
-    <button type="submit" class="btn btn-primary">Create</button>
-    <a asp-controller="Profiles" asp-action="ById" asp-route-id="@Model.ReturnId">Cancel</a>
+    <input type="hidden" name="ReturnId" value="@Model.Id" />
+    <button type="submit" class="btn btn-primary">Edit</button>
+    <a asp-controller="Pages" asp-action="ById" asp-route-id="@Model.Id">Cancel</a>
 </form>
 
 @section Scripts{
-    <script src="/js/tags.js" current-tags="0"></script>
+    <script src="/js/tags.js" current-tags="@Model.Tags.Count"></script>
 }

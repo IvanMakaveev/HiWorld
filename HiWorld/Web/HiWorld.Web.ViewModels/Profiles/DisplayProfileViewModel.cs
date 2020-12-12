@@ -13,16 +13,16 @@
     {
         public int Id { get; set; }
 
-        [NotMapped]
+        [IgnoreMap]
         public bool IsOwner { get; set; }
 
-        [NotMapped]
+        [IgnoreMap]
         public bool IsFriend { get; set; }
 
-        [NotMapped]
+        [IgnoreMap]
         public bool IsPending { get; set; }
 
-        [NotMapped]
+        [IgnoreMap]
         public bool IsFollowing { get; set; }
 
         public string FirstName { get; set; }

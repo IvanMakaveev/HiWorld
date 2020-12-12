@@ -12,10 +12,16 @@
 
         IEnumerable<T> GetForId<T>(int id);
 
-        Task<int> Create(int profileId, CreatePageInputModel input, string path);
+        Task<int> CreateAsync(int profileId, CreatePageInputModel input, string path);
 
         bool IsOwner(int profileId, int pageId);
 
+        bool IsOwner(string userId, int pageId);
+
         bool IsFollowing(int profileId, int pageId);
+
+        Task FollowPageAsync(int profileId, int pageId);
+
+        Task UpdateAsync(EditPageInputModel input, string path);
     }
 }

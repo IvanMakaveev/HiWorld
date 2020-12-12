@@ -24,8 +24,11 @@
 
         public DateTime CreatedOn { get; set; }
 
-        [NotMapped]
+        [IgnoreMap]
         public bool IsLiked { get; set; }
+
+        [IgnoreMap]
+        public string CreatedOnString => this.CreatedOn.ToString("dd/MM/yyyy HH:mm");
 
         public void CreateMappings(IProfileExpression configuration)
         {

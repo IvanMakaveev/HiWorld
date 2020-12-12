@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
-
+    using System.Linq;
     using AutoMapper;
     using HiWorld.Data.Models;
     using HiWorld.Services.Mapping;
@@ -12,10 +12,10 @@
     {
         public int Id { get; set; }
 
-        [NotMapped]
+        [IgnoreMap]
         public bool IsOwner { get; set; }
 
-        [NotMapped]
+        [IgnoreMap]
         public bool IsFollowing { get; set; }
 
         public string Name { get; set; }
@@ -28,15 +28,19 @@
 
         public string ImagePath { get; set; }
 
-        public int FollowersCount { get; set; }
+        public int PageFollowersCount { get; set; }
 
         public List<PostViewModel> Posts { get; set; }
 
+        public ICollection<KeyValuePair<int, string>> PageTags { get; set; }
+
         public void CreateMappings(IProfileExpression configuration)
         {
-            configuration.CreateMap<Data.Models.Profile, DisplayPageViewModel>()
+            configuration.CreateMap<Page, DisplayPageViewModel>()
                 .ForMember(x => x.ImagePath, opt =>
-                    opt.MapFrom(x => x.Image == null ? null : $"{x.Image.Id}.{x.Image.Extension}"));
+                    opt.MapFrom(x => x.Image == null ? null : $"{x.Image.Id}.{x.Image.Extension}"))
+                .ForMember(x => x.PageTags, opt =>
+                    opt.MapFrom(x => x.PageTags.Select(tag => new KeyValuePair<int, string>(tag.Tag.Id, tag.Tag.Name)).ToList()));
         }
     }
 }

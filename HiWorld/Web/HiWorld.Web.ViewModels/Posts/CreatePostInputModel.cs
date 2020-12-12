@@ -19,5 +19,7 @@
         public IFormFile Image { get; set; }
 
         public IEnumerable<string> Tags { get; set; }
+
+        public bool IsProfile { get; set; }
     }
 }

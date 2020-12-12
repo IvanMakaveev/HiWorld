@@ -1,5 +1,6 @@
 ﻿namespace HiWorld.Web.Controllers
 {
+    using System;
     using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
@@ -48,7 +49,7 @@
 
             if (!viewModel.IsOwner)
             {
-                viewModel.IsFollowing = this.pagesService.IsFollowing(id, profileId);
+                viewModel.IsFollowing = this.pagesService.IsFollowing(profileId, id);
             }
 
             viewModel.Posts.ForEach(x => x.IsLiked = this.postsService.IsLiked(x.Id, profileId));
@@ -58,7 +59,6 @@
             return this.View(viewModel);
         }
 
-        [Authorize]
         public IActionResult Create()
         {
             var userid = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -70,7 +70,6 @@
             return this.View(viewModel);
         }
 
-        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Create(CreatePageInputModel input)
         {
@@ -82,9 +81,9 @@
             var userid = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var profileId = this.profilesService.GetId(userid);
 
-            await this.pagesService.Create(profileId, input, $"{this.webHost.WebRootPath}/img/pages");
+            var pageId = await this.pagesService.CreateAsync(profileId, input, $"{this.webHost.WebRootPath}/img/pages");
 
-            return this.RedirectToAction(nameof(this.ById), new { id = input.ReturnId });
+            return this.RedirectToAction(nameof(this.ById), new { id = pageId });
         }
 
         public IActionResult MyPages()
@@ -95,6 +94,53 @@
             var viewModel = this.pagesService.GetForId<PageInfoViewModel>(profileId);
 
             return this.View(viewModel);
+        }
+
+        public IActionResult Edit(int id)
+        {
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var isOwner = this.pagesService.IsOwner(userId, id);
+
+            if (isOwner)
+            {
+                var inputModel = this.pagesService.GetById<EditPageInputModel>(id);
+
+                return this.View(inputModel);
+            }
+
+            return this.BadRequest();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(EditPageInputModel input)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View(input);
+            }
+
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var isOwner = this.pagesService.IsOwner(userId, input.Id);
+
+            if (isOwner)
+            {
+                await this.pagesService.UpdateAsync(input, $"{this.webHost.WebRootPath}/img/pages");
+
+                return this.RedirectToAction(nameof(this.ById), new { input.Id });
+            }
+
+            return this.BadRequest();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Follow(int id)
+        {
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var profileId = this.profilesService.GetId(userId);
+
+            await this.pagesService.FollowPageAsync(profileId, id);
+
+            return this.RedirectToAction(nameof(this.ById), new { id });
         }
     }
 }

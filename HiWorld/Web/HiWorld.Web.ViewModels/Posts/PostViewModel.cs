@@ -27,7 +27,7 @@
 
         public DateTime CreatedOn { get; set; }
 
-        [NotMapped]
+        [IgnoreMap]
         public bool IsLiked { get; set; }
 
         public int Likes { get; set; }
@@ -38,7 +38,7 @@
         {
             configuration.CreateMap<Post, PostViewModel>()
                 .ForMember(x => x.OwnerName, opt =>
-                    opt.MapFrom(x => x.Profile != null ? $"{x.Profile.FirstName}.{x.Profile.LastName}" : $"{x.Page.Name}"))
+                    opt.MapFrom(x => x.Profile != null ? $"{x.Profile.FirstName} {x.Profile.LastName}" : $"{x.Page.Name}"))
                 .ForMember(x => x.OwnerId, opt =>
                     opt.MapFrom(x => x.ProfileId != null ? x.ProfileId : x.PageId))
                 .ForMember(x => x.IsProfilePost, opt =>

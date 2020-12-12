@@ -8,6 +8,7 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
+    [Authorize]
     public class CommentsController : Controller
     {
         private readonly IProfilesService profilesService;
@@ -21,8 +22,6 @@
             this.commentsService = commentsService;
         }
 
-
-        [Authorize]
         [HttpPost]
         public async Task Like(int id)
         {
