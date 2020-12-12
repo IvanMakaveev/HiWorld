@@ -17,6 +17,8 @@
 
         public int OwnerId { get; set; }
 
+        public string OwnerImage { get; set; }
+
         public bool IsProfilePost { get; set; }
 
         public string Text { get; set; }
@@ -41,6 +43,10 @@
                     opt.MapFrom(x => x.Profile != null ? $"{x.Profile.FirstName} {x.Profile.LastName}" : $"{x.Page.Name}"))
                 .ForMember(x => x.OwnerId, opt =>
                     opt.MapFrom(x => x.ProfileId != null ? x.ProfileId : x.PageId))
+                .ForMember(x => x.OwnerImage, opt =>
+                    opt.MapFrom(x => x.ProfileId != null ?
+                        x.Profile.Image != null ? $"{x.Profile.Image.Id}.{x.Profile.Image.Extension}" : null :
+                        x.Page.Image != null ? $"{x.Page.Image.Id}.{x.Page.Image.Extension}" : null))
                 .ForMember(x => x.IsProfilePost, opt =>
                     opt.MapFrom(x => x.ProfileId != null ? true : false))
                 .ForMember(x => x.ImagePath, opt =>

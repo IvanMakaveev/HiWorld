@@ -22,6 +22,8 @@
 
         Task FollowPageAsync(int profileId, int pageId);
 
+        Task DeleteAsync(int pageId);
+
         Task UpdateAsync(EditPageInputModel input, string path);
     }
 }

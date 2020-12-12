@@ -164,5 +164,16 @@
                 await this.pagesRepository.SaveChangesAsync();
             }
         }
+
+        public async Task DeleteAsync(int pageId)
+        {
+            var page = this.pagesRepository.All().Where(x => x.Id == pageId).FirstOrDefault();
+
+            if (page != null)
+            {
+                this.pagesRepository.Delete(page);
+                await this.pagesRepository.SaveChangesAsync();
+            }
+        }
     }
 }

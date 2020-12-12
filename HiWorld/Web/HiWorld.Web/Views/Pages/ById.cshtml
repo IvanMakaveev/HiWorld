@@ -71,6 +71,9 @@
         @if (Model.IsOwner)
         {
             <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model.Id">Edit Page</a>
+            <form asp-action="Delete" asp-route-id="@Model.Id" method="post">
+                <button class="btn btn-danger">Delete</button>
+            </form>
             <a class="btn btn-primary" asp-controller="Posts" asp-action="CreateForPage" asp-route-id="@Model.Id">Create New Post</a>
         }
         else

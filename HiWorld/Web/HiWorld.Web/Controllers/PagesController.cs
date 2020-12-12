@@ -142,5 +142,21 @@
 
             return this.RedirectToAction(nameof(this.ById), new { id });
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var isOwner = this.pagesService.IsOwner(userId, id);
+
+            if (isOwner)
+            {
+                await this.pagesService.DeleteAsync(id);
+
+                return this.RedirectToAction(nameof(this.MyPages));
+            }
+
+            return this.BadRequest();
+        }
     }
 }

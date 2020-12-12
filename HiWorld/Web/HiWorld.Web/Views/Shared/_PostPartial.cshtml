@@ -1,21 +1,49 @@
 ﻿@model HiWorld.Web.ViewModels.Posts.PostViewModel
 
 <div class="card-body">
-    @if (Model.IsProfilePost)
-    {
-        <a asp-controller="Profiles" asp-action="ById" asp-route-id="@Model.OwnerId" class="card-title h5 text-dark">@Model.OwnerName</a>
-    }
-    else
-    {
-        <a asp-controller="Pages" asp-action="ById" asp-route-id="@Model.OwnerId" class="card-title h5 text-dark">@Model.OwnerName</a>
-    }
-    <p class="card-text">
-        @Model.Text
-        @foreach (var tag in Model.PostTags)
-        {
-            <a asp-controller="Tags" asp-action="ById" asp-route-id="@tag.Key">#@tag.Value</a>
-        }
-    </p>
+    <div class="row pl-3 flex-nowrap">
+        <div class="mr-3">
+            @if (Model.IsProfilePost)
+            {
+                @if (Model.OwnerImage == null)
+                {
+                    <img src="/img/users/@GlobalConstants.DefaultImage" class="align-self-start rounded-circle d-block media-image" alt="Profile Image">
+                }
+                else
+                {
+                    <img src="/img/users/@Model.OwnerImage" class="align-self-start rounded-circle d-block media-image" alt="Profile Image">
+                }
+            }
+            else
+            {
+                @if (Model.OwnerImage == null)
+                {
+                    <img src="/img/pages/@GlobalConstants.DefaultImage" class="align-self-start rounded-circle d-block media-image" alt="Profile Image">
+                }
+                else
+                {
+                    <img src="/img/pages/@Model.OwnerImage" class="align-self-start rounded-circle d-block media-image" alt="Profile Image">
+                }
+            }
+        </div>
+        <div class="align-self-center">
+            @if (Model.IsProfilePost)
+            {
+                <a asp-controller="Profiles" asp-action="ById" asp-route-id="@Model.OwnerId" class="card-title h5 text-dark">@Model.OwnerName</a>
+            }
+            else
+            {
+                <a asp-controller="Pages" asp-action="ById" asp-route-id="@Model.OwnerId" class="card-title h5 text-dark">@Model.OwnerName</a>
+            }
+            <p class="card-text">
+                @Model.Text
+                @foreach (var tag in Model.PostTags)
+                {
+                    <a asp-controller="Tags" asp-action="ById" asp-route-id="@tag.Key">#@tag.Value</a>
+                }
+            </p>
+        </div>
+    </div>
     <p class="card-text"><small class="text-muted">Created on: @Model.CreatedOn.ToString("dd/MM/yyyy HH:mm")</small></p>
 </div>
 @if (Model.ImagePath != null)

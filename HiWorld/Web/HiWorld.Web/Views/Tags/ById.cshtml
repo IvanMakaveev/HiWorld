@@ -13,20 +13,21 @@
             @foreach (var userPage in Model.Pages)
             {
                 <div class="media mb-2 border-box row">
-                    @if (userPage.ImagePath != null)
-                    {
-                        <img src="/img/pages/@userPage.ImagePath" class="align-self-start rounded-circle d-block media-image" alt="Profile Image">
-                    }
-                    else
-                    {
-                        <img src="/img/pages/@GlobalConstants.DefaultImage" class="align-self-start rounded-circle d-block media-image" alt="Profile Image">
-
-                    }
-                    <div class="media-body ml-3 mt-1">
-                        <h5 class="mt-0">@userPage.Name</h5>
-                        <p>@userPage.Description</p>
+                    <div class="row mx-0 flex-nowrap">
+                        @if (userPage.ImagePath != null)
+                        {
+                            <img src="/img/pages/@userPage.ImagePath" class="align-self-center rounded-circle d-block media-image" alt="Profile Image">
+                        }
+                        else
+                        {
+                            <img src="/img/pages/@GlobalConstants.DefaultImage" class="align-self-center rounded-circle d-block media-image" alt="Profile Image">
+                        }
+                        <div class="media-body ml-3 mt-2 align-self-stretch">
+                            <h5 class="mt-0">@userPage.Name</h5>
+                            <p class="text-break">@userPage.Description</p>
+                        </div>
                     </div>
-                    <div class="mr-auto align-self-center mt-1">
+                    <div class="ml-auto mr-2 align-self-center">
                         <a class="btn btn-success" asp-controller="Pages" asp-action="ById" asp-route-id="@userPage.Id">View</a>
                     </div>
                 </div>
