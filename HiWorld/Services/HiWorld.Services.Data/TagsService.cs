@@ -1,5 +1,6 @@
 ﻿namespace HiWorld.Services.Data
 {
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -34,9 +35,37 @@
             return tag.Id;
         }
 
-        public T SearchByTag<T>(int id)
+        public string GetName(int id)
         {
-            return this.tagsRepository.AllAsNoTracking().Where(x => x.Id == id).To<T>().FirstOrDefault();
+            return this.tagsRepository.AllAsNoTracking().Where(x => x.Id == id).Select(x => x.Name).FirstOrDefault();
+        }
+
+        public IEnumerable<T> SearchPagesByTag<T>(int id)
+        {
+            return this.tagsRepository.AllAsNoTracking()
+                .Where(x => x.Id == id)
+                .SelectMany(x => x.PageTags.Select(x => x.Page))
+                .To<T>()
+                .ToList();
+        }
+
+        public IEnumerable<T> SearchPostsByTag<T>(int id, int pageNumber, int count = 20)
+        {
+            return this.tagsRepository.AllAsNoTracking()
+                .Where(x => x.Id == id)
+                .SelectMany(x => x.PostTags.Select(x => x.Post))
+                .OrderByDescending(x => x.CreatedOn)
+                .Skip((pageNumber - 1) * count)
+                .Take(count)
+                .To<T>()
+                .ToList();
+        }
+
+        public int SearchPostsByTagCount(int id)
+        {
+            return this.tagsRepository.AllAsNoTracking()
+                .Where(x => x.Id == id)
+                .SelectMany(x => x.PostTags.Select(x => x.Post)).Count();
         }
     }
 }

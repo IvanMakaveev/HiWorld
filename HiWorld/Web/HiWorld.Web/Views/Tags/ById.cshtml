@@ -42,18 +42,44 @@
         <h2>Posts:</h2>
         @if (Model.Posts.Count() > 0)
         {
-            @foreach (var post in Model.Posts)
-            {
-                <div class="card mt-3">
-                    <partial name="_PostPartial" model="post" />
-                </div>
-            }
+            <vc:posts model="Model.Posts"></vc:posts>
         }
         else
         {
             <h5>No posts found!</h5>
         }
     </div>
+
+    <nav class="mx-auto mt-5">
+        <ul class="pagination justify-content-center">
+            <li class="page-item @if (!Model.HasPreviousPage) { <text>disabled</text> } ">
+                <a class="page-link" asp-action="ById" asp-route-id="@Model.Id" asp-route-pagenumber="@Model.PreviousPageNumber">Previous</a>
+            </li>
+            @for (int i = Model.PageNumber - 3; i < Model.PageNumber; i++)
+            {
+                @if (i > 0)
+                {
+                    <li class="page-item"><a class="page-link" asp-action="ById" asp-route-id="@Model.Id" asp-route-pagenumber="@i">@i</a></li>
+                }
+            }
+            <li class="page-item active" aria-current="page">
+                <span class="page-link">
+                    @Model.PageNumber
+                    <span class="sr-only">(current)</span>
+                </span>
+            </li>
+            @for (int i = Model.PageNumber + 1; i < Model.PageNumber + 4; i++)
+            {
+                @if (i <= Model.PagesCount)
+                {
+                    <li class="page-item"><a class="page-link" asp-action="ById" asp-route-id="@Model.Id" asp-route-pagenumber="@i">@i</a></li>
+                }
+            }
+            <li class="page-item @if (!Model.HasNextPage) { <text>disabled</text> }">
+                <a class="page-link" asp-action="ById" asp-route-id="@Model.Id" asp-route-pagenumber="@Model.NextPageNumber">Next</a>
+            </li>
+        </ul>
+    </nav>
 </div>
 @section Scripts{
     <script src="~/js/posts.js" asp-append-version="true"></script>

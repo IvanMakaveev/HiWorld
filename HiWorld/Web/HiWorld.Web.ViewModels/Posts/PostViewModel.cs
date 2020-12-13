@@ -13,6 +13,9 @@
     {
         public int Id { get; set; }
 
+        [IgnoreMap]
+        public bool IsOwner { get; set; }
+
         public string OwnerName { get; set; }
 
         public int OwnerId { get; set; }

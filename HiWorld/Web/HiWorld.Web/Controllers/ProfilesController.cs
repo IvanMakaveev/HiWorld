@@ -6,6 +6,8 @@
     using System.Threading.Tasks;
 
     using HiWorld.Services.Data;
+    using HiWorld.Web.ViewModels;
+    using HiWorld.Web.ViewModels.Posts;
     using HiWorld.Web.ViewModels.Profiles;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Hosting;
@@ -34,7 +36,7 @@
             this.webHost = webHost;
         }
 
-        public IActionResult ById(int id)
+        public IActionResult ById(int id, int pageNumber = 1)
         {
             var viewModel = this.profilesService.GetById<DisplayProfileViewModel>(id);
 
@@ -43,6 +45,9 @@
                 return this.NotFound();
             }
 
+            pageNumber = pageNumber < 1 ? 1 : pageNumber;
+
+            viewModel.Posts = this.postsService.GetProfilePosts<PostViewModel>(id, pageNumber);
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var profileId = this.profilesService.GetId(userId);
             viewModel.IsOwner = profileId == id;
@@ -58,9 +63,14 @@
                 }
             }
 
-            viewModel.Posts.ForEach(x => x.IsLiked = this.postsService.IsLiked(x.Id, profileId));
-            viewModel.Posts.ForEach(x => x.Comments.ForEach(y => y.IsLiked = this.commentsService.IsLiked(y.Id, profileId)));
-            viewModel.Posts.ForEach(x => x.Comments.OrderByDescending(x => x.CreatedOn));
+            var totalPosts = this.postsService.GetProfileTotalPosts(id);
+
+            viewModel.Paging = new PagingViewModel
+            {
+                Items = totalPosts,
+                ItemsPerPage = 20,
+                PageNumber = pageNumber,
+            };
 
             return this.View(viewModel);
         }

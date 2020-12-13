@@ -52,21 +52,44 @@ namespace HiWorld.Services.Data
             return pages.Concat(profiles);
         }
 
-        public IEnumerable<T> GetNewestPosts<T>(int profileId)
+        public IEnumerable<T> GetNewestPosts<T>(int profileId, int pageNumber, int count = 20)
         {
             var postsFromPages = this.profileRepository.AllAsNoTracking()
                 .Where(x => x.Id == profileId)
                 .SelectMany(x => x.PageFollows
-                    .SelectMany(x => x.Page.Posts)).To<T>()
+                    .SelectMany(x => x.Page.Posts))
+                .OrderByDescending(x => x.CreatedOn)
+                .Skip((pageNumber - 1) * count)
+                .Take(count)
+                .To<T>()
                 .ToList();
 
             var postsFromProfiles = this.profileRepository.AllAsNoTracking()
                 .Where(x => x.Id == profileId)
                 .SelectMany(x => x.Following
-                    .SelectMany(x => x.Profile.Posts)).To<T>()
+                    .SelectMany(x => x.Profile.Posts))
+                .OrderByDescending(x => x.CreatedOn)
+                .Skip((pageNumber - 1) * count)
+                .Take(count)
+                .To<T>()
                 .ToList();
 
             return postsFromPages.Concat(postsFromProfiles);
+        }
+
+        public int GetPostsCount(int profileId)
+        {
+            var postsFromPages = this.profileRepository.AllAsNoTracking()
+                .Where(x => x.Id == profileId)
+                .SelectMany(x => x.PageFollows
+                    .SelectMany(x => x.Page.Posts)).Count();
+
+            var postsFromProfiles = this.profileRepository.AllAsNoTracking()
+                .Where(x => x.Id == profileId)
+                .SelectMany(x => x.Following
+                    .SelectMany(x => x.Profile.Posts)).Count();
+
+            return postsFromPages + postsFromProfiles;
         }
     }
 }

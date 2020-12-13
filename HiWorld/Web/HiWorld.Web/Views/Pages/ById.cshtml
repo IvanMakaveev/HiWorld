@@ -95,22 +95,41 @@
 </div>
 
 <div class="profile-container">
-    <div class="mx-auto col-md-8">
-        @foreach (var post in Model.Posts.OrderByDescending(x => x.CreatedOn))
-        {
-            <div class="card mt-3">
-                @if (Model.IsOwner)
-                {
-                    <div class="card-header text-right p-1">
-                        <form class="deleteButton" asp-controller="Posts" asp-action="DeleteFromProfile" asp-route-id="@post.Id" method="post">
-                            <button class="btn btn-danger">Delete</button>
-                        </form>
-                    </div>
-                }
+    <div class="container">
+        <div class="mx-auto col-md-8">
+            <vc:posts model="Model.Posts"></vc:posts>
+        </div>
 
-                <partial name="_PostPartial" model="post" />
-            </div>
-        }
+        <nav class="mx-auto mt-5">
+            <ul class="pagination justify-content-center">
+                <li class="page-item @if (!Model.Paging.HasPreviousPage) { <text>disabled</text> } ">
+                    <a class="page-link" asp-action="ById" asp-route-id="@Model.Id" asp-route-pagenumber="@Model.Paging.PreviousPageNumber">Previous</a>
+                </li>
+                @for (int i = Model.Paging.PageNumber - 3; i < Model.Paging.PageNumber; i++)
+                {
+                    @if (i > 0)
+                    {
+                        <li class="page-item"><a class="page-link" asp-action="ById" asp-route-id="@Model.Id" asp-route-pagenumber="@i">@i</a></li>
+                    }
+                }
+                <li class="page-item active" aria-current="page">
+                    <span class="page-link">
+                        @Model.Paging.PageNumber
+                        <span class="sr-only">(current)</span>
+                    </span>
+                </li>
+                @for (int i = Model.Paging.PageNumber + 1; i < Model.Paging.PageNumber + 4; i++)
+                {
+                    @if (i <= Model.Paging.PagesCount)
+                    {
+                        <li class="page-item"><a class="page-link" asp-action="ById" asp-route-id="@Model.Id" asp-route-pagenumber="@i">@i</a></li>
+                    }
+                }
+                <li class="page-item @if (!Model.Paging.HasNextPage) { <text>disabled</text> }">
+                    <a class="page-link" asp-action="ById" asp-route-id="@Model.Id" asp-route-pagenumber="@Model.Paging.NextPageNumber">Next</a>
+                </li>
+            </ul>
+        </nav>
     </div>
 </div>
 

@@ -1,4 +1,6 @@
 ﻿using HiWorld.Services.Data;
+using HiWorld.Web.ViewModels.Pages;
+using HiWorld.Web.ViewModels.Posts;
 using HiWorld.Web.ViewModels.Tags;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -27,20 +29,27 @@ namespace HiWorld.Web.Controllers
             this.profilesService = profilesService;
         }
 
-        public IActionResult ById(int id)
+        public IActionResult ById(int id, int pageNumber = 1)
         {
-            var viewModel = this.tagsService.SearchByTag<TagSearchViewModel>(id);
-            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var profileId = this.profilesService.GetId(userId);
+            var name = this.tagsService.GetName(id);
 
-            if (viewModel == null)
+            if (name == null)
             {
                 return this.NotFound();
             }
 
-            viewModel.Posts.ForEach(x => x.IsLiked = this.postsService.IsLiked(x.Id, profileId));
-            viewModel.Posts.ForEach(x => x.Comments.ForEach(y => y.IsLiked = this.commentsService.IsLiked(y.Id, profileId)));
-            viewModel.Posts.ForEach(x => x.Comments.OrderByDescending(x => x.CreatedOn));
+            pageNumber = pageNumber < 1 ? 1 : pageNumber;
+
+            var viewModel = new TagSearchViewModel()
+            {
+                Id = id,
+                Name = name,
+                Pages = this.tagsService.SearchPagesByTag<PageInfoViewModel>(id),
+                Posts = this.tagsService.SearchPostsByTag<PostViewModel>(id, pageNumber),
+                Items = this.tagsService.SearchPostsByTagCount(id),
+                ItemsPerPage = 20,
+                PageNumber = pageNumber,
+            };
 
             return this.View(viewModel);
         }

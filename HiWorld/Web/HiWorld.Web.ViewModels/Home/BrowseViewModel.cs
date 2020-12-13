@@ -6,7 +6,7 @@
 
     using HiWorld.Web.ViewModels.Posts;
 
-    public class BrowseViewModel
+    public class BrowseViewModel : PagingViewModel
     {
         public IEnumerable<ProfileFollowingViewModel> Following { get; set; }
 

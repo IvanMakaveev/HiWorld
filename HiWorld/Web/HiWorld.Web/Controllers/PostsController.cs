@@ -108,5 +108,17 @@
 
             await this.postsService.DeletePostFromProfileAsync(profileId, id);
         }
+
+        [HttpPost]
+        public async Task DeleteFromPage(int id, int pageId)
+        {
+            var userid = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var profileId = this.profilesService.GetId(userid);
+
+            if (this.pagesService.IsOwner(profileId, pageId))
+            {
+                await this.postsService.DeletePostFromPageAsync(profileId, id);
+            }
+        }
     }
 }

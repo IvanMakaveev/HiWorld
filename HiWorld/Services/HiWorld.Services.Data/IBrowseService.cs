@@ -5,8 +5,10 @@
 
     public interface IBrowseService
     {
-        IEnumerable<T> GetNewestPosts<T>(int profileId);
+        IEnumerable<T> GetNewestPosts<T>(int profileId, int pageNumber, int count = 20);
 
         IEnumerable<ProfileFollowingViewModel> GetFollowing(int profileId);
+
+        int GetPostsCount(int profileId);
     }
 }

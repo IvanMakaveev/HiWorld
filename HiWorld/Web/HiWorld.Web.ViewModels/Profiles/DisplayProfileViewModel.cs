@@ -43,7 +43,11 @@
 
         public int FollowersCount { get; set; }
 
-        public List<PostViewModel> Posts { get; set; }
+        [IgnoreMap]
+        public IEnumerable<PostViewModel> Posts { get; set; }
+
+        [IgnoreMap]
+        public PagingViewModel Paging { get; set; }
 
         public void CreateMappings(IProfileExpression configuration)
         {

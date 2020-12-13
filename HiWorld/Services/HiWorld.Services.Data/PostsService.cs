@@ -1,5 +1,6 @@
 ﻿namespace HiWorld.Services.Data
 {
+    using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
@@ -49,19 +50,7 @@
 
             if (input.Tags != null && input.Tags.Count() > 0)
             {
-                foreach (var tag in input.Tags)
-                {
-                    var tagId = await this.tagsService.GetIdAsync(tag);
-                    var postTag = new PostTag()
-                    {
-                        TagId = tagId,
-                        PostId = post.Id,
-                    };
-
-                    await this.postTagsRepository.AddAsync(postTag);
-                }
-
-                await this.postTagsRepository.SaveChangesAsync();
+                await this.AddTagsToPost(post.Id, input.Tags);
             }
         }
 
@@ -81,17 +70,9 @@
             await this.postsRepository.AddAsync(post);
             await this.postsRepository.SaveChangesAsync();
 
-            foreach (var tag in input.Tags)
+            if (input.Tags != null && input.Tags.Count() > 0)
             {
-                var tagId = await this.tagsService.GetIdAsync(tag);
-                var postTag = new PostTag()
-                {
-                    TagId = tagId,
-                    PostId = post.Id,
-                };
-
-                await this.postTagsRepository.AddAsync(postTag);
-                await this.postTagsRepository.SaveChangesAsync();
+                await this.AddTagsToPost(post.Id, input.Tags);
             }
         }
 
@@ -103,6 +84,27 @@
                 this.postsRepository.Delete(post);
                 await this.postsRepository.SaveChangesAsync();
             }
+        }
+
+        public async Task DeletePostFromPageAsync(int pageId, int id)
+        {
+            var post = this.postsRepository.All().Where(x => x.Id == id).FirstOrDefault();
+            if (post != null && post.PageId == pageId)
+            {
+                this.postsRepository.Delete(post);
+                await this.postsRepository.SaveChangesAsync();
+            }
+        }
+
+        public async Task DeleteAllPostsFromPage(int pageId)
+        {
+            var posts = this.postsRepository.All().Where(x => x.PageId == pageId).ToList();
+            foreach (var post in posts)
+            {
+                this.postsRepository.Delete(post);
+            }
+
+            await this.postsRepository.SaveChangesAsync();
         }
 
         public async Task LikePostAsync(int profileId, int id)
@@ -129,6 +131,68 @@
         public bool IsLiked(int postId, int accessorId)
         {
             return this.postLikesRepository.AllAsNoTracking().Any(x => x.PostId == postId && x.ProfileId == accessorId);
+        }
+
+        public IEnumerable<T> GetProfilePosts<T>(int profileId, int pageNumber, int count = 20)
+        {
+            return this.postsRepository.AllAsNoTracking()
+                .Where(x => x.ProfileId == profileId)
+                .OrderByDescending(x => x.CreatedOn)
+                .Skip((pageNumber - 1) * count)
+                .Take(count)
+                .To<T>()
+                .ToList();
+        }
+
+        public IEnumerable<T> GetPagePosts<T>(int pageId, int pageNumber, int count = 20)
+        {
+            return this.postsRepository.AllAsNoTracking()
+                .Where(x => x.PageId == pageId)
+                .OrderByDescending(x => x.CreatedOn)
+                .Skip((pageNumber - 1) * count)
+                .Take(count)
+                .To<T>()
+                .ToList();
+        }
+
+        public int GetProfileTotalPosts(int profileId)
+        {
+            return this.postsRepository.AllAsNoTracking()
+                .Where(x => x.ProfileId == profileId).Count();
+        }
+
+        public int GetPageTotalPosts(int pageId)
+        {
+            return this.postsRepository.AllAsNoTracking()
+                .Where(x => x.PageId == pageId).Count();
+        }
+
+        public bool IsOwner(int postId, bool isProfile, int accessorId)
+        {
+            if (isProfile)
+            {
+                return this.postsRepository.AllAsNoTracking().Where(x => x.Id == postId).FirstOrDefault()?.ProfileId == accessorId;
+            }
+            else
+            {
+                return this.postsRepository.AllAsNoTracking().Where(x => x.Id == postId).FirstOrDefault()?.PageId == accessorId;
+            }
+        }
+
+        private async Task AddTagsToPost(int postId, IEnumerable<string> tags)
+        {
+            foreach (var tag in tags)
+            {
+                var tagId = await this.tagsService.GetIdAsync(tag);
+                var postTag = new PostTag()
+                {
+                    TagId = tagId,
+                    PostId = postId,
+                };
+
+                await this.postTagsRepository.AddAsync(postTag);
+                await this.postTagsRepository.SaveChangesAsync();
+            }
         }
     }
 }

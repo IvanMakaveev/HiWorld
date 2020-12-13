@@ -18,15 +18,18 @@
         private readonly ITagsService tagsService;
         private readonly IRepository<PageTag> pageTagsRepository;
         private readonly IImagesService imagesService;
+        private readonly IPostsService postsService;
 
         public PagesService(
             IDeletableEntityRepository<Page> pagesRepository,
+            IPostsService postsService,
             IRepository<PageFollower> followersRepository,
             ITagsService tagsService,
             IRepository<PageTag> pageTagsRepository,
             IImagesService imagesService)
         {
             this.pagesRepository = pagesRepository;
+            this.postsService = postsService;
             this.followersRepository = followersRepository;
             this.tagsService = tagsService;
             this.pageTagsRepository = pageTagsRepository;
@@ -171,6 +174,8 @@
 
             if (page != null)
             {
+                await this.postsService.DeleteAllPostsFromPage(pageId);
+
                 this.pagesRepository.Delete(page);
                 await this.pagesRepository.SaveChangesAsync();
             }
