@@ -1,0 +1,115 @@
+﻿@using HiWorld.Web.ViewModels.Home;
+@model SearchViewModel
+@{
+    this.ViewData["Title"] = "Search";
+}
+
+<div class="row">
+    <div class="col-md-2 mt-2">
+        <h2 class="mb-3">Profiles</h2>
+        @if (Model.Profiles.Count() > 0)
+        {
+            @foreach (var profile in Model.Profiles)
+            {
+                <div class="media mb-3 border-box row">
+                    <div class="row mx-0 flex-nowrap">
+
+                        @if (profile.ImagePath != null)
+                        {
+                            <img src="/img/users/@profile.ImagePath" class="align-self-center rounded-circle d-block media-image" alt="Profile Image">
+                        }
+                        else
+                        {
+                            <img src="/img/users/@GlobalConstants.DefaultImage" class="align-self-center rounded-circle d-block media-image" alt="Profile Image">
+                        }
+                        <div class="media-body ml-3 mt-1 align-self-center">
+                            <h5 class="mt-0">@profile.FirstName @profile.LastName </h5>
+                        </div>
+                    </div>
+                    <div class="align-self-center ml-auto">
+                        <a class="btn btn-success" asp-controller="Profiles" asp-action="ById" asp-route-id="@profile.Id">View</a>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <h5>No profiles to show</h5>
+        }
+    </div>
+    <div class="col-md-8">
+        <h1 class="text-center">Posts</h1>
+        @if (Model.Posts.Count() > 0)
+        {
+            <vc:posts model="Model.Posts"></vc:posts>
+        }
+        else
+        {
+            <h5 class="text-center mt-2">No posts to show</h5>
+        }
+    </div>
+    <div class="col-md-2 mt-2">
+        <h2 class="mb-3">Pages</h2>
+        @if (Model.Pages.Count() > 0)
+        {
+            @foreach (var profilePage in Model.Pages)
+            {
+                <div class="media mb-3 border-box row">
+                    <div class="row mx-0 flex-nowrap mr-1">
+
+                        @if (profilePage.ImagePath != null)
+                        {
+                            <img src="/img/pages/@profilePage.ImagePath" class="align-self-center rounded-circle d-block media-image" alt="Profile Image">
+                        }
+                        else
+                        {
+                            <img src="/img/users/@GlobalConstants.DefaultImage" class="align-self-center rounded-circle d-block media-image" alt="Profile Image">
+                        }
+                        <div class="media-body ml-3 mt-1 align-self-center">
+                            <h5 class="mt-0">@profilePage.Name</h5>
+                        </div>
+                    </div>
+                    <div class="align-self-center ml-auto">
+                        <a class="btn btn-success" asp-controller="Page" asp-action="ById" asp-route-id="@profilePage.Id">View</a>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <h5>No pages to show</h5>
+        }
+    </div>
+
+
+    <nav class="mx-auto mt-5">
+        <ul class="pagination justify-content-center">
+            <li class="page-item @if (!Model.HasPreviousPage) { <text>disabled</text> } ">
+                <a class="page-link" asp-action="Search" asp-route-searchtext="@Model.SearchText" asp-route-id="@Model.PreviousPageNumber">Previous</a>
+            </li>
+            @for (int i = Model.PageNumber - 3; i < Model.PageNumber; i++)
+            {
+                @if (i > 0)
+                {
+                    <li class="page-item"><a class="page-link" asp-action="Search" asp-route-searchtext="@Model.SearchText" asp-route-id="@i">@i</a></li>
+                }
+            }
+            <li class="page-item active" aria-current="page">
+                <span class="page-link">
+                    @Model.PageNumber
+                    <span class="sr-only">(current)</span>
+                </span>
+            </li>
+            @for (int i = Model.PageNumber + 1; i < Model.PageNumber + 4; i++)
+            {
+                @if (i <= Model.PagesCount)
+                {
+                    <li class="page-item"><a class="page-link" asp-action="Search" asp-route-searchtext="@Model.SearchText" asp-route-id="@i">@i</a></li>
+                }
+            }
+            <li class="page-item @if (!Model.HasNextPage) { <text>disabled</text> }">
+                <a class="page-link" asp-action="Search" asp-route-searchtext="@Model.SearchText" asp-route-id="@Model.NextPageNumber">Next</a>
+            </li>
+        </ul>
+    </nav>
+</div>

@@ -4,6 +4,7 @@ using HiWorld.Web.ViewModels.Posts;
 using HiWorld.Web.ViewModels.Tags;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Linq;
 using System.Security.Claims;
 
@@ -44,9 +45,9 @@ namespace HiWorld.Web.Controllers
             {
                 Id = id,
                 Name = name,
-                Pages = this.tagsService.SearchPagesByTag<PageInfoViewModel>(id),
+                Pages = this.tagsService.SearchPagesByTag<PageInfoViewModel>(id, pageNumber),
                 Posts = this.tagsService.SearchPostsByTag<PostViewModel>(id, pageNumber),
-                Items = this.tagsService.SearchPostsByTagCount(id),
+                Items = Math.Max(this.tagsService.SearchPostsByTagCount(id), this.tagsService.SearchPagesByTagCount(id)),
                 ItemsPerPage = 20,
                 PageNumber = pageNumber,
             };

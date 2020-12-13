@@ -76,5 +76,24 @@
 
             return this.View(viewModel);
         }
+
+        [Authorize]
+        public IActionResult Search(string searchText, int id)
+        {
+            id = id < 1 ? 1 : id;
+
+            var viewModel = new SearchViewModel()
+            {
+                Posts = this.browseService.SearchPosts<PostViewModel>(searchText, id),
+                Pages = this.browseService.SearchPages<PageSearchViewModel>(searchText, id),
+                Profiles = this.browseService.SearchProfiles<ProfileSearchViewModel>(searchText, id),
+                PageNumber = id,
+                ItemsPerPage = 20,
+                Items = this.browseService.GetSearchCount(searchText),
+                SearchText = searchText,
+            };
+
+            return this.View(viewModel);
+        }
     }
 }

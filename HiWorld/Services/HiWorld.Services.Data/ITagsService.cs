@@ -9,10 +9,12 @@
 
         string GetName(int id);
 
-        IEnumerable<T> SearchPagesByTag<T>(int id);
+        IEnumerable<T> SearchPagesByTag<T>(int id, int pageNumber, int count = 20);
 
         IEnumerable<T> SearchPostsByTag<T>(int id, int pageNumber, int count = 20);
 
         int SearchPostsByTagCount(int id);
+
+        int SearchPagesByTagCount(int id);
     }
 }

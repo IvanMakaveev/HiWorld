@@ -40,13 +40,23 @@
             return this.tagsRepository.AllAsNoTracking().Where(x => x.Id == id).Select(x => x.Name).FirstOrDefault();
         }
 
-        public IEnumerable<T> SearchPagesByTag<T>(int id)
+        public IEnumerable<T> SearchPagesByTag<T>(int id, int pageNumber, int count = 20)
         {
             return this.tagsRepository.AllAsNoTracking()
                 .Where(x => x.Id == id)
                 .SelectMany(x => x.PageTags.Select(x => x.Page))
+                .OrderByDescending(x => x.PageFollowers.Count)
+                .Skip((pageNumber - 1) * count)
+                .Take(count)
                 .To<T>()
                 .ToList();
+        }
+
+        public int SearchPagesByTagCount(int id)
+        {
+            return this.tagsRepository.AllAsNoTracking()
+                .Where(x => x.Id == id)
+                .SelectMany(x => x.PageTags.Select(x => x.Page)).Count();
         }
 
         public IEnumerable<T> SearchPostsByTag<T>(int id, int pageNumber, int count = 20)

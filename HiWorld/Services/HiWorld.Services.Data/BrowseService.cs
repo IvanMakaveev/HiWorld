@@ -11,16 +11,22 @@ namespace HiWorld.Services.Data
 {
     public class BrowseService : IBrowseService
     {
-        private readonly IDeletableEntityRepository<Profile> profileRepository;
+        private readonly IDeletableEntityRepository<Page> pageRepository;
+        private readonly IDeletableEntityRepository<Post> postsRepository;
+        private readonly IDeletableEntityRepository<Profile> profilesRepository;
         private readonly IRepository<ProfileFollower> profileFollowersRepository;
         private readonly IRepository<PageFollower> pageFollowersRepository;
 
         public BrowseService(
+            IDeletableEntityRepository<Page> pageRepository,
+            IDeletableEntityRepository<Post> postRepository,
             IDeletableEntityRepository<Profile> profileRepository,
             IRepository<ProfileFollower> profileFollowersRepository,
             IRepository<PageFollower> pageFollowersRepository)
         {
-            this.profileRepository = profileRepository;
+            this.pageRepository = pageRepository;
+            this.postsRepository = postRepository;
+            this.profilesRepository = profileRepository;
             this.profileFollowersRepository = profileFollowersRepository;
             this.pageFollowersRepository = pageFollowersRepository;
         }
@@ -54,7 +60,7 @@ namespace HiWorld.Services.Data
 
         public IEnumerable<T> GetNewestPosts<T>(int profileId, int pageNumber, int count = 20)
         {
-            var postsFromPages = this.profileRepository.AllAsNoTracking()
+            var postsFromPages = this.profilesRepository.AllAsNoTracking()
                 .Where(x => x.Id == profileId)
                 .SelectMany(x => x.PageFollows
                     .SelectMany(x => x.Page.Posts))
@@ -64,7 +70,7 @@ namespace HiWorld.Services.Data
                 .To<T>()
                 .ToList();
 
-            var postsFromProfiles = this.profileRepository.AllAsNoTracking()
+            var postsFromProfiles = this.profilesRepository.AllAsNoTracking()
                 .Where(x => x.Id == profileId)
                 .SelectMany(x => x.Following
                     .SelectMany(x => x.Profile.Posts))
@@ -79,17 +85,100 @@ namespace HiWorld.Services.Data
 
         public int GetPostsCount(int profileId)
         {
-            var postsFromPages = this.profileRepository.AllAsNoTracking()
+            var postsFromPages = this.profilesRepository.AllAsNoTracking()
                 .Where(x => x.Id == profileId)
                 .SelectMany(x => x.PageFollows
                     .SelectMany(x => x.Page.Posts)).Count();
 
-            var postsFromProfiles = this.profileRepository.AllAsNoTracking()
+            var postsFromProfiles = this.profilesRepository.AllAsNoTracking()
                 .Where(x => x.Id == profileId)
                 .SelectMany(x => x.Following
                     .SelectMany(x => x.Profile.Posts)).Count();
 
             return postsFromPages + postsFromProfiles;
+        }
+
+        public int GetSearchCount(string searchText)
+        {
+            var searchTokens = searchText.ToLower().Split(" ", StringSplitOptions.RemoveEmptyEntries);
+
+            var pagesCountResults = 0;
+            var postsCountResults = 0;
+            var profilesCountResults = 0;
+
+            foreach (var search in searchTokens)
+            {
+                pagesCountResults += this.pageRepository.AllAsNoTracking()
+                    .Where(x => x.Name.ToLower().Contains(search)).Count();
+
+                postsCountResults += this.postsRepository.AllAsNoTracking()
+                    .Where(x => x.Text.ToLower().Contains(search)).Count();
+
+                profilesCountResults += this.profilesRepository.AllAsNoTracking()
+                    .Where(x => x.FirstName.ToLower().Contains(search) || x.LastName.ToLower().Contains(search)).Count();
+            }
+
+            return Math.Max(Math.Max(pagesCountResults, postsCountResults), profilesCountResults);
+        }
+
+        public IEnumerable<T> SearchPages<T>(string searchText, int pageNumber, int count = 20)
+        {
+            var searchTokens = searchText.ToLower().Split(" ", StringSplitOptions.RemoveEmptyEntries);
+
+            var results = new List<T>();
+
+            foreach (var search in searchTokens)
+            {
+                results.AddRange(this.pageRepository.AllAsNoTracking()
+                .Where(x => x.Name.ToLower().Contains(search))
+                .OrderByDescending(x => x.CreatedOn)
+                .Skip((pageNumber - 1) * count)
+                .Take(count)
+                .To<T>()
+                .ToList());
+            }
+
+            return results;
+        }
+
+        public IEnumerable<T> SearchPosts<T>(string searchText, int pageNumber, int count = 20)
+        {
+            var searchTokens = searchText.ToLower().Split(" ", StringSplitOptions.RemoveEmptyEntries);
+
+            var results = new List<T>();
+
+            foreach (var search in searchTokens)
+            {
+                results.AddRange(this.postsRepository.AllAsNoTracking()
+                .Where(x => x.Text.ToLower().Contains(search))
+                .OrderByDescending(x => x.CreatedOn)
+                .Skip((pageNumber - 1) * count)
+                .Take(count)
+                .To<T>()
+                .ToList());
+            }
+
+            return results;
+        }
+
+        public IEnumerable<T> SearchProfiles<T>(string searchText, int pageNumber, int count = 20)
+        {
+            var searchTokens = searchText.ToLower().Split(" ", StringSplitOptions.RemoveEmptyEntries);
+
+            var results = new List<T>();
+
+            foreach (var search in searchTokens)
+            {
+                results.AddRange(this.profilesRepository.AllAsNoTracking()
+                .Where(x => x.FirstName.ToLower().Contains(search) || x.LastName.ToLower().Contains(search))
+                .OrderByDescending(x => x.CreatedOn)
+                .Skip((pageNumber - 1) * count)
+                .Take(count)
+                .To<T>()
+                .ToList());
+            }
+
+            return results;
         }
     }
 }
