@@ -42,4 +42,8 @@
     <ProjectReference Include="..\HiWorld.Web.Infrastructure\HiWorld.Web.Infrastructure.csproj" />
     <ProjectReference Include="..\HiWorld.Web.ViewModels\HiWorld.Web.ViewModels.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\img\groups\" />
+  </ItemGroup>
 </Project>

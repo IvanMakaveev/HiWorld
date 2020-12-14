@@ -26,7 +26,7 @@
         public string Phone { get; set; }
 
         [ImageValidation]
-        [Display(Name = "Profile Picture")]
+        [Display(Name = "Page Picture")]
         public IFormFile Image { get; set; }
 
         public int ReturnId { get; set; }

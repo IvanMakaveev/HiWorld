@@ -1,0 +1,47 @@
+﻿@using HiWorld.Web.ViewModels.Groups;
+@model InviteFriendsViewModel
+@{
+    ViewData["Title"] = "Friends you can invite";
+}
+
+<div class="offset-md-1 col-md-10">
+    @if (Model.Friends.Count() > 0)
+    {
+        <h1 class="mb-3">@ViewData["Title"]</h1>
+        @foreach (var friend in Model.Friends)
+        {
+
+            <div class="media mt-1">
+                @if (friend.ImagePath != null)
+                {
+                    <img src="/img/users/@friend.ImagePath" class="align-self-start rounded-circle d-block media-image" alt="Profile Image">
+                }
+                else
+                {
+                    <img src="/img/users/@GlobalConstants.DefaultImage" class="align-self-start rounded-circle d-block media-image" alt="Profile Image">
+
+                }
+                <div class="media-body ml-3 mt-1">
+                    <h5 class="mt-0">@friend.FirstName @friend.LastName</h5>
+                </div>
+                <div class="mr-auto align-self-center row">
+                    @if (friend.IsInGroup)
+                    {
+                        <span class="btn btn-secondary">Already in Group</span>
+                    }
+                    else
+                    {
+                        <form method="post" asp-action="AddMember" asp-route-id="@Model.Id" asp-route-profileId="@friend.FriendId">
+                            <button class="btn btn-primary">Add</button>
+                        </form>
+                    }
+                    <a class="btn btn-success ml-1" asp-controller="Profiles" asp-action="ById" asp-route-id="@friend.FriendId">View Profile</a>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <h2 class="mt-5 text-center">You don't have any friends that you can invite.</h2>
+    }
+</div>

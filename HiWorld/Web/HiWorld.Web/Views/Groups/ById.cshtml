@@ -1,0 +1,125 @@
+﻿@using HiWorld.Web.ViewModels.Groups;
+@model GroupViewModel
+@{
+    this.ViewData["Title"] = $"{Model.Name}";
+}
+
+<div class="col-md-12">
+    <h1 class="mb-3">@ViewData["Title"]</h1>
+    <div id="messageBox" class="overflow-auto container messages-window px-0">
+        @foreach (var message in Model.Messages.OrderBy(x => x.CreatedOn))
+        {
+            <div class="@if (message.ProfileId == Model.ProfileId) { <text>offset-md-6 text-right</text> } col-md-6">
+                <input type="hidden" class="messageId" id="@message.Id" value="@message.Id" />
+                <a class="ml-2" asp-controller="Profiles" asp-action="ById" asp-route-id="@message.ProfileId">
+                    <small class="text-muted">From: @message.ProfileFirstName @message.ProfileLastName</small>
+                </a>
+                @if (Model.IsAdmin || message.ProfileId == Model.ProfileId)
+                {
+                    <button class="deleteButton btn btn-sm btn-danger mx-2 mb-1">Delete</button>
+                }
+                <p class="mb-0 message @if (message.ProfileId == Model.ProfileId) { <text>personal-message</text> } text-break">@message.Text</p>
+                <small class="text-muted ml-2">Created on: @message.CreatedOnString</small>
+            </div>
+        }
+    </div>
+    <div>
+        <div class="input-group mb-3 row mx-0">
+            <input id="message" type="text" class="form-control" placeholder="Message...">
+            <div class="input-group-append">
+                <button class="input-group-text btn btn-dark" id="sendButton">
+                    Send
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        var connection =
+            new signalR.HubConnectionBuilder()
+                .withUrl("/chat")
+                .build();
+
+        function deleteElement() {
+            var groupId = Number.parseInt('@Model.Id');
+            var messageId = $(this).parent().find('.messageId').val();
+            connection.invoke("Delete", groupId, Number.parseInt(messageId)).catch(function (err) {
+                return console.error(err.toString());
+            });
+        }
+
+        connection.on("RecieveMessage",
+            function (messageModel) {
+                var currentProfileId = Number.parseInt('@Model.ProfileId');
+                var isAdmin = '@Model.IsAdmin';
+
+                var message = `An unexpected Error has occured`;
+
+                if (currentProfileId == messageModel.profileId) {
+                    message =
+                        `<div class="offset-md-6 text-right col-md-6">
+                            <input type="hidden" class="messageId" id="${messageModel.id}" value="${messageModel.id}" />
+                            <a class="ml-2" asp-controller="Profiles" asp-action="ById" asp-route-id="${messageModel.profileId}">
+                                <small class="text-muted">From: ${messageModel.profileFirstName} ${messageModel.profileLastName}</small>
+                            </a>
+                            <button class="deleteButton btn btn-sm btn-danger mx-2 mb-1">Delete</button>
+                            <p class="mb-0 message personal-message text-break">${messageModel.text}</p>
+                            <small class="text-muted ml-2">Created on: ${messageModel.createdOnString}</small>
+                        </div>`;
+                }
+                else if (isAdmin == "true") {
+                    message =
+                        `<div class="col-md-6">
+                            <input type="hidden" class="messageId" id="${messageModel.id}" value="${messageModel.id}" />
+                            <a class="ml-2" asp-controller="Profiles" asp-action="ById" asp-route-id="${messageModel.profileId}">
+                                <small class="text-muted">From: ${messageModel.profileFirstName} ${messageModel.profileLastName}</small>
+                            </a>
+                            <button class="deleteButton btn btn-sm btn-danger mx-2 mb-1">Delete</button>
+                            <p class="mb-0 message text-break">${messageModel.text}</p>
+                            <small class="text-muted ml-2">Created on: ${messageModel.createdOnString}</small>
+                        </div>`;
+                }
+                else {
+                    message =
+                        `<div class="col-md-6">
+                            <input type="hidden" class="messageId" id="${messageModel.id}" value="${messageModel.id}" />
+                            <a class="ml-2" asp-controller="Profiles" asp-action="ById" asp-route-id="${messageModel.profileId}">
+                                <small class="text-muted">From: ${messageModel.profileFirstName} ${messageModel.profileLastName}</small>
+                            </a>
+                            <p class="mb-0 message text-break">${messageModel.text}</p>
+                            <small class="text-muted ml-2">Created on: ${messageModel.createdOnString}</small>
+                        </div>`;
+                }
+
+
+                $("#messageBox").append(message);
+                $(`#${messageModel.id}`).parent().find('.deleteButton').click(deleteElement);
+            });
+
+        connection.on("DeleteMessage",
+            function (messageId) {
+                $(`#${messageId}`).parent().remove();
+            });
+
+        $(".deleteButton").click(deleteElement);
+
+        $("#sendButton").click(function () {
+            var message = escapeHtml($("#message").val());
+            var groupId = Number.parseInt('@Model.Id');
+            connection.invoke("Send", groupId, message).catch(function (err) {
+                return console.error(err.toString());
+            });
+        });
+
+        connection.start().then(function () {
+            var groupId = Number.parseInt('@Model.Id');
+            connection.invoke("ConnectToChat", groupId).catch(function (err) {
+                return console.error(err.toString());
+            });
+        }).catch(function (err) {
+            return console.error(err.toString());
+        });
+    </script>
+}

@@ -99,7 +99,7 @@
             var userid = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var profileId = this.profilesService.GetId(userid);
 
-            var viewModel = this.pagesService.GetForId<PageInfoViewModel>(profileId);
+            var viewModel = this.pagesService.GetProfilePages<PageInfoViewModel>(profileId);
 
             return this.View(viewModel);
         }

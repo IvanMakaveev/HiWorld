@@ -80,9 +80,9 @@
             return this.pagesRepository.AllAsNoTracking().Where(x => x.Id == id).To<T>().FirstOrDefault();
         }
 
-        public IEnumerable<T> GetForId<T>(int id)
+        public IEnumerable<T> GetProfilePages<T>(int profileId)
         {
-            return this.pagesRepository.AllAsNoTracking().Where(x => x.ProfileId == id).To<T>().ToList();
+            return this.pagesRepository.AllAsNoTracking().Where(x => x.ProfileId == profileId).To<T>().ToList();
         }
 
         public bool IsFollowing(int profileId, int pageId)

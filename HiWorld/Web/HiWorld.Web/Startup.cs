@@ -11,6 +11,7 @@
     using HiWorld.Services.Data;
     using HiWorld.Services.Mapping;
     using HiWorld.Services.Messaging;
+    using HiWorld.Web.Hubs;
     using HiWorld.Web.ViewModels;
 
     using Microsoft.AspNetCore.Builder;
@@ -59,6 +60,8 @@
                 opt.HeaderName = "X-CSRF-TOKEN";
             });
 
+            services.AddSignalR();
+
             services.AddSingleton(this.configuration);
 
             // Data repositories
@@ -77,6 +80,8 @@
             services.AddTransient<IPagesService, PagesService>();
             services.AddTransient<IFriendsService, FriendsService>();
             services.AddTransient<IBrowseService, BrowseService>();
+            services.AddTransient<IGroupsService, GroupsService>();
+            services.AddTransient<IMessagesService, MessagesService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -115,6 +120,7 @@
             app.UseEndpoints(
                 endpoints =>
                     {
+                        endpoints.MapHub<ChatHub>("/chat");
                         endpoints.MapControllerRoute("areaRoute", "{area:exists}/{controller=Home}/{action=Index}/{id?}");
                         endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
                         endpoints.MapRazorPages();

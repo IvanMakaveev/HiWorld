@@ -164,3 +164,18 @@ body {
 .media-image {
     max-width:64px;
 }
+
+.message {
+    background: #d2d2d2;
+    padding: 5px 15px;
+    border-radius: 15px;
+}
+
+.personal-message {
+    background: rgb(149, 45, 224);
+    color:white;
+}
+
+.messages-window {
+    height: 70vh;
+}

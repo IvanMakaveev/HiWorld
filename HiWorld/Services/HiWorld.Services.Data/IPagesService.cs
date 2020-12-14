@@ -10,7 +10,7 @@
     {
         T GetById<T>(int id);
 
-        IEnumerable<T> GetForId<T>(int id);
+        IEnumerable<T> GetProfilePages<T>(int profileId);
 
         Task<int> CreateAsync(int profileId, CreatePageInputModel input, string path);
 

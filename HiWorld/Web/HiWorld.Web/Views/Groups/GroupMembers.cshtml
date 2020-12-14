@@ -1,0 +1,64 @@
+﻿@using HiWorld.Web.ViewModels.Groups;
+@model GroupMembersViewModel
+@{
+    ViewData["Title"] = "Group Members";
+}
+
+<div class="offset-md-1 col-md-10">
+    <h1 class="mb-3">@ViewData["Title"]</h1>
+    @if (Model.Members.Count() > 0)
+    {
+        <a class="btn btn-primary btn-block my-3" asp-action="InviteToGroup" asp-route-id="@Model.Id">Add members!</a>
+
+        @foreach (var member in Model.Members)
+        {
+            <div class="media mt-1">
+                @if (member.ImagePath != null)
+                {
+                    <img src="/img/users/@member.ImagePath" class="align-self-start rounded-circle d-block media-image" alt="Profile Image">
+                }
+                else
+                {
+                    <img src="/img/users/@GlobalConstants.DefaultImage" class="align-self-start rounded-circle d-block media-image" alt="Profile Image">
+
+                }
+                <div class="media-body ml-3 mt-1 align-self-center">
+                    <h5 class="mt-0">@member.MemberFirstName @member.MemberLastName</h5>
+                </div>
+                <div class="align-self-center row col-md-8 justify-content-end">
+                    @if (member.IsOwner)
+                    {
+                        <span class="badge badge-primary mr-2 align-self-center">Owner</span>
+                    }
+                    else if (member.IsAdmin)
+                    {
+                        <span class="badge badge-success mr-2 align-self-center">Admin</span>
+                    }
+                    else
+                    {
+                        <span class="badge badge-secondary mr-2 align-self-center">Member</span>
+                    }
+
+                    @if (Model.IsOwner && !member.IsOwner)
+                    {
+                        <form method="post" asp-action="ChangeRole" asp-route-profileId="@member.MemberId" asp-route-id="@Model.Id">
+                            <button class="btn btn-primary ml-1">Change Role</button>
+                        </form>
+                    }
+
+                    @if ((Model.IsOwner && !member.IsOwner) || (Model.IsAdmin && !member.IsOwner && !member.IsAdmin))
+                    {
+                        <form method="post" asp-action="Kick" asp-route-profileId="@member.MemberId" asp-route-id="@Model.Id">
+                            <button class="btn btn-danger ml-1">Kick</button>
+                        </form>
+                    }
+                    <a class="btn btn-success ml-1" asp-controller="Profiles" asp-action="ById" asp-route-id="@member.MemberId">View</a>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <h5>This group does not exist</h5>
+    }
+</div>

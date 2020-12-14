@@ -24,16 +24,6 @@
 }
 
 
-function escapeHtml(unsafe) {
-    return unsafe
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-}
-
-
 $('.likeButton').submit(function (event) {
     event.preventDefault();
     var antiForgeryToken = $(this).find('input[name=__RequestVerificationToken]').val();

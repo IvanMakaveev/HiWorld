@@ -32,7 +32,7 @@
 
         [IgnoreMap]
         [ImageValidation]
-        [Display(Name = "Profile Picture")]
+        [Display(Name = "Page Picture")]
         public IFormFile Image { get; set; }
 
         public IList<string> Tags { get; set; }
