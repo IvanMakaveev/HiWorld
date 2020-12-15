@@ -3,7 +3,7 @@
     using System;
     using System.Security.Claims;
     using System.Threading.Tasks;
-
+    using Ganss.XSS;
     using HiWorld.Services.Data;
     using HiWorld.Web.ViewModels.Posts;
     using Microsoft.AspNetCore.Authorization;
@@ -39,6 +39,9 @@
             {
                 var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var profileId = this.profilesService.GetId(userId);
+
+                var sanitizer = new HtmlSanitizer();
+                input.Text = sanitizer.Sanitize(input.Text);
 
                 var viewModel = await this.commentsService.AddCommentAsync<PostCommentResponceModel>(profileId, input);
                 return viewModel;

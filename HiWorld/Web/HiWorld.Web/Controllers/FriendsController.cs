@@ -58,7 +58,10 @@
         [HttpPost]
         public async Task<IActionResult> DenyFriend(int id)
         {
-            await this.friendsService.DenyFriendshipAsync(id);
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var profileId = this.profilesService.GetId(userId);
+
+            await this.friendsService.DenyFriendshipAsync(id, profileId);
 
             return this.RedirectToAction(nameof(this.FriendRequests));
         }
@@ -66,7 +69,10 @@
         [HttpPost]
         public async Task<IActionResult> AcceptFriend(int id)
         {
-            await this.friendsService.AcceptFriendshipAsync(id);
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var profileId = this.profilesService.GetId(userId);
+
+            await this.friendsService.AcceptFriendshipAsync(id, profileId);
 
             return this.RedirectToAction(nameof(this.FriendRequests));
         }

@@ -12,8 +12,6 @@ namespace HiWorld.Services.Data
 
         bool IsOwner(int messageId, int profileId);
 
-        int GetMessageGroupId(int id);
-
         Task<int> AddMessage(int groupId, int profileId, string text);
 
         T GetById<T>(int id);

@@ -85,10 +85,14 @@
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var isOwner = this.pagesService.IsOwner(userId, input.ReturnId);
 
+            if (isOwner)
+            {
+                await this.postsService.CreateForPageAsync(input.ReturnId, input, $"{this.webHost.WebRootPath}/img/posts");
 
-            await this.postsService.CreateForPageAsync(input.ReturnId, input, $"{this.webHost.WebRootPath}/img/posts");
+                return this.RedirectToAction("ById", "Pages", new { id = input.ReturnId });
+            }
 
-            return this.RedirectToAction("ById", "Pages", new { id = input.ReturnId });
+            return this.BadRequest();
         }
 
         [HttpPost]

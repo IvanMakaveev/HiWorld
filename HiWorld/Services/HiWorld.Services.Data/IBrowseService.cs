@@ -11,12 +11,12 @@
 
         int GetPostsCount(int profileId);
 
-        IEnumerable<T> SearchPosts<T>(string searchText, int pageNumber, int count = 20);
+        IEnumerable<T> SearchPosts<T>(string[] searchTokens, int pageNumber, int count = 20);
 
-        IEnumerable<T> SearchPages<T>(string searchText, int pageNumber, int count = 20);
+        IEnumerable<T> SearchPages<T>(string[] searchTokens, int pageNumber, int count = 20);
 
-        IEnumerable<T> SearchProfiles<T>(string searchText, int pageNumber, int count = 20);
+        IEnumerable<T> SearchProfiles<T>(string[] searchTokens, int pageNumber, int count = 20);
 
-        int GetSearchCount(string searchText);
+        int GetSearchCount(string[] searchTokens);
     }
 }

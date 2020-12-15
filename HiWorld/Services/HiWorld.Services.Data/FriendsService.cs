@@ -53,11 +53,11 @@ namespace HiWorld.Services.Data
             }
         }
 
-        public async Task DenyFriendshipAsync(int id)
+        public async Task DenyFriendshipAsync(int id, int profileId)
         {
             var friendship = this.friendsRepository.All().FirstOrDefault(x => x.Id == id);
 
-            if (friendship != null)
+            if (friendship != null && friendship.FriendId == profileId)
             {
                 this.friendsRepository.Delete(friendship);
 
@@ -65,11 +65,11 @@ namespace HiWorld.Services.Data
             }
         }
 
-        public async Task AcceptFriendshipAsync(int id)
+        public async Task AcceptFriendshipAsync(int id, int profileId)
         {
             var friendship = this.friendsRepository.All().FirstOrDefault(x => x.Id == id);
 
-            if (friendship != null)
+            if (friendship != null && friendship.FriendId == profileId)
             {
                 friendship.IsAccepted = true;
                 this.friendsRepository.Update(friendship);

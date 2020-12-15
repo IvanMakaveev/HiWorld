@@ -1,4 +1,5 @@
-﻿using HiWorld.Services.Data;
+﻿using Ganss.XSS;
+using HiWorld.Services.Data;
 using HiWorld.Web.ViewModels.Groups;
 using Microsoft.AspNetCore.SignalR;
 using System;
@@ -38,6 +39,9 @@ namespace HiWorld.Web.Hubs
 
             if (isMember)
             {
+                var sanitizer = new HtmlSanitizer();
+                message = sanitizer.Sanitize(message);
+
                 var messageId = await this.messagesService.AddMessage(groupId, profileId, message);
                 var messageModel = this.messagesService.GetById<MessageViewModel>(messageId);
                 await this.Clients.Group(groupId.ToString()).SendAsync("RecieveMessage", messageModel);

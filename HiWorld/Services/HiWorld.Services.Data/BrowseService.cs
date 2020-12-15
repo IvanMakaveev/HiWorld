@@ -98,10 +98,8 @@ namespace HiWorld.Services.Data
             return postsFromPages + postsFromProfiles;
         }
 
-        public int GetSearchCount(string searchText)
+        public int GetSearchCount(string[] searchTokens)
         {
-            var searchTokens = searchText.ToLower().Split(" ", StringSplitOptions.RemoveEmptyEntries);
-
             var pagesCountResults = 0;
             var postsCountResults = 0;
             var profilesCountResults = 0;
@@ -121,10 +119,8 @@ namespace HiWorld.Services.Data
             return Math.Max(Math.Max(pagesCountResults, postsCountResults), profilesCountResults);
         }
 
-        public IEnumerable<T> SearchPages<T>(string searchText, int pageNumber, int count = 20)
+        public IEnumerable<T> SearchPages<T>(string[] searchTokens, int pageNumber, int count = 20)
         {
-            var searchTokens = searchText.ToLower().Split(" ", StringSplitOptions.RemoveEmptyEntries);
-
             var results = new List<T>();
 
             foreach (var search in searchTokens)
@@ -141,10 +137,8 @@ namespace HiWorld.Services.Data
             return results;
         }
 
-        public IEnumerable<T> SearchPosts<T>(string searchText, int pageNumber, int count = 20)
+        public IEnumerable<T> SearchPosts<T>(string[] searchTokens, int pageNumber, int count = 20)
         {
-            var searchTokens = searchText.ToLower().Split(" ", StringSplitOptions.RemoveEmptyEntries);
-
             var results = new List<T>();
 
             foreach (var search in searchTokens)
@@ -161,10 +155,8 @@ namespace HiWorld.Services.Data
             return results;
         }
 
-        public IEnumerable<T> SearchProfiles<T>(string searchText, int pageNumber, int count = 20)
+        public IEnumerable<T> SearchProfiles<T>(string[] searchTokens, int pageNumber, int count = 20)
         {
-            var searchTokens = searchText.ToLower().Split(" ", StringSplitOptions.RemoveEmptyEntries);
-
             var results = new List<T>();
 
             foreach (var search in searchTokens)

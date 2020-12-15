@@ -1,5 +1,6 @@
 ﻿namespace HiWorld.Web.Controllers
 {
+    using System;
     using System.Diagnostics;
     using System.Linq;
     using System.Security.Claims;
@@ -82,14 +83,17 @@
         {
             id = id < 1 ? 1 : id;
 
+            var searchTokens = searchText.ToLower().Split(" ", StringSplitOptions.RemoveEmptyEntries);
+
+
             var viewModel = new SearchViewModel()
             {
-                Posts = this.browseService.SearchPosts<PostViewModel>(searchText, id),
-                Pages = this.browseService.SearchPages<PageSearchViewModel>(searchText, id),
-                Profiles = this.browseService.SearchProfiles<ProfileSearchViewModel>(searchText, id),
+                Posts = this.browseService.SearchPosts<PostViewModel>(searchTokens, id),
+                Pages = this.browseService.SearchPages<PageSearchViewModel>(searchTokens, id),
+                Profiles = this.browseService.SearchProfiles<ProfileSearchViewModel>(searchTokens, id),
                 PageNumber = id,
                 ItemsPerPage = 20,
-                Items = this.browseService.GetSearchCount(searchText),
+                Items = this.browseService.GetSearchCount(searchTokens),
                 SearchText = searchText,
             };
 

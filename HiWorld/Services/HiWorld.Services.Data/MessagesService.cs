@@ -49,17 +49,6 @@ namespace HiWorld.Services.Data
             return this.messageRepository.AllAsNoTracking().Where(x => x.Id == id).To<T>().FirstOrDefault();
         }
 
-        public int GetMessageGroupId(int id)
-        {
-            var message = this.messageRepository.AllAsNoTracking().Where(x => x.Id == id).FirstOrDefault();
-            if (message != null)
-            {
-                return message.Id;
-            }
-
-            return 0;
-        }
-
         public bool IsOwner(int messageId, int profileId)
         {
             return this.messageRepository.AllAsNoTracking().Any(x => x.Id == messageId && x.ProfileId == profileId);
