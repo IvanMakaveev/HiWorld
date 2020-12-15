@@ -69,7 +69,7 @@
                             <small class="text-muted ml-2">Created on: ${messageModel.createdOnString}</small>
                         </div>`;
                 }
-                else if (isAdmin == "true") {
+                else if (isAdmin == "True") {
                     message =
                         `<div class="col-md-6">
                             <input type="hidden" class="messageId" id="${messageModel.id}" value="${messageModel.id}" />
@@ -111,6 +111,7 @@
             connection.invoke("Send", groupId, message).catch(function (err) {
                 return console.error(err.toString());
             });
+            $("#message").val("")
         });
 
         connection.start().then(function () {
