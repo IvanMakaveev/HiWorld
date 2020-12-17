@@ -27,6 +27,9 @@ It is separated into the following controllers:
 ## 🗃 Database
 ![](https://cdn.discordapp.com/attachments/385512132969758733/788457060156702731/Diagram.png)
 
+## 🧪 Unit Tests Coverage
+![](https://cdn.discordapp.com/attachments/385512132969758733/789236692107919410/unknown.png)
+
 ## 🔗 Link
 https://hiworldsn.azurewebsites.net
 
