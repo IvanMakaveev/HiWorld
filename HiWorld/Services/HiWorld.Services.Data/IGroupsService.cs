@@ -1,12 +1,13 @@
-﻿using HiWorld.Data.Models.Enums;
-using HiWorld.Web.ViewModels.Groups;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace HiWorld.Services.Data
+﻿namespace HiWorld.Services.Data
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Text;
+    using System.Threading.Tasks;
+
+    using HiWorld.Data.Models.Enums;
+    using HiWorld.Web.ViewModels.Groups;
+
     public interface IGroupsService
     {
         IEnumerable<T> GetProfileGroups<T>(int profileId);

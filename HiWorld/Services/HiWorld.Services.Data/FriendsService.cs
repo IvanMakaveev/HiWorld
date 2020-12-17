@@ -1,15 +1,16 @@
-﻿using HiWorld.Data.Common.Repositories;
-using HiWorld.Data.Models;
-using HiWorld.Services.Mapping;
-using HiWorld.Web.ViewModels.Friends;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace HiWorld.Services.Data
+﻿namespace HiWorld.Services.Data
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+
+    using HiWorld.Data.Common.Repositories;
+    using HiWorld.Data.Models;
+    using HiWorld.Services.Mapping;
+    using HiWorld.Web.ViewModels.Friends;
+
     public class FriendsService : IFriendsService
     {
         private readonly IRepository<ProfileFriend> friendsRepository;

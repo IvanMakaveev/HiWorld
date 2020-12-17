@@ -1,14 +1,15 @@
-﻿using HiWorld.Data.Common.Repositories;
-using HiWorld.Data.Models;
-using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace HiWorld.Services.Data
+﻿namespace HiWorld.Services.Data
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Text;
+    using System.Threading.Tasks;
+
+    using HiWorld.Data.Common.Repositories;
+    using HiWorld.Data.Models;
+    using Microsoft.AspNetCore.Http;
+
     public class ImagesService : IImagesService
     {
         private readonly IRepository<Image> imageRepository;

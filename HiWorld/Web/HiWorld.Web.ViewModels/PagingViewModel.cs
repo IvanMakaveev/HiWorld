@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace HiWorld.Web.ViewModels
+﻿namespace HiWorld.Web.ViewModels
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Text;
+
     public class PagingViewModel
     {
         public int PageNumber { get; set; }

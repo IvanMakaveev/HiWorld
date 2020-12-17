@@ -1,20 +1,21 @@
-﻿using HiWorld.Data.Common.Repositories;
-using HiWorld.Data.Models;
-using HiWorld.Services.Data.Tests.FakeModels;
-using HiWorld.Services.Mapping;
-using HiWorld.Web.ViewModels;
-using HiWorld.Web.ViewModels.Friends;
-using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
-
-namespace HiWorld.Services.Data.Tests
+﻿namespace HiWorld.Services.Data.Tests
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection;
+    using System.Text;
+    using System.Threading.Tasks;
+
+    using HiWorld.Data.Common.Repositories;
+    using HiWorld.Data.Models;
+    using HiWorld.Services.Data.Tests.FakeModels;
+    using HiWorld.Services.Mapping;
+    using HiWorld.Web.ViewModels;
+    using HiWorld.Web.ViewModels.Friends;
+    using Moq;
+    using Xunit;
+
     public class FriendsServiceTests
     {
         private List<ProfileFriend> repoStorage = new List<ProfileFriend>();

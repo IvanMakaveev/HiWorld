@@ -1,15 +1,16 @@
 ﻿namespace HiWorld.Services.Data
 {
-    using HiWorld.Data.Common.Repositories;
-    using HiWorld.Data.Models;
-    using HiWorld.Services.Mapping;
-    using HiWorld.Web.ViewModels.Pages;
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+
+    using HiWorld.Data.Common.Repositories;
+    using HiWorld.Data.Models;
+    using HiWorld.Services.Mapping;
+    using HiWorld.Web.ViewModels.Pages;
 
     public class PagesService : IPagesService
     {

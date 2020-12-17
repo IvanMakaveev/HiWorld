@@ -1,7 +1,8 @@
 ﻿namespace HiWorld.Services.Data
 {
-    using HiWorld.Web.ViewModels.Home;
     using System.Collections.Generic;
+
+    using HiWorld.Web.ViewModels.Home;
 
     public interface IBrowseService
     {

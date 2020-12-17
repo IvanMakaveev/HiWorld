@@ -1,14 +1,15 @@
-﻿using HiWorld.Data.Common.Repositories;
-using HiWorld.Data.Models;
-using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Xunit;
-
-namespace HiWorld.Services.Data.Tests
+﻿namespace HiWorld.Services.Data.Tests
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+
+    using HiWorld.Data.Common.Repositories;
+    using HiWorld.Data.Models;
+    using Moq;
+    using Xunit;
+
     public class CountriesServiceTests
     {
         [Fact]

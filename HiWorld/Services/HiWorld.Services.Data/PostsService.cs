@@ -107,6 +107,17 @@
             await this.postsRepository.SaveChangesAsync();
         }
 
+        public async Task DeleteAllPostsFromProfile(int profileId)
+        {
+            var posts = this.postsRepository.All().Where(x => x.ProfileId == profileId).ToList();
+            foreach (var post in posts)
+            {
+                this.postsRepository.Delete(post);
+            }
+
+            await this.postsRepository.SaveChangesAsync();
+        }
+
         public async Task LikePostAsync(int profileId, int id)
         {
             var postLike = this.postLikesRepository.All().FirstOrDefault(x => x.PostId == id && x.ProfileId == profileId);

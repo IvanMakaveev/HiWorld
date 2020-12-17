@@ -10,6 +10,8 @@
 
         Task LikeCommentAsync(int commentId, int profileId);
 
+        Task DeleteAllCommentsFromProfile(int profileId);
+
         bool IsLiked(int commentId, int accessorId);
     }
 }

@@ -1,12 +1,13 @@
-﻿using HiWorld.Data.Models;
-using HiWorld.Data.Models.Enums;
-using HiWorld.Services.Mapping;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace HiWorld.Web.ViewModels.Groups
+﻿namespace HiWorld.Web.ViewModels.Groups
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Text;
+
+    using HiWorld.Data.Models;
+    using HiWorld.Data.Models.Enums;
+    using HiWorld.Services.Mapping;
+
     public class MemberInfoViewModel : IMapFrom<GroupMember>, IHaveCustomMappings
     {
         public int MemberId { get; set; }

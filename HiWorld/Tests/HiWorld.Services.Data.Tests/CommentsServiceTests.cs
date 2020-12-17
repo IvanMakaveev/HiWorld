@@ -1,19 +1,20 @@
-﻿using HiWorld.Data.Common.Repositories;
-using HiWorld.Data.Models;
-using HiWorld.Services.Data.Tests.FakeModels;
-using HiWorld.Services.Mapping;
-using HiWorld.Web.ViewModels.Posts;
-using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
-
-namespace HiWorld.Services.Data.Tests
+﻿namespace HiWorld.Services.Data.Tests
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection;
+    using System.Text;
+    using System.Threading.Tasks;
+
+    using HiWorld.Data.Common.Repositories;
+    using HiWorld.Data.Models;
+    using HiWorld.Services.Data.Tests.FakeModels;
+    using HiWorld.Services.Mapping;
+    using HiWorld.Web.ViewModels.Posts;
+    using Moq;
+    using Xunit;
+
     public class CommentsServiceTests
     {
         private List<Comment> commentRepoStorage = new List<Comment>();
@@ -42,6 +43,8 @@ namespace HiWorld.Services.Data.Tests
                 .Callback((Comment commentLike) => this.commentRepoStorage.Add(commentLike));
             mockCommentsRepo.Setup(x => x.All())
                 .Returns(this.commentRepoStorage.AsQueryable);
+            mockCommentsRepo.Setup(x => x.Delete(It.IsAny<Comment>()))
+                .Callback((Comment comment) => this.commentRepoStorage.Remove(comment));
 
             this.commentsRepository = mockCommentsRepo.Object;
 
@@ -85,6 +88,40 @@ namespace HiWorld.Services.Data.Tests
             await this.commentsService.LikeCommentAsync(1, 3);
 
             Assert.Equal(2, this.commentLikeRepoStorage.Count);
+        }
+
+        [Fact]
+        public async Task DeleteAllCommentsFromProfileWorksCorrectly()
+        {
+            this.commentRepoStorage.Add(new Comment
+            {
+                ProfileId = 1,
+            });
+            this.commentRepoStorage.Add(new Comment
+            {
+                ProfileId = 1,
+            });
+
+            await this.commentsService.DeleteAllCommentsFromProfile(1);
+
+            Assert.Empty(this.commentRepoStorage);
+        }
+
+        [Fact]
+        public async Task DeleteAllCommentsFromDoesntDeleteWithNonExistentId()
+        {
+            this.commentRepoStorage.Add(new Comment
+            {
+                ProfileId = 1,
+            });
+            this.commentRepoStorage.Add(new Comment
+            {
+                ProfileId = 1,
+            });
+
+            await this.commentsService.DeleteAllCommentsFromProfile(2);
+
+            Assert.Equal(2, this.commentRepoStorage.Count());
         }
     }
 }

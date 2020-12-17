@@ -1,12 +1,13 @@
-﻿using HiWorld.Web.Infrastructure.Attributes;
-using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
-
-namespace HiWorld.Web.ViewModels.Groups
+﻿namespace HiWorld.Web.ViewModels.Groups
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.Text;
+
+    using HiWorld.Web.Infrastructure.Attributes;
+    using Microsoft.AspNetCore.Http;
+
     public class CreateGroupInputModel
     {
         [Required]

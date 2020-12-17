@@ -1,25 +1,26 @@
-﻿using HiWorld.Data;
-using HiWorld.Data.Common.Repositories;
-using HiWorld.Data.Models;
-using HiWorld.Data.Models.Enums;
-using HiWorld.Data.Repositories;
-using HiWorld.Services.Data.Tests.FakeModels;
-using HiWorld.Services.Mapping;
-using HiWorld.Web.ViewModels.Groups;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Internal;
-using Microsoft.EntityFrameworkCore;
-using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
-
-namespace HiWorld.Services.Data.Tests
+﻿namespace HiWorld.Services.Data.Tests
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection;
+    using System.Text;
+    using System.Threading.Tasks;
+
+    using HiWorld.Data;
+    using HiWorld.Data.Common.Repositories;
+    using HiWorld.Data.Models;
+    using HiWorld.Data.Models.Enums;
+    using HiWorld.Data.Repositories;
+    using HiWorld.Services.Data.Tests.FakeModels;
+    using HiWorld.Services.Mapping;
+    using HiWorld.Web.ViewModels.Groups;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Http.Internal;
+    using Microsoft.EntityFrameworkCore;
+    using Moq;
+    using Xunit;
+
     public class GroupsServiceTests : IDisposable
     {
         private IDeletableEntityRepository<Group> groupsRepository;

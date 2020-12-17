@@ -1,15 +1,16 @@
-﻿using HiWorld.Services.Data;
-using HiWorld.Web.ViewModels.Pages;
-using HiWorld.Web.ViewModels.Posts;
-using HiWorld.Web.ViewModels.Tags;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Linq;
-using System.Security.Claims;
-
-namespace HiWorld.Web.Controllers
+﻿namespace HiWorld.Web.Controllers
 {
+    using System;
+    using System.Linq;
+    using System.Security.Claims;
+
+    using HiWorld.Services.Data;
+    using HiWorld.Web.ViewModels.Pages;
+    using HiWorld.Web.ViewModels.Posts;
+    using HiWorld.Web.ViewModels.Tags;
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Mvc;
+
     [Authorize]
     public class TagsController : Controller
     {

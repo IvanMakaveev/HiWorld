@@ -1,18 +1,19 @@
-﻿using HiWorld.Data.Common.Repositories;
-using HiWorld.Data.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Internal;
-using Moq;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
-
-namespace HiWorld.Services.Data.Tests
+﻿namespace HiWorld.Services.Data.Tests
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+
+    using HiWorld.Data.Common.Repositories;
+    using HiWorld.Data.Models;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Http.Internal;
+    using Moq;
+    using Xunit;
+
     public class ImagesServiceTests
     {
         private const string ImageName = "Test.png";

@@ -1,15 +1,16 @@
-﻿using HiWorld.Data.Models.Enums;
-using HiWorld.Services.Data;
-using HiWorld.Web.ViewModels.Groups;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-
-namespace HiWorld.Web.Controllers
+﻿namespace HiWorld.Web.Controllers
 {
+    using System.Linq;
+    using System.Security.Claims;
+    using System.Threading.Tasks;
+
+    using HiWorld.Data.Models.Enums;
+    using HiWorld.Services.Data;
+    using HiWorld.Web.ViewModels.Groups;
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Mvc;
+
     [Authorize]
     public class GroupsController : Controller
     {

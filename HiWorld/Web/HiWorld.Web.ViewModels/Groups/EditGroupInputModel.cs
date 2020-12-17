@@ -1,15 +1,16 @@
-﻿using AutoMapper;
-using HiWorld.Data.Models;
-using HiWorld.Services.Mapping;
-using HiWorld.Web.Infrastructure.Attributes;
-using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
-
-namespace HiWorld.Web.ViewModels.Groups
+﻿namespace HiWorld.Web.ViewModels.Groups
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.Text;
+
+    using AutoMapper;
+    using HiWorld.Data.Models;
+    using HiWorld.Services.Mapping;
+    using HiWorld.Web.Infrastructure.Attributes;
+    using Microsoft.AspNetCore.Http;
+
     public class EditGroupInputModel : IMapFrom<Group>
     {
         public int Id { get; set; }

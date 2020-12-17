@@ -1,8 +1,9 @@
-﻿using HiWorld.Web.ViewModels.Posts;
-using System.Collections.Generic;
-
-namespace HiWorld.Web.ViewModels.Home
+﻿namespace HiWorld.Web.ViewModels.Home
 {
+    using System.Collections.Generic;
+
+    using HiWorld.Web.ViewModels.Posts;
+
     public class SearchViewModel : PagingViewModel
     {
         public string SearchText { get; set; }

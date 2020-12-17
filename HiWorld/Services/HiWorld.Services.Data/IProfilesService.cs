@@ -19,6 +19,8 @@
 
         Task UpdateAsync(string id, EditProfileInputModel input, string path);
 
+        Task DeleteAsync(int id);
+
         bool IsFriend(int profileId, int accessorId);
 
         bool IsPending(int profileId, int accessorId);

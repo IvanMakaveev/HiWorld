@@ -1,18 +1,19 @@
-﻿using HiWorld.Data.Common.Repositories;
-using HiWorld.Data.Models;
-using HiWorld.Services.Data.Tests.FakeModels;
-using HiWorld.Services.Mapping;
-using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
-
-namespace HiWorld.Services.Data.Tests
+﻿namespace HiWorld.Services.Data.Tests
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection;
+    using System.Text;
+    using System.Threading.Tasks;
+
+    using HiWorld.Data.Common.Repositories;
+    using HiWorld.Data.Models;
+    using HiWorld.Services.Data.Tests.FakeModels;
+    using HiWorld.Services.Mapping;
+    using Moq;
+    using Xunit;
+
     public class TagsServiceTests
     {
         private List<Tag> repoStorage = new List<Tag>();
@@ -90,7 +91,7 @@ namespace HiWorld.Services.Data.Tests
                     new PageTag()
                     {
                         Id = 1,
-                        Page = new Page() {Id = 1, Name = pageName},
+                        Page = new Page() { Id = 1, Name = pageName },
                     },
                 },
             });
@@ -142,7 +143,7 @@ namespace HiWorld.Services.Data.Tests
                     new PostTag()
                     {
                         Id = 1,
-                        Post = new Post() {Id = 1, Text = postText},
+                        Post = new Post() { Id = 1, Text = postText },
                     },
                 },
             });

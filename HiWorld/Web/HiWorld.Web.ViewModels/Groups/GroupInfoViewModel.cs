@@ -1,12 +1,13 @@
-﻿using AutoMapper;
-using HiWorld.Data.Models;
-using HiWorld.Services.Mapping;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace HiWorld.Web.ViewModels.Groups
+﻿namespace HiWorld.Web.ViewModels.Groups
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Text;
+
+    using AutoMapper;
+    using HiWorld.Data.Models;
+    using HiWorld.Services.Mapping;
+
     public class GroupInfoViewModel : IMapFrom<Group>, IHaveCustomMappings
     {
         public int Id { get; set; }

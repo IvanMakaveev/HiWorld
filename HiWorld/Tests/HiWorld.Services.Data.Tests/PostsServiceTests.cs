@@ -1,22 +1,24 @@
-﻿using HiWorld.Data;
-using HiWorld.Data.Common.Repositories;
-using HiWorld.Data.Models;
-using HiWorld.Data.Repositories;
-using HiWorld.Services.Data.Tests.FakeModels;
-using HiWorld.Services.Mapping;
-using HiWorld.Web.ViewModels.Posts;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using Moq;
-using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
-
-namespace HiWorld.Services.Data.Tests
+﻿namespace HiWorld.Services.Data.Tests
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection;
+    using System.Text;
+    using System.Threading.Tasks;
+
+    using HiWorld.Data;
+    using HiWorld.Data.Common.Repositories;
+    using HiWorld.Data.Models;
+    using HiWorld.Data.Repositories;
+    using HiWorld.Services.Data.Tests.FakeModels;
+    using HiWorld.Services.Mapping;
+    using HiWorld.Web.ViewModels.Posts;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.EntityFrameworkCore;
+    using Moq;
+    using Xunit;
+
     public class PostsServiceTests : IDisposable
     {
         private IDeletableEntityRepository<Post> postsRepository;
@@ -264,6 +266,26 @@ namespace HiWorld.Services.Data.Tests
 
             Assert.True(result);
             Assert.False(secondResult);
+        }
+
+        [Fact]
+        public async Task DeleteAllPostsFromProfileWorksCorrectly()
+        {
+            await this.SeedData();
+
+            await this.postsService.DeleteAllPostsFromProfile(2);
+
+            Assert.Equal(0, await this.postsRepository.All().Where(x => x.ProfileId == 2).CountAsync());
+        }
+
+        [Fact]
+        public async Task DeleteAllPostsFromDoesntDeleteWithNonExistentId()
+        {
+            await this.SeedData();
+
+            await this.postsService.DeleteAllPostsFromProfile(3);
+
+            Assert.Equal(2, await this.postsRepository.All().CountAsync());
         }
 
         public void Dispose()

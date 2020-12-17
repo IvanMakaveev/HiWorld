@@ -1,20 +1,21 @@
-﻿using HiWorld.Data;
-using HiWorld.Data.Common.Repositories;
-using HiWorld.Data.Models;
-using HiWorld.Data.Repositories;
-using HiWorld.Services.Data.Tests.FakeModels;
-using HiWorld.Services.Mapping;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
-
-namespace HiWorld.Services.Data.Tests
+﻿namespace HiWorld.Services.Data.Tests
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection;
+    using System.Text;
+    using System.Threading.Tasks;
+
+    using HiWorld.Data;
+    using HiWorld.Data.Common.Repositories;
+    using HiWorld.Data.Models;
+    using HiWorld.Data.Repositories;
+    using HiWorld.Services.Data.Tests.FakeModels;
+    using HiWorld.Services.Mapping;
+    using Microsoft.EntityFrameworkCore;
+    using Xunit;
+
     public class BrowseServiceTests : IDisposable
     {
         private IDeletableEntityRepository<Page> pageRepository;

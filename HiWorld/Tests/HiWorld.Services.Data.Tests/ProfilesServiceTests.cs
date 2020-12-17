@@ -1,29 +1,32 @@
-﻿using HiWorld.Data;
-using HiWorld.Data.Common.Repositories;
-using HiWorld.Data.Models;
-using HiWorld.Data.Models.Enums;
-using HiWorld.Data.Repositories;
-using HiWorld.Services.Data.Tests.FakeModels;
-using HiWorld.Services.Mapping;
-using HiWorld.Web.ViewModels.Profiles;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using Moq;
-using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
-
-namespace HiWorld.Services.Data.Tests
+﻿namespace HiWorld.Services.Data.Tests
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Reflection;
+    using System.Text;
+    using System.Threading.Tasks;
+
+    using HiWorld.Data;
+    using HiWorld.Data.Common.Repositories;
+    using HiWorld.Data.Models;
+    using HiWorld.Data.Models.Enums;
+    using HiWorld.Data.Repositories;
+    using HiWorld.Services.Data.Tests.FakeModels;
+    using HiWorld.Services.Mapping;
+    using HiWorld.Web.ViewModels.Profiles;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.EntityFrameworkCore;
+    using Moq;
+    using Xunit;
+
     public class ProfilesServiceTests : IDisposable
     {
         private IDeletableEntityRepository<Profile> profileRepository;
         private IRepository<Country> countriesRepository;
         private IRepository<ProfileFollower> followersRepository;
         private IImagesService imagesService;
+        private IPostsService postsService;
+        private ICommentsService commentsService;
         private ApplicationDbContext dbContext;
         private ProfilesService profilesService;
 
@@ -35,6 +38,16 @@ namespace HiWorld.Services.Data.Tests
             mockImageService.Setup(x => x.Create(It.IsAny<IFormFile>(), It.IsAny<string>()))
                 .Returns(Task.Run(() => "test"));
             this.imagesService = mockImageService.Object;
+
+            var mockPostsService = new Mock<IPostsService>();
+            mockPostsService.Setup(x => x.DeleteAllPostsFromProfile(It.IsAny<int>()))
+                .Returns(Task.Run(() => { return; }));
+            this.postsService = mockPostsService.Object;
+
+            var mockCommnetsService = new Mock<ICommentsService>();
+            mockCommnetsService.Setup(x => x.DeleteAllCommentsFromProfile(It.IsAny<int>()))
+                .Returns(Task.Run(() => { return; }));
+            this.commentsService = mockCommnetsService.Object;
 
             var connection = new DbContextOptionsBuilder<ApplicationDbContext>()
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString());
@@ -49,6 +62,8 @@ namespace HiWorld.Services.Data.Tests
                 this.profileRepository,
                 this.countriesRepository,
                 this.followersRepository,
+                this.postsService,
+                this.commentsService,
                 this.imagesService);
         }
 
@@ -238,6 +253,16 @@ namespace HiWorld.Services.Data.Tests
             await this.profilesService.UpdateAsync("test", input, "test");
 
             Assert.Equal("test2", (await this.profileRepository.All().FirstOrDefaultAsync()).FirstName);
+        }
+
+        [Fact]
+        public async Task DeleteAsyncWorksCorrectly()
+        {
+            await this.SeedData();
+
+            await this.profilesService.DeleteAsync(1);
+
+            Assert.Equal(0, await this.profileRepository.All().CountAsync());
         }
 
         public void Dispose()

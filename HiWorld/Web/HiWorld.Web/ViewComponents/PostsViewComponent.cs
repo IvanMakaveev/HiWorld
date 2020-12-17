@@ -1,14 +1,15 @@
-﻿using HiWorld.Services.Data;
-using HiWorld.Web.ViewModels.Posts;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-
-namespace HiWorld.Web.ViewComponents
+﻿namespace HiWorld.Web.ViewComponents
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Security.Claims;
+    using System.Threading.Tasks;
+
+    using HiWorld.Services.Data;
+    using HiWorld.Web.ViewModels.Posts;
+    using Microsoft.AspNetCore.Mvc;
+
     public class PostsViewComponent : ViewComponent
     {
         private readonly IPostsService postsService;

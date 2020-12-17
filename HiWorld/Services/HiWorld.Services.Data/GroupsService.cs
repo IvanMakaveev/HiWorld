@@ -1,16 +1,17 @@
-﻿using HiWorld.Data.Common.Repositories;
-using HiWorld.Data.Models;
-using HiWorld.Data.Models.Enums;
-using HiWorld.Services.Mapping;
-using HiWorld.Web.ViewModels.Groups;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace HiWorld.Services.Data
+﻿namespace HiWorld.Services.Data
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+
+    using HiWorld.Data.Common.Repositories;
+    using HiWorld.Data.Models;
+    using HiWorld.Data.Models.Enums;
+    using HiWorld.Services.Mapping;
+    using HiWorld.Web.ViewModels.Groups;
+
     public class GroupsService : IGroupsService
     {
         private readonly IDeletableEntityRepository<Group> groupsRepository;

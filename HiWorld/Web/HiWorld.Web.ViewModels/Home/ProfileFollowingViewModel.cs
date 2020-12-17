@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace HiWorld.Web.ViewModels.Home
+﻿namespace HiWorld.Web.ViewModels.Home
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Text;
+
     public class ProfileFollowingViewModel
     {
         public int Id { get; set; }

@@ -1,12 +1,13 @@
-﻿using AutoMapper;
-using HiWorld.Data.Models;
-using HiWorld.Services.Mapping;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace HiWorld.Web.ViewModels.Friends
+﻿namespace HiWorld.Web.ViewModels.Friends
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Text;
+
+    using AutoMapper;
+    using HiWorld.Data.Models;
+    using HiWorld.Services.Mapping;
+
     public class FriendViewModel
     {
         public int FriendId { get; set; }

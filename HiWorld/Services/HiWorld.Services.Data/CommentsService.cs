@@ -36,6 +36,17 @@
             return this.commentsRepository.All().Where(x => x.Id == comment.Id).To<T>().FirstOrDefault();
         }
 
+        public async Task DeleteAllCommentsFromProfile(int profileId)
+        {
+            var comments = this.commentsRepository.All().Where(x => x.ProfileId == profileId).ToList();
+            foreach (var comment in comments)
+            {
+                this.commentsRepository.Delete(comment);
+            }
+
+            await this.commentsRepository.SaveChangesAsync();
+        }
+
         public bool IsLiked(int commentId, int accessorId)
         {
             return this.commentLikesRepository.AllAsNoTracking().Any(x => x.CommentId == commentId && x.ProfileId == accessorId);

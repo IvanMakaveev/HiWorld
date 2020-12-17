@@ -1,14 +1,15 @@
-﻿using Ganss.XSS;
-using HiWorld.Services.Data;
-using HiWorld.Web.ViewModels.Groups;
-using Microsoft.AspNetCore.SignalR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace HiWorld.Web.Hubs
+﻿namespace HiWorld.Web.Hubs
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+
+    using Ganss.XSS;
+    using HiWorld.Services.Data;
+    using HiWorld.Web.ViewModels.Groups;
+    using Microsoft.AspNetCore.SignalR;
+
     public class ChatHub : Hub
     {
         private readonly IProfilesService profilesService;

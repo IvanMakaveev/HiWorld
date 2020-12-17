@@ -2,6 +2,7 @@
 {
     using System.Security.Claims;
     using System.Threading.Tasks;
+
     using HiWorld.Services.Data;
     using HiWorld.Web.ViewModels.Posts;
     using Microsoft.AspNetCore.Authorization;
@@ -15,7 +16,6 @@
         private readonly IProfilesService profilesService;
         private readonly IPagesService pagesService;
         private readonly IWebHostEnvironment webHost;
-        private readonly ICommentsService commentsService;
 
         public PostsController(
             IPostsService postsService,
@@ -118,8 +118,9 @@
         {
             var userid = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var profileId = this.profilesService.GetId(userid);
+            var isOwner = this.pagesService.IsOwner(profileId, pageId);
 
-            if (this.pagesService.IsOwner(profileId, pageId))
+            if (isOwner)
             {
                 await this.postsService.DeletePostFromPageAsync(profileId, id);
             }

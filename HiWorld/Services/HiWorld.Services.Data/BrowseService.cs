@@ -1,14 +1,15 @@
-﻿using HiWorld.Data.Common.Repositories;
-using HiWorld.Data.Models;
-using HiWorld.Services.Mapping;
-using HiWorld.Web.ViewModels.Home;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace HiWorld.Services.Data
+﻿namespace HiWorld.Services.Data
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+
+    using HiWorld.Data.Common.Repositories;
+    using HiWorld.Data.Models;
+    using HiWorld.Services.Mapping;
+    using HiWorld.Web.ViewModels.Home;
+
     public class BrowseService : IBrowseService
     {
         private readonly IDeletableEntityRepository<Page> pageRepository;

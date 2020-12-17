@@ -1,11 +1,12 @@
-﻿using HiWorld.Web.ViewModels.Friends;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace HiWorld.Services.Data
+﻿namespace HiWorld.Services.Data
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Text;
+    using System.Threading.Tasks;
+
+    using HiWorld.Web.ViewModels.Friends;
+
     public interface IFriendsService
     {
         Task SendFriendRequestAsync(int profileId, int senderId);

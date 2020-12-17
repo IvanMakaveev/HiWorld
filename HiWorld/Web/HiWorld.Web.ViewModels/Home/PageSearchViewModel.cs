@@ -1,11 +1,12 @@
-﻿using HiWorld.Data.Models;
-using HiWorld.Services.Mapping;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace HiWorld.Web.ViewModels.Home
+﻿namespace HiWorld.Web.ViewModels.Home
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Text;
+
+    using HiWorld.Data.Models;
+    using HiWorld.Services.Mapping;
+
     public class PageSearchViewModel : IMapFrom<Page>, IHaveCustomMappings
     {
         public int Id { get; set; }
