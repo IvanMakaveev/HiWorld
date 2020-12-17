@@ -15,18 +15,18 @@
     {
         private readonly IDeletableEntityRepository<Page> pagesRepository;
         private readonly IRepository<PageFollower> followersRepository;
-        private readonly ITagsService tagsService;
         private readonly IRepository<PageTag> pageTagsRepository;
+        private readonly ITagsService tagsService;
         private readonly IImagesService imagesService;
         private readonly IPostsService postsService;
 
         public PagesService(
             IDeletableEntityRepository<Page> pagesRepository,
-            IPostsService postsService,
             IRepository<PageFollower> followersRepository,
-            ITagsService tagsService,
             IRepository<PageTag> pageTagsRepository,
-            IImagesService imagesService)
+            ITagsService tagsService,
+            IImagesService imagesService,
+            IPostsService postsService)
         {
             this.pagesRepository = pagesRepository;
             this.postsService = postsService;
@@ -57,7 +57,7 @@
 
             if (input.Tags != null && input.Tags.Count() > 0)
             {
-                foreach (var tag in input.Tags)
+                foreach (var tag in input.Tags.Distinct())
                 {
                     var tagId = await this.tagsService.GetIdAsync(tag);
                     var pageTag = new PageTag()
@@ -136,7 +136,7 @@
                 var tagIds = new List<int>();
                 if (input.Tags != null && input.Tags.Count() > 0)
                 {
-                    foreach (var tag in input.Tags)
+                    foreach (var tag in input.Tags.Distinct())
                     {
                         var tagId = await this.tagsService.GetIdAsync(tag);
                         if (!this.pageTagsRepository.AllAsNoTracking().Any(x => x.TagId == tagId && x.PageId == page.Id))

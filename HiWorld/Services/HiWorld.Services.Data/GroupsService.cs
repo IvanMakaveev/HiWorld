@@ -75,24 +75,17 @@ namespace HiWorld.Services.Data
             await this.groupsRepository.AddAsync(group);
             await this.groupsRepository.SaveChangesAsync();
 
-            return group.Id;
-        }
-
-        public async Task AddProfileToGroup(int profileId, int groupId, GroupRole role)
-        {
-            if (!this.groupMembersRepository.AllAsNoTracking()
-                .Any(x => x.MemberId == profileId && x.GroupId == groupId))
+            var groupMember = new GroupMember()
             {
-                var groupMember = new GroupMember()
-                {
-                    MemberId = profileId,
-                    GroupId = groupId,
-                    Role = GroupRole.Owner,
-                };
+                MemberId = profileId,
+                GroupId = group.Id,
+                Role = GroupRole.Owner,
+            };
 
-                await this.groupMembersRepository.AddAsync(groupMember);
-                await this.groupMembersRepository.SaveChangesAsync();
-            }
+            await this.groupMembersRepository.AddAsync(groupMember);
+            await this.groupMembersRepository.SaveChangesAsync();
+
+            return group.Id;
         }
 
         public async Task ChangeProfileRole(int profileId, int groupId, GroupRole role)

@@ -23,7 +23,7 @@ namespace HiWorld.Services.Data.Tests
 
         public FriendsServiceTests()
         {
-            AutoMapperConfig.RegisterMappings(Assembly.GetExecutingAssembly());
+            AutoMapperConfig.RegisterMappings(Assembly.Load("HiWorld.Services.Data.Tests"));
 
             var mockRepo = new Mock<IRepository<ProfileFriend>>();
             mockRepo.Setup(x => x.AddAsync(It.IsAny<ProfileFriend>()))

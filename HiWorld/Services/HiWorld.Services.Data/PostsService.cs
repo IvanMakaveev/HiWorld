@@ -78,8 +78,8 @@
 
         public async Task DeletePostFromProfileAsync(int profileId, int id)
         {
-            var post = this.postsRepository.All().Where(x => x.Id == id).FirstOrDefault();
-            if (post != null && post.ProfileId == profileId)
+            var post = this.postsRepository.All().Where(x => x.Id == id && x.ProfileId == profileId).FirstOrDefault();
+            if (post != null)
             {
                 this.postsRepository.Delete(post);
                 await this.postsRepository.SaveChangesAsync();
@@ -88,8 +88,8 @@
 
         public async Task DeletePostFromPageAsync(int pageId, int id)
         {
-            var post = this.postsRepository.All().Where(x => x.Id == id).FirstOrDefault();
-            if (post != null && post.PageId == pageId)
+            var post = this.postsRepository.All().Where(x => x.Id == id && x.PageId == pageId).FirstOrDefault();
+            if (post != null)
             {
                 this.postsRepository.Delete(post);
                 await this.postsRepository.SaveChangesAsync();
@@ -181,7 +181,7 @@
 
         private async Task AddTagsToPost(int postId, IEnumerable<string> tags)
         {
-            foreach (var tag in tags)
+            foreach (var tag in tags.Distinct())
             {
                 var tagId = await this.tagsService.GetIdAsync(tag);
                 var postTag = new PostTag()

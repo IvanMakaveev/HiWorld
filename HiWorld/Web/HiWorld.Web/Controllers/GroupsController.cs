@@ -58,7 +58,6 @@ namespace HiWorld.Web.Controllers
             var profileId = this.profilesService.GetId(userid);
 
             var groupId = await this.groupsService.CreateAsync(profileId, input, $"{this.webHost.WebRootPath}/img/groups");
-            await this.groupsService.AddProfileToGroup(profileId, groupId, GroupRole.Owner);
 
             return this.RedirectToAction(nameof(this.ById), new { id = groupId });
         }
@@ -229,7 +228,7 @@ namespace HiWorld.Web.Controllers
             var accessorId = this.profilesService.GetId(userId);
             var isAdmin = this.groupsService.HasAdminPermissions(id, accessorId);
 
-            if (isAdmin)
+            if (isAdmin && this.profilesService.IsFriend(profileId, accessorId))
             {
                 await this.groupsService.AddMember(profileId, id);
 

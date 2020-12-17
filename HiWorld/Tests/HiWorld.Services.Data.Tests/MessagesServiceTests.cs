@@ -17,11 +17,11 @@ namespace HiWorld.Services.Data.Tests
     {
         private List<Message> repoStorage = new List<Message>();
         private IDeletableEntityRepository<Message> messagesRepo;
-        private MessagesService messageService;
+        private MessagesService messagesService;
 
         public MessagesServiceTests()
         {
-            AutoMapperConfig.RegisterMappings(Assembly.GetExecutingAssembly());
+            AutoMapperConfig.RegisterMappings(Assembly.Load("HiWorld.Services.Data.Tests"));
 
             var mockRepo = new Mock<IDeletableEntityRepository<Message>>();
             mockRepo.Setup(x => x.AddAsync(It.IsAny<Message>()))
@@ -34,7 +34,7 @@ namespace HiWorld.Services.Data.Tests
                 .Callback((Message msg) => this.repoStorage.Remove(msg));
 
             this.messagesRepo = mockRepo.Object;
-            this.messageService = new MessagesService(this.messagesRepo);
+            this.messagesService = new MessagesService(this.messagesRepo);
         }
 
         [Fact]
@@ -42,7 +42,7 @@ namespace HiWorld.Services.Data.Tests
         {
             var messageText = "test";
 
-            await this.messageService.AddMessage(1, 1, messageText);
+            await this.messagesService.AddMessage(1, 1, messageText);
 
             Assert.Single(this.repoStorage);
             Assert.Equal(messageText, this.repoStorage[0].Text);
@@ -53,7 +53,7 @@ namespace HiWorld.Services.Data.Tests
         {
             this.repoStorage.Add(new Message() { Id = 1 });
 
-            await this.messageService.DeleteMessage(1);
+            await this.messagesService.DeleteMessage(1);
 
             Assert.Empty(this.repoStorage);
         }
@@ -63,7 +63,7 @@ namespace HiWorld.Services.Data.Tests
         {
             this.repoStorage.Add(new Message() { Id = 2 });
 
-            await this.messageService.DeleteMessage(1);
+            await this.messagesService.DeleteMessage(1);
 
             Assert.Single(this.repoStorage);
         }
@@ -79,7 +79,7 @@ namespace HiWorld.Services.Data.Tests
                 Text = messageText,
             });
 
-            var result = this.messageService.GetById<FakeMessageModel>(1);
+            var result = this.messagesService.GetById<FakeMessageModel>(1);
 
             Assert.Equal(messageText, result.Text);
         }
@@ -95,7 +95,7 @@ namespace HiWorld.Services.Data.Tests
                 Text = messageText,
             });
 
-            var result = this.messageService.GetById<FakeMessageModel>(2);
+            var result = this.messagesService.GetById<FakeMessageModel>(2);
 
             Assert.Null(result);
         }
@@ -109,8 +109,8 @@ namespace HiWorld.Services.Data.Tests
                 ProfileId = 1,
             });
 
-            var firstResult = this.messageService.IsOwner(1, 1);
-            var secondResult = this.messageService.IsOwner(1, 2);
+            var firstResult = this.messagesService.IsOwner(1, 1);
+            var secondResult = this.messagesService.IsOwner(1, 2);
 
             Assert.True(firstResult);
             Assert.False(secondResult);

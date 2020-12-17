@@ -145,8 +145,12 @@
         {
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var profileId = this.profilesService.GetId(userId);
+            var isOwner = this.pagesService.IsOwner(userId, id);
 
-            await this.pagesService.FollowPageAsync(profileId, id);
+            if (!isOwner)
+            {
+                await this.pagesService.FollowPageAsync(profileId, id);
+            }
 
             return this.RedirectToAction(nameof(this.ById), new { id });
         }

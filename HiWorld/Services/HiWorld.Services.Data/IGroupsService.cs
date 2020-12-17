@@ -21,8 +21,6 @@ namespace HiWorld.Services.Data
 
         Task<int> CreateAsync(int profileId, CreateGroupInputModel input, string path);
 
-        Task AddProfileToGroup(int profileId, int groupId, GroupRole role);
-
         Task ChangeProfileRole(int profileId, int groupId, GroupRole role);
 
         Task AddMember(int profileId, int groupId);
