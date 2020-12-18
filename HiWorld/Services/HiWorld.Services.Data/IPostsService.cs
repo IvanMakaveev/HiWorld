@@ -21,6 +21,8 @@
 
         Task DeleteAllPostsFromProfile(int profileId);
 
+        Task DeleteAsync(int id);
+
         bool IsLiked(int postId, int accessorId);
 
         bool IsOwner(int postId, bool isProfile, int accessorId);
@@ -32,5 +34,7 @@
         IEnumerable<T> GetPagePosts<T>(int pageId, int pageNumber, int count = 20);
 
         int GetPageTotalPosts(int pageId);
+
+        IEnumerable<T> GetAllPosts<T>();
     }
 }

@@ -1,0 +1,10 @@
+﻿@{ 
+    ViewData["Title"] = "Admin Home";
+}
+
+<div>
+    <h1 class="text-center">@ViewData["Title"]</h1>
+    <a asp-area="Administration" asp-controller="Comments" asp-action="List" class="btn btn-primary btn-block">Comments Administration</a>
+    <a asp-area="Administration" asp-controller="Posts" asp-action="List" class="btn btn-primary btn-block">Posts Administration</a>
+    <a asp-area="Administration" asp-controller="Pages" asp-action="List" class="btn btn-primary btn-block">Pages Administration</a>
+</div>

@@ -1,0 +1,39 @@
+﻿@using HiWorld.Web.ViewModels.Administration;
+@model IEnumerable<PageFullInfoViewModel>
+@{
+    this.ViewData["Title"] = "Pages";
+}
+
+<div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Created On</th>
+                <th scope="col">Name</th>
+                <th scope="col">Description</th>
+                <th scope="col">Email</th>
+                <th scope="col">Phone</th>
+                <th scope="col">Image Id</th>
+                <th scope="col">Profile</th>
+                <th scope="col">Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var profilePage in Model)
+            {
+                <tr>
+                    <td>@profilePage.Id</td>
+                    <td>@profilePage.CreatedOn</td>
+                    <td>@profilePage.Name</td>
+                    <td>@profilePage.Description</td>
+                    <td>@(profilePage.Email != null ? profilePage.Email : "No email")</td>
+                    <td>@(profilePage.Phone != null ? profilePage.Phone : "No phone")</td>
+                    <td>@(profilePage.ImageId != null ? profilePage.ImageId : "No image")</td>
+                    <td>@profilePage.ProfileId</td>
+                    <td><form asp-action="Delete" asp-route-id="@profilePage.Id" method="post"><button class="btn btn-danger">Delete</button></form></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

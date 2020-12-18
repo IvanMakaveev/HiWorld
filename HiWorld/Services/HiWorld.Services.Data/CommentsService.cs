@@ -1,5 +1,6 @@
 ﻿namespace HiWorld.Services.Data
 {
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -45,6 +46,21 @@
             }
 
             await this.commentsRepository.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            var comment = this.commentsRepository.All().Where(x => x.Id == id).FirstOrDefault();
+            if (comment != null)
+            {
+                this.commentsRepository.Delete(comment);
+                await this.commentsRepository.SaveChangesAsync();
+            }
+        }
+
+        public IEnumerable<T> GetAllComments<T>()
+        {
+            return this.commentsRepository.AllAsNoTracking().To<T>().ToList();
         }
 
         public bool IsLiked(int commentId, int accessorId)

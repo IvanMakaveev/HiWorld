@@ -288,6 +288,36 @@
             Assert.Equal(2, await this.postsRepository.All().CountAsync());
         }
 
+        [Fact]
+        public async Task DeleteAsyncWorksCorrectly()
+        {
+            await this.SeedData();
+
+            await this.postsService.DeleteAsync(2);
+
+            Assert.Equal(1, await this.postsRepository.All().CountAsync());
+        }
+
+        [Fact]
+        public async Task DeleteAsyncDoesNotDeleteNonExistendId()
+        {
+            await this.SeedData();
+
+            await this.postsService.DeleteAsync(3);
+
+            Assert.Equal(2, await this.postsRepository.All().CountAsync());
+        }
+
+        [Fact]
+        public async Task GetAllPostsWorksCorrectly()
+        {
+            await this.SeedData();
+
+            var result = this.postsService.GetAllPosts<FakePostModel>();
+
+            Assert.Equal(2, result.Count());
+        }
+
         public void Dispose()
         {
             this.dbContext.Dispose();

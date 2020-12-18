@@ -26,5 +26,7 @@
         Task DeleteAsync(int pageId);
 
         Task UpdateAsync(EditPageInputModel input, string path);
+
+        IEnumerable<T> GetAllPages<T>();
     }
 }

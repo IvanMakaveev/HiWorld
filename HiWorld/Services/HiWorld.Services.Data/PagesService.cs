@@ -181,5 +181,10 @@
                 await this.pagesRepository.SaveChangesAsync();
             }
         }
+
+        public IEnumerable<T> GetAllPages<T>()
+        {
+            return this.pagesRepository.AllAsNoTracking().To<T>().ToList();
+        }
     }
 }

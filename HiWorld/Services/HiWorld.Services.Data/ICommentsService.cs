@@ -1,5 +1,6 @@
 ﻿namespace HiWorld.Services.Data
 {
+    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     using HiWorld.Web.ViewModels.Posts;
@@ -12,6 +13,10 @@
 
         Task DeleteAllCommentsFromProfile(int profileId);
 
+        Task DeleteAsync(int id);
+
         bool IsLiked(int commentId, int accessorId);
+
+        IEnumerable<T> GetAllComments<T>();
     }
 }

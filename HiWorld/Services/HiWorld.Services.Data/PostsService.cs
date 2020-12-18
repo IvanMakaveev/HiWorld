@@ -190,6 +190,21 @@
             }
         }
 
+        public async Task DeleteAsync(int id)
+        {
+            var post = this.postsRepository.All().Where(x => x.Id == id).FirstOrDefault();
+            if (post != null)
+            {
+                this.postsRepository.Delete(post);
+                await this.postsRepository.SaveChangesAsync();
+            }
+        }
+
+        public IEnumerable<T> GetAllPosts<T>()
+        {
+            return this.postsRepository.AllAsNoTracking().To<T>().ToList();
+        }
+
         private async Task AddTagsToPost(int postId, IEnumerable<string> tags)
         {
             foreach (var tag in tags.Distinct())

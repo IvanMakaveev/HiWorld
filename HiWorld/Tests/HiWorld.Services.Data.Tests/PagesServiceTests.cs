@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Reflection;
     using System.Text;
     using System.Threading.Tasks;
@@ -262,6 +263,16 @@
             await this.pagesService.DeleteAsync(1);
 
             Assert.Equal(0, await this.pagesRepository.All().CountAsync());
+        }
+
+        [Fact]
+        public async Task GetAllPagesWorksCorrectly()
+        {
+            await this.SeedData();
+
+            var result = this.pagesService.GetAllPages<FakePageModel>();
+
+            Assert.Single(result);
         }
 
         [Fact]

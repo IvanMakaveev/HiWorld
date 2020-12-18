@@ -43,6 +43,8 @@
                 .Callback((Comment commentLike) => this.commentRepoStorage.Add(commentLike));
             mockCommentsRepo.Setup(x => x.All())
                 .Returns(this.commentRepoStorage.AsQueryable);
+            mockCommentsRepo.Setup(x => x.AllAsNoTracking())
+                .Returns(this.commentRepoStorage.AsQueryable);
             mockCommentsRepo.Setup(x => x.Delete(It.IsAny<Comment>()))
                 .Callback((Comment comment) => this.commentRepoStorage.Remove(comment));
 
@@ -122,6 +124,57 @@
             await this.commentsService.DeleteAllCommentsFromProfile(2);
 
             Assert.Equal(2, this.commentRepoStorage.Count());
+        }
+
+        [Fact]
+        public async Task DeleteAsyncWorksCorrectly()
+        {
+            this.commentRepoStorage.Add(new Comment
+            {
+                Id = 1,
+            });
+            this.commentRepoStorage.Add(new Comment
+            {
+                Id = 2,
+            });
+
+            await this.commentsService.DeleteAsync(2);
+
+            Assert.Single(this.commentRepoStorage);
+        }
+
+        [Fact]
+        public async Task DeleteAsyncDoesNotDeleteNonExistentId()
+        {
+            this.commentRepoStorage.Add(new Comment
+            {
+                Id = 1,
+            });
+            this.commentRepoStorage.Add(new Comment
+            {
+                Id = 2,
+            });
+
+            await this.commentsService.DeleteAsync(3);
+
+            Assert.Equal(2, this.commentRepoStorage.Count);
+        }
+
+        [Fact]
+        public async Task GetAllCommentsWorksCorrectly()
+        {
+            this.commentRepoStorage.Add(new Comment
+            {
+                Id = 1,
+            });
+            this.commentRepoStorage.Add(new Comment
+            {
+                Id = 2,
+            });
+
+            var result = this.commentsService.GetAllComments<FakeCommentModel>();
+
+            Assert.Equal(2, result.Count());
         }
     }
 }

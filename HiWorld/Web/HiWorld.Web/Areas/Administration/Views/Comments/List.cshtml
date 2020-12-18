@@ -1,0 +1,33 @@
+﻿@using HiWorld.Web.ViewModels.Administration;
+@model IEnumerable<CommentInfoViewModel>
+@{ 
+    this.ViewData["Title"] = "Comments";
+}
+
+<div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Created On</th>
+                <th scope="col">Text</th>
+                <th scope="col">Profile Id</th>
+                <th scope="col">Post Id</th>
+                <th scope="col">Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var comment in Model)
+            {
+                <tr>
+                    <td>@comment.Id</td>
+                    <td>@comment.CreatedOn</td>
+                    <td>@comment.Text</td>
+                    <td>@comment.ProfileId</td>
+                    <td>@comment.PostId</td>
+                    <td><form asp-action="Delete" asp-route-id="@comment.Id" method="post"><button class="btn btn-danger">Delete</button></form></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,37 @@
+﻿@using HiWorld.Web.ViewModels.Administration;
+@model IEnumerable<PostInfoViewModel>
+@{
+    this.ViewData["Title"] = "Posts";
+}
+
+<div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Created On</th>
+                <th scope="col">Text</th>
+                <th scope="col">Image Id</th>
+                <th scope="col">Owner Id/Type</th>
+                <th scope="col">Comments</th>
+                <th scope="col">Likes</th>
+                <th scope="col">Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var post in Model)
+            {
+                <tr>
+                    <td>@post.Id</td>
+                    <td>@post.CreatedOn</td>
+                    <td>@post.Text</td>
+                    <td>@(post.ImageId != null ? post.ImageId : "No image")</td>
+                    <td>@(post.ProfileId != null ? $"{post.ProfileId} - Profile" : $"{post.PageId} - Page")</td>
+                    <td>@post.CommentsCount</td>
+                    <td>@post.PostLikesCount</td>
+                    <td><form asp-action="Delete" asp-route-id="@post.Id" method="post"><button class="btn btn-danger">Delete</button></form></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
