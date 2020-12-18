@@ -182,11 +182,11 @@
         {
             if (isProfile)
             {
-                return this.postsRepository.AllAsNoTracking().Where(x => x.Id == postId).FirstOrDefault()?.ProfileId == accessorId;
+                return this.postsRepository.AllAsNoTracking().Any(x => x.Id == postId && x.ProfileId == accessorId);
             }
             else
             {
-                return this.postsRepository.AllAsNoTracking().Where(x => x.Id == postId).FirstOrDefault()?.PageId == accessorId;
+                return this.postsRepository.AllAsNoTracking().Any(x => x.Id == postId && x.Page.ProfileId == accessorId);
             }
         }
 

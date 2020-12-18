@@ -329,6 +329,7 @@
             {
                 Id = 1,
                 PageId = 1,
+                Page = new Page() { ProfileId = 1 },
             });
 
             await this.postsRepository.AddAsync(new Post()
