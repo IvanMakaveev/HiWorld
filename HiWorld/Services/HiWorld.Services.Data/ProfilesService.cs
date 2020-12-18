@@ -137,7 +137,7 @@
 
                 if (input.Image != null && input.Image.Length > 0)
                 {
-                    profile.ImageId = await this.imagesService.Create(input.Image, path);
+                    profile.ImageId = await this.imagesService.CreateAsync(input.Image, path);
                 }
 
                 this.profileRepository.Update(profile);
@@ -150,8 +150,8 @@
             var profile = this.profileRepository.All().Where(x => x.Id == id).FirstOrDefault();
             if (profile != null)
             {
-                await this.postsService.DeleteAllPostsFromProfile(id);
-                await this.commentsService.DeleteAllCommentsFromProfile(id);
+                await this.postsService.DeleteAllPostsFromProfileAsync(id);
+                await this.commentsService.DeleteAllCommentsFromProfileAsync(id);
 
                 this.profileRepository.Delete(profile);
                 await this.profileRepository.SaveChangesAsync();

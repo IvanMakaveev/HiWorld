@@ -34,7 +34,7 @@
             AutoMapperConfig.RegisterMappings(Assembly.Load("HiWorld.Services.Data.Tests"));
 
             var mockImageService = new Mock<IImagesService>();
-            mockImageService.Setup(x => x.Create(It.IsAny<IFormFile>(), It.IsAny<string>()))
+            mockImageService.Setup(x => x.CreateAsync(It.IsAny<IFormFile>(), It.IsAny<string>()))
                 .Returns(Task.Run(() => "test"));
             this.imagesService = mockImageService.Object;
 
@@ -169,7 +169,7 @@
         {
             await this.SeedData();
 
-            await this.postsService.DeleteAllPostsFromPage(1);
+            await this.postsService.DeleteAllPostsFromPageAsync(1);
 
             Assert.Equal(1, await this.postsRepository.All().CountAsync());
         }
@@ -273,7 +273,7 @@
         {
             await this.SeedData();
 
-            await this.postsService.DeleteAllPostsFromProfile(2);
+            await this.postsService.DeleteAllPostsFromProfileAsync(2);
 
             Assert.Equal(0, await this.postsRepository.All().Where(x => x.ProfileId == 2).CountAsync());
         }
@@ -283,7 +283,7 @@
         {
             await this.SeedData();
 
-            await this.postsService.DeleteAllPostsFromProfile(3);
+            await this.postsService.DeleteAllPostsFromProfileAsync(3);
 
             Assert.Equal(2, await this.postsRepository.All().CountAsync());
         }

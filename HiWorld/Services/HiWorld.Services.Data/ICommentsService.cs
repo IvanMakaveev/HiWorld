@@ -11,7 +11,7 @@
 
         Task LikeCommentAsync(int commentId, int profileId);
 
-        Task DeleteAllCommentsFromProfile(int profileId);
+        Task DeleteAllCommentsFromProfileAsync(int profileId);
 
         Task DeleteAsync(int id);
 

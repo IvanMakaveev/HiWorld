@@ -9,11 +9,11 @@
 
     public interface IMessagesService
     {
-        Task DeleteMessage(int messageId);
+        Task DeleteMessageAsync(int messageId);
 
         bool IsOwner(int messageId, int profileId);
 
-        Task<int> AddMessage(int groupId, int profileId, string text);
+        Task<int> AddMessageAsync(int groupId, int profileId, string text);
 
         T GetById<T>(int id);
     }

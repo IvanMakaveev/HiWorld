@@ -6,6 +6,6 @@
 
     public interface IImagesService
     {
-        Task<string> Create(IFormFile image, string path);
+        Task<string> CreateAsync(IFormFile image, string path);
     }
 }

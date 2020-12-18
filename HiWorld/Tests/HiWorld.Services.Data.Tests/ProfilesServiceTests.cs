@@ -35,17 +35,17 @@
             AutoMapperConfig.RegisterMappings(Assembly.Load("HiWorld.Services.Data.Tests"));
 
             var mockImageService = new Mock<IImagesService>();
-            mockImageService.Setup(x => x.Create(It.IsAny<IFormFile>(), It.IsAny<string>()))
+            mockImageService.Setup(x => x.CreateAsync(It.IsAny<IFormFile>(), It.IsAny<string>()))
                 .Returns(Task.Run(() => "test"));
             this.imagesService = mockImageService.Object;
 
             var mockPostsService = new Mock<IPostsService>();
-            mockPostsService.Setup(x => x.DeleteAllPostsFromProfile(It.IsAny<int>()))
+            mockPostsService.Setup(x => x.DeleteAllPostsFromProfileAsync(It.IsAny<int>()))
                 .Returns(Task.Run(() => { return; }));
             this.postsService = mockPostsService.Object;
 
             var mockCommnetsService = new Mock<ICommentsService>();
-            mockCommnetsService.Setup(x => x.DeleteAllCommentsFromProfile(It.IsAny<int>()))
+            mockCommnetsService.Setup(x => x.DeleteAllCommentsFromProfileAsync(It.IsAny<int>()))
                 .Returns(Task.Run(() => { return; }));
             this.commentsService = mockCommnetsService.Object;
 

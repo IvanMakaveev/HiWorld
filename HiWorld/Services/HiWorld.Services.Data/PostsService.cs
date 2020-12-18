@@ -42,7 +42,7 @@
 
             if (input.Image != null && input.Image.Length > 0)
             {
-                post.ImageId = await this.imagesService.Create(input.Image, path);
+                post.ImageId = await this.imagesService.CreateAsync(input.Image, path);
             }
 
             await this.postsRepository.AddAsync(post);
@@ -64,7 +64,7 @@
 
             if (input.Image != null && input.Image.Length > 0)
             {
-                post.ImageId = await this.imagesService.Create(input.Image, path);
+                post.ImageId = await this.imagesService.CreateAsync(input.Image, path);
             }
 
             await this.postsRepository.AddAsync(post);
@@ -96,7 +96,7 @@
             }
         }
 
-        public async Task DeleteAllPostsFromPage(int pageId)
+        public async Task DeleteAllPostsFromPageAsync(int pageId)
         {
             var posts = this.postsRepository.All().Where(x => x.PageId == pageId).ToList();
             foreach (var post in posts)
@@ -107,7 +107,7 @@
             await this.postsRepository.SaveChangesAsync();
         }
 
-        public async Task DeleteAllPostsFromProfile(int profileId)
+        public async Task DeleteAllPostsFromProfileAsync(int profileId)
         {
             var posts = this.postsRepository.All().Where(x => x.ProfileId == profileId).ToList();
             foreach (var post in posts)

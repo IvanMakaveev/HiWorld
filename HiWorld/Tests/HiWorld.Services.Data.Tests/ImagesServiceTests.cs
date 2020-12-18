@@ -48,7 +48,7 @@
                     Headers = new HeaderDictionary(),
                     ContentType = ImageContentType,
                 };
-                await imageService.Create(file, this.imageFolder);
+                await imageService.CreateAsync(file, this.imageFolder);
             }
 
             var directory = new DirectoryInfo(this.imageFolder);

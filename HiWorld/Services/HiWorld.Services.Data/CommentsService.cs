@@ -37,7 +37,7 @@
             return this.commentsRepository.All().Where(x => x.Id == comment.Id).To<T>().FirstOrDefault();
         }
 
-        public async Task DeleteAllCommentsFromProfile(int profileId)
+        public async Task DeleteAllCommentsFromProfileAsync(int profileId)
         {
             var comments = this.commentsRepository.All().Where(x => x.ProfileId == profileId).ToList();
             foreach (var comment in comments)

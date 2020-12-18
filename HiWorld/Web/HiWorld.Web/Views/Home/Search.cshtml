@@ -5,7 +5,7 @@
 }
 
 <div class="row">
-    <div class="col-md-2 mt-2">
+    <div class="col-md-4 mt-2">
         <h2 class="mb-3">Profiles</h2>
         @if (Model.Profiles.Count() > 0)
         {
@@ -36,19 +36,7 @@
         {
             <h5>No profiles to show</h5>
         }
-    </div>
-    <div class="col-md-8">
-        <h1 class="text-center">Posts</h1>
-        @if (Model.Posts.Count() > 0)
-        {
-            <vc:posts model="Model.Posts"></vc:posts>
-        }
-        else
-        {
-            <h5 class="text-center mt-2">No posts to show</h5>
-        }
-    </div>
-    <div class="col-md-2 mt-2">
+
         <h2 class="mb-3">Pages</h2>
         @if (Model.Pages.Count() > 0)
         {
@@ -80,7 +68,17 @@
             <h5>No pages to show</h5>
         }
     </div>
-
+    <div class="col-md-8">
+        <h1 class="text-center">Posts</h1>
+        @if (Model.Posts.Count() > 0)
+        {
+            <vc:posts model="Model.Posts"></vc:posts>
+        }
+        else
+        {
+            <h5 class="text-center mt-2">No posts to show</h5>
+        }
+    </div>
 
     <nav class="mx-auto mt-5">
         <ul class="pagination justify-content-center">

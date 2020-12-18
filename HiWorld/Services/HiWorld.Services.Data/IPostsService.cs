@@ -17,9 +17,9 @@
 
         Task DeletePostFromPageAsync(int pageId, int id);
 
-        Task DeleteAllPostsFromPage(int pageId);
+        Task DeleteAllPostsFromPageAsync(int pageId);
 
-        Task DeleteAllPostsFromProfile(int profileId);
+        Task DeleteAllPostsFromProfileAsync(int profileId);
 
         Task DeleteAsync(int id);
 

@@ -148,7 +148,7 @@
 
             if (isOwner)
             {
-                await this.groupsService.DeleteGroup(id);
+                await this.groupsService.DeleteGroupAsync(id);
             }
 
             return this.RedirectToAction(nameof(this.List));
@@ -166,11 +166,11 @@
                 var isAdmin = this.groupsService.HasAdminPermissions(id, profileId);
                 if (!isAdmin)
                 {
-                    await this.groupsService.ChangeProfileRole(profileId, id, GroupRole.Admin);
+                    await this.groupsService.ChangeProfileRoleAsync(profileId, id, GroupRole.Admin);
                 }
                 else
                 {
-                    await this.groupsService.ChangeProfileRole(profileId, id, GroupRole.Member);
+                    await this.groupsService.ChangeProfileRoleAsync(profileId, id, GroupRole.Member);
                 }
             }
 
@@ -186,7 +186,7 @@
 
             if (isAccessorOwner && profileId != accessorId)
             {
-                await this.groupsService.RemoveMember(profileId, id);
+                await this.groupsService.RemoveMemberAsync(profileId, id);
             }
             else
             {
@@ -195,7 +195,7 @@
 
                 if (isAccessorAdmin && !isProfileAdmin)
                 {
-                    await this.groupsService.RemoveMember(profileId, id);
+                    await this.groupsService.RemoveMemberAsync(profileId, id);
                 }
             }
 
@@ -231,7 +231,7 @@
 
             if (isAdmin && this.profilesService.IsFriend(profileId, accessorId))
             {
-                await this.groupsService.AddMember(profileId, id);
+                await this.groupsService.AddMemberAsync(profileId, id);
 
                 return this.RedirectToAction(nameof(this.InviteToGroup), new { id });
             }
@@ -247,7 +247,7 @@
 
             if (!isOwner)
             {
-                await this.groupsService.RemoveMember(profileId, id);
+                await this.groupsService.RemoveMemberAsync(profileId, id);
             }
 
             return this.RedirectToAction(nameof(this.List));

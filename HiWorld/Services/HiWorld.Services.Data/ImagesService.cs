@@ -19,7 +19,7 @@
             this.imageRepository = imageRepository;
         }
 
-        public async Task<string> Create(IFormFile image, string path)
+        public async Task<string> CreateAsync(IFormFile image, string path)
         {
             Directory.CreateDirectory($"{path}/");
             var extension = Path.GetExtension(image.FileName).TrimStart('.');

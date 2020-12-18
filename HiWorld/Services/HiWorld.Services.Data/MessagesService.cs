@@ -19,7 +19,7 @@
             this.messageRepository = messageRepository;
         }
 
-        public async Task<int> AddMessage(int groupId, int profileId, string text)
+        public async Task<int> AddMessageAsync(int groupId, int profileId, string text)
         {
             var message = new Message
             {
@@ -34,7 +34,7 @@
             return message.Id;
         }
 
-        public async Task DeleteMessage(int messageId)
+        public async Task DeleteMessageAsync(int messageId)
         {
             var message = this.messageRepository.All().Where(x => x.Id == messageId).FirstOrDefault();
 

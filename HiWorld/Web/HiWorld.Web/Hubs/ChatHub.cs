@@ -43,7 +43,7 @@
                 var sanitizer = new HtmlSanitizer();
                 message = sanitizer.Sanitize(message);
 
-                var messageId = await this.messagesService.AddMessage(groupId, profileId, message);
+                var messageId = await this.messagesService.AddMessageAsync(groupId, profileId, message);
                 var messageModel = this.messagesService.GetById<MessageViewModel>(messageId);
                 await this.Clients.Group(groupId.ToString()).SendAsync("RecieveMessage", messageModel);
             }
@@ -57,7 +57,7 @@
 
             if (isMessageOwner)
             {
-                await this.messagesService.DeleteMessage(messageId);
+                await this.messagesService.DeleteMessageAsync(messageId);
                 await this.Clients.Group(groupId.ToString()).SendAsync("DeleteMessage", messageId);
             }
             else
@@ -65,7 +65,7 @@
                 var isAdmin = this.groupsService.HasAdminPermissions(groupId, profileId);
                 if (isAdmin)
                 {
-                    await this.messagesService.DeleteMessage(messageId);
+                    await this.messagesService.DeleteMessageAsync(messageId);
                     await this.Clients.Group(groupId.ToString()).SendAsync("DeleteMessage", messageId);
                 }
             }

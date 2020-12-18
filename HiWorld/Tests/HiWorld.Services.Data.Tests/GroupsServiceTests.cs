@@ -35,7 +35,7 @@
             AutoMapperConfig.RegisterMappings(Assembly.Load("HiWorld.Services.Data.Tests"));
 
             var mockImageService = new Mock<IImagesService>();
-            mockImageService.Setup(x => x.Create(It.IsAny<IFormFile>(), It.IsAny<string>()))
+            mockImageService.Setup(x => x.CreateAsync(It.IsAny<IFormFile>(), It.IsAny<string>()))
                 .Returns(Task.Run(() => "test"));
             this.imagesService = mockImageService.Object;
 
@@ -140,7 +140,7 @@
         {
             await this.SeedData();
 
-            await this.groupsService.ChangeProfileRole(1, 1, GroupRole.Admin);
+            await this.groupsService.ChangeProfileRoleAsync(1, 1, GroupRole.Admin);
 
             Assert.Equal(GroupRole.Admin, (await this.groupMembersRepository.All().FirstOrDefaultAsync()).Role);
         }
@@ -150,7 +150,7 @@
         {
             await this.SeedData();
 
-            await this.groupsService.ChangeProfileRole(1, 2, GroupRole.Admin);
+            await this.groupsService.ChangeProfileRoleAsync(1, 2, GroupRole.Admin);
 
             Assert.Equal(GroupRole.Owner, (await this.groupMembersRepository.All().FirstOrDefaultAsync()).Role);
         }
@@ -160,7 +160,7 @@
         {
             await this.SeedData();
 
-            await this.groupsService.RemoveMember(1, 1);
+            await this.groupsService.RemoveMemberAsync(1, 1);
 
             Assert.Equal(1, await this.groupMembersRepository.All().CountAsync());
         }
@@ -170,7 +170,7 @@
         {
             await this.SeedData();
 
-            await this.groupsService.RemoveMember(1, 2);
+            await this.groupsService.RemoveMemberAsync(1, 2);
 
             Assert.Equal(2, await this.groupMembersRepository.All().CountAsync());
         }
@@ -180,7 +180,7 @@
         {
             await this.SeedData();
 
-            await this.groupsService.DeleteGroup(1);
+            await this.groupsService.DeleteGroupAsync(1);
 
             Assert.Equal(0, await this.groupsRepository.All().CountAsync());
         }
@@ -190,7 +190,7 @@
         {
             await this.SeedData();
 
-            await this.groupsService.DeleteGroup(2);
+            await this.groupsService.DeleteGroupAsync(2);
 
             Assert.Equal(1, await this.groupsRepository.All().CountAsync());
         }
@@ -281,8 +281,8 @@
         {
             await this.SeedData();
 
-            await this.groupsService.AddMember(2, 1);
-            await this.groupsService.AddMember(2, 1);
+            await this.groupsService.AddMemberAsync(2, 1);
+            await this.groupsService.AddMemberAsync(2, 1);
 
             Assert.Equal(3, await this.groupMembersRepository.All().CountAsync());
         }

@@ -104,7 +104,7 @@
                 ProfileId = 1,
             });
 
-            await this.commentsService.DeleteAllCommentsFromProfile(1);
+            await this.commentsService.DeleteAllCommentsFromProfileAsync(1);
 
             Assert.Empty(this.commentRepoStorage);
         }
@@ -121,7 +121,7 @@
                 ProfileId = 1,
             });
 
-            await this.commentsService.DeleteAllCommentsFromProfile(2);
+            await this.commentsService.DeleteAllCommentsFromProfileAsync(2);
 
             Assert.Equal(2, this.commentRepoStorage.Count());
         }

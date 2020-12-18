@@ -50,7 +50,7 @@
 
             if (input.Image != null && input.Image.Length > 0)
             {
-                page.ImageId = await this.imagesService.Create(input.Image, path);
+                page.ImageId = await this.imagesService.CreateAsync(input.Image, path);
             }
 
             await this.pagesRepository.AddAsync(page);
@@ -161,7 +161,7 @@
 
                 if (input.Image != null && input.Image.Length > 0)
                 {
-                    page.ImageId = await this.imagesService.Create(input.Image, path);
+                    page.ImageId = await this.imagesService.CreateAsync(input.Image, path);
                 }
 
                 this.pagesRepository.Update(page);
@@ -175,7 +175,7 @@
 
             if (page != null)
             {
-                await this.postsService.DeleteAllPostsFromPage(pageId);
+                await this.postsService.DeleteAllPostsFromPageAsync(pageId);
 
                 this.pagesRepository.Delete(page);
                 await this.pagesRepository.SaveChangesAsync();

@@ -70,7 +70,7 @@
 
             if (input.Image != null && input.Image.Length > 0)
             {
-                group.ImageId = await this.imagesService.Create(input.Image, path);
+                group.ImageId = await this.imagesService.CreateAsync(input.Image, path);
             }
 
             await this.groupsRepository.AddAsync(group);
@@ -89,7 +89,7 @@
             return group.Id;
         }
 
-        public async Task ChangeProfileRole(int profileId, int groupId, GroupRole role)
+        public async Task ChangeProfileRoleAsync(int profileId, int groupId, GroupRole role)
         {
             var groupMember = this.groupMembersRepository.All()
                 .Where(x => x.MemberId == profileId && x.GroupId == groupId).FirstOrDefault();
@@ -103,7 +103,7 @@
             }
         }
 
-        public async Task RemoveMember(int profileId, int groupId)
+        public async Task RemoveMemberAsync(int profileId, int groupId)
         {
             var groupMember = this.groupMembersRepository.All()
                 .Where(x => x.MemberId == profileId && x.GroupId == groupId).FirstOrDefault();
@@ -115,7 +115,7 @@
             }
         }
 
-        public async Task DeleteGroup(int groupId)
+        public async Task DeleteGroupAsync(int groupId)
         {
             var group = this.groupsRepository.All()
                 .Where(x => x.Id == groupId).FirstOrDefault();
@@ -148,7 +148,7 @@
 
                 if (input.Image != null && input.Image.Length > 0)
                 {
-                    group.ImageId = await this.imagesService.Create(input.Image, path);
+                    group.ImageId = await this.imagesService.CreateAsync(input.Image, path);
                 }
 
                 this.groupsRepository.Update(group);
@@ -174,7 +174,7 @@
                 }).ToList();
         }
 
-        public async Task AddMember(int profileId, int groupId)
+        public async Task AddMemberAsync(int profileId, int groupId)
         {
             var isMember = this.groupMembersRepository
                 .AllAsNoTracking()

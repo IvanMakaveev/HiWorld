@@ -43,7 +43,7 @@
         {
             var messageText = "test";
 
-            await this.messagesService.AddMessage(1, 1, messageText);
+            await this.messagesService.AddMessageAsync(1, 1, messageText);
 
             Assert.Single(this.repoStorage);
             Assert.Equal(messageText, this.repoStorage[0].Text);
@@ -54,7 +54,7 @@
         {
             this.repoStorage.Add(new Message() { Id = 1 });
 
-            await this.messagesService.DeleteMessage(1);
+            await this.messagesService.DeleteMessageAsync(1);
 
             Assert.Empty(this.repoStorage);
         }
@@ -64,7 +64,7 @@
         {
             this.repoStorage.Add(new Message() { Id = 2 });
 
-            await this.messagesService.DeleteMessage(1);
+            await this.messagesService.DeleteMessageAsync(1);
 
             Assert.Single(this.repoStorage);
         }

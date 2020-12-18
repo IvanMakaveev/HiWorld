@@ -22,13 +22,13 @@
 
         Task<int> CreateAsync(int profileId, CreateGroupInputModel input, string path);
 
-        Task ChangeProfileRole(int profileId, int groupId, GroupRole role);
+        Task ChangeProfileRoleAsync(int profileId, int groupId, GroupRole role);
 
-        Task AddMember(int profileId, int groupId);
+        Task AddMemberAsync(int profileId, int groupId);
 
-        Task RemoveMember(int profileId, int groupId);
+        Task RemoveMemberAsync(int profileId, int groupId);
 
-        Task DeleteGroup(int groupId);
+        Task DeleteGroupAsync(int groupId);
 
         IEnumerable<T> GetMembers<T>(int groupId);
 
