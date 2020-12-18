@@ -82,23 +82,27 @@
         [Authorize]
         public IActionResult Search(string searchText, int id)
         {
-            id = id < 1 ? 1 : id;
-
-            var searchTokens = searchText.ToLower().Split(" ", StringSplitOptions.RemoveEmptyEntries);
-
-
-            var viewModel = new SearchViewModel()
+            if (searchText != null && searchText != string.Empty)
             {
-                Posts = this.browseService.SearchPosts<PostViewModel>(searchTokens, id),
-                Pages = this.browseService.SearchPages<PageSearchViewModel>(searchTokens, id),
-                Profiles = this.browseService.SearchProfiles<ProfileSearchViewModel>(searchTokens, id),
-                PageNumber = id,
-                ItemsPerPage = 20,
-                Items = this.browseService.GetSearchCount(searchTokens),
-                SearchText = searchText,
-            };
+                id = id < 1 ? 1 : id;
 
-            return this.View(viewModel);
+                var searchTokens = searchText.ToLower().Split(" ", StringSplitOptions.RemoveEmptyEntries);
+
+                var viewModel = new SearchViewModel()
+                {
+                    Posts = this.browseService.SearchPosts<PostViewModel>(searchTokens, id),
+                    Pages = this.browseService.SearchPages<PageSearchViewModel>(searchTokens, id),
+                    Profiles = this.browseService.SearchProfiles<ProfileSearchViewModel>(searchTokens, id),
+                    PageNumber = id,
+                    ItemsPerPage = 20,
+                    Items = this.browseService.GetSearchCount(searchTokens),
+                    SearchText = searchText,
+                };
+
+                return this.View(viewModel);
+            }
+
+            return this.RedirectToAction(nameof(this.Browse));
         }
     }
 }
