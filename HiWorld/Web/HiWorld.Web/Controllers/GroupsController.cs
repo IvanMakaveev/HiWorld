@@ -34,8 +34,11 @@
             var profileId = this.profilesService.GetId(userid);
 
             var viewModel = this.groupsService.GetProfileGroups<GroupInfoViewModel>(profileId).ToList();
-            viewModel.ForEach(x => x.IsOwner = this.groupsService.IsOwner(x.Id, profileId));
-            viewModel.ForEach(x => x.IsAdmin = this.groupsService.HasAdminPermissions(x.Id, profileId));
+            foreach (var group in viewModel)
+            {
+                group.IsOwner = this.groupsService.IsOwner(group.Id, profileId);
+                group.IsAdmin = this.groupsService.HasAdminPermissions(group.Id, profileId);
+            }
 
             return this.View(viewModel);
         }

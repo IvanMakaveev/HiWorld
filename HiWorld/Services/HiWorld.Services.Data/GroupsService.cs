@@ -32,19 +32,17 @@
         }
 
         public IEnumerable<T> GetProfileGroups<T>(int profileId)
-        {
-            return this.groupsRepository.AllAsNoTracking()
-                .Where(x => x.GroupMembers
-                    .Any(y => y.MemberId == profileId))
-                .To<T>()
-                .ToList();
-        }
+            => this.groupsRepository.AllAsNoTracking()
+            .Where(x => x.GroupMembers
+                .Any(y => y.MemberId == profileId))
+            .To<T>()
+            .ToList();
 
         public bool IsOwner(int groupId, int profileId)
-        {
-            return this.groupMembersRepository.AllAsNoTracking()
-                .Where(x => x.GroupId == groupId && x.MemberId == profileId).FirstOrDefault()?.Role == GroupRole.Owner;
-        }
+            => this.groupMembersRepository
+            .AllAsNoTracking()
+            .Where(x => x.GroupId == groupId && x.MemberId == profileId)
+            .FirstOrDefault()?.Role == GroupRole.Owner;
 
         public bool HasAdminPermissions(int groupId, int profileId)
         {
@@ -55,10 +53,10 @@
         }
 
         public bool IsMember(int groupId, int profileId)
-        {
-            return this.groupMembersRepository.AllAsNoTracking()
-                .Where(x => x.GroupId == groupId && x.MemberId == profileId).FirstOrDefault() != null;
-        }
+            => this.groupMembersRepository
+            .AllAsNoTracking()
+            .Where(x => x.GroupId == groupId && x.MemberId == profileId)
+            .FirstOrDefault() != null;
 
         public async Task<int> CreateAsync(int profileId, CreateGroupInputModel input, string path)
         {
@@ -68,7 +66,7 @@
                 Description = input.Description,
             };
 
-            if (input.Image != null && input.Image.Length > 0)
+            if (input.Image?.Length > 0)
             {
                 group.ImageId = await this.imagesService.CreateAsync(input.Image, path);
             }
@@ -128,14 +126,18 @@
         }
 
         public IEnumerable<T> GetMembers<T>(int groupId)
-        {
-            return this.groupMembersRepository.AllAsNoTracking().Where(x => x.GroupId == groupId).To<T>().ToList();
-        }
+            => this.groupMembersRepository
+            .AllAsNoTracking()
+            .Where(x => x.GroupId == groupId)
+            .To<T>()
+            .ToList();
 
         public T GetById<T>(int groupId)
-        {
-            return this.groupsRepository.AllAsNoTracking().Where(x => x.Id == groupId).To<T>().FirstOrDefault();
-        }
+            => this.groupsRepository
+            .AllAsNoTracking()
+            .Where(x => x.Id == groupId)
+            .To<T>()
+            .FirstOrDefault();
 
         public async Task UpdateAsync(EditGroupInputModel input, string path)
         {
@@ -146,7 +148,7 @@
                 group.Name = input.Name;
                 group.Description = input.Description;
 
-                if (input.Image != null && input.Image.Length > 0)
+                if (input.Image?.Length > 0)
                 {
                     group.ImageId = await this.imagesService.CreateAsync(input.Image, path);
                 }
@@ -157,22 +159,21 @@
         }
 
         public IEnumerable<GroupFriendAddViewModel> FriendsToInvite(int groupId, int profileId)
-        {
-            return this.friendsRepository.All()
-                .Where(x => (x.FriendId == profileId || x.ProfileId == profileId) && x.IsAccepted == true)
-                .Select(x => new GroupFriendAddViewModel()
-                {
-                    IsInGroup = profileId == x.ProfileId ?
-                        x.Friend.GroupMembers.Any(x => x.GroupId == groupId) :
-                        x.Profile.GroupMembers.Any(x => x.GroupId == groupId),
-                    FirstName = profileId == x.ProfileId ? x.Friend.FirstName : x.Profile.FirstName,
-                    LastName = profileId == x.ProfileId ? x.Friend.LastName : x.Profile.LastName,
-                    FriendId = profileId == x.ProfileId ? x.FriendId : x.ProfileId,
-                    ImagePath = profileId == x.ProfileId ?
-                        x.Friend.Image != null ? $"{x.Friend.Image.Id}.{x.Friend.Image.Extension}" : null :
-                        x.Profile.Image != null ? $"{x.Profile.Image.Id}.{x.Profile.Image.Extension}" : null,
-                }).ToList();
-        }
+            => this.friendsRepository
+            .AllAsNoTracking()
+            .Where(x => (x.FriendId == profileId || x.ProfileId == profileId) && x.IsAccepted == true)
+            .Select(x => new GroupFriendAddViewModel()
+            {
+                IsInGroup = profileId == x.ProfileId ?
+                    x.Friend.GroupMembers.Any(x => x.GroupId == groupId) :
+                    x.Profile.GroupMembers.Any(x => x.GroupId == groupId),
+                FirstName = profileId == x.ProfileId ? x.Friend.FirstName : x.Profile.FirstName,
+                LastName = profileId == x.ProfileId ? x.Friend.LastName : x.Profile.LastName,
+                FriendId = profileId == x.ProfileId ? x.FriendId : x.ProfileId,
+                ImagePath = profileId == x.ProfileId ?
+                    x.Friend.Image != null ? $"{x.Friend.Image.Id}.{x.Friend.Image.Extension}" : null :
+                    x.Profile.Image != null ? $"{x.Profile.Image.Id}.{x.Profile.Image.Extension}" : null,
+            }).ToList();
 
         public async Task AddMemberAsync(int profileId, int groupId)
         {

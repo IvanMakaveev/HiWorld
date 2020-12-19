@@ -52,7 +52,12 @@
             }
 
             var directory = new DirectoryInfo(this.imageFolder);
-            directory.GetFiles().ToList().ForEach(x => x.Delete());
+
+            var files = directory.GetFiles();
+            foreach (var file in files)
+            {
+                file.Delete();
+            }
 
             Assert.Equal(3, list.Count);
         }

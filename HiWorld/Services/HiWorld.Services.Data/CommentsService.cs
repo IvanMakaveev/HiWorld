@@ -34,7 +34,7 @@
             await this.commentsRepository.AddAsync(comment);
             await this.commentsRepository.SaveChangesAsync();
 
-            return this.commentsRepository.All().Where(x => x.Id == comment.Id).To<T>().FirstOrDefault();
+            return this.commentsRepository.AllAsNoTracking().Where(x => x.Id == comment.Id).To<T>().FirstOrDefault();
         }
 
         public async Task DeleteAllCommentsFromProfileAsync(int profileId)
@@ -59,14 +59,15 @@
         }
 
         public IEnumerable<T> GetAllComments<T>()
-        {
-            return this.commentsRepository.AllAsNoTracking().To<T>().ToList();
-        }
+            => this.commentsRepository
+            .AllAsNoTracking()
+            .To<T>()
+            .ToList();
 
         public bool IsLiked(int commentId, int accessorId)
-        {
-            return this.commentLikesRepository.AllAsNoTracking().Any(x => x.CommentId == commentId && x.ProfileId == accessorId);
-        }
+            => this.commentLikesRepository
+            .AllAsNoTracking()
+            .Any(x => x.CommentId == commentId && x.ProfileId == accessorId);
 
         public async Task LikeCommentAsync(int commentId, int profileId)
         {

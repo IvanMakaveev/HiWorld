@@ -16,16 +16,14 @@
         }
 
         public IEnumerable<KeyValuePair<int, string>> GetAllAsKvp()
-        {
-            return this.countriesRepository
-                .AllAsNoTracking()
-                .Select(x => new
-                {
-                    x.Id,
-                    x.Name,
-                })
-                .OrderBy(x => x.Name)
-                .Select(x => new KeyValuePair<int, string>(x.Id, x.Name));
-        }
+            => this.countriesRepository
+            .AllAsNoTracking()
+            .Select(x => new
+            {
+                x.Id,
+                x.Name,
+            })
+            .OrderBy(x => x.Name)
+            .Select(x => new KeyValuePair<int, string>(x.Id, x.Name));
     }
 }

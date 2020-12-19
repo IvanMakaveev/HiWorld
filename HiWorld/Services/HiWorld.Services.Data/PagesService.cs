@@ -48,7 +48,7 @@
                 ProfileId = profileId,
             };
 
-            if (input.Image != null && input.Image.Length > 0)
+            if (input.Image?.Length > 0)
             {
                 page.ImageId = await this.imagesService.CreateAsync(input.Image, path);
             }
@@ -56,7 +56,7 @@
             await this.pagesRepository.AddAsync(page);
             await this.pagesRepository.SaveChangesAsync();
 
-            if (input.Tags != null && input.Tags.Count() > 0)
+            if (input.Tags?.Count() > 0)
             {
                 foreach (var tag in input.Tags.Distinct())
                 {
@@ -77,29 +77,33 @@
         }
 
         public T GetById<T>(int id)
-        {
-            return this.pagesRepository.AllAsNoTracking().Where(x => x.Id == id).To<T>().FirstOrDefault();
-        }
+            => this.pagesRepository
+            .AllAsNoTracking()
+            .Where(x => x.Id == id)
+            .To<T>()
+            .FirstOrDefault();
 
         public IEnumerable<T> GetProfilePages<T>(int profileId)
-        {
-            return this.pagesRepository.AllAsNoTracking().Where(x => x.ProfileId == profileId).To<T>().ToList();
-        }
+            => this.pagesRepository
+            .AllAsNoTracking()
+            .Where(x => x.ProfileId == profileId)
+            .To<T>()
+            .ToList();
 
         public bool IsFollowing(int profileId, int pageId)
-        {
-            return this.followersRepository.AllAsNoTracking().Any(x => x.PageId == pageId && x.FollowerId == profileId);
-        }
+            => this.followersRepository
+            .AllAsNoTracking()
+            .Any(x => x.PageId == pageId && x.FollowerId == profileId);
 
         public bool IsOwner(int profileId, int pageId)
-        {
-            return this.pagesRepository.AllAsNoTracking().Any(x => x.ProfileId == profileId && x.Id == pageId);
-        }
+            => this.pagesRepository
+            .AllAsNoTracking()
+            .Any(x => x.ProfileId == profileId && x.Id == pageId);
 
         public bool IsOwner(string userId, int pageId)
-        {
-            return this.pagesRepository.AllAsNoTracking().Any(x => x.Profile.User.Id == userId && x.Id == pageId);
-        }
+            => this.pagesRepository
+            .AllAsNoTracking()
+            .Any(x => x.Profile.User.Id == userId && x.Id == pageId);
 
         public async Task FollowPageAsync(int profileId, int pageId)
         {
@@ -135,11 +139,12 @@
                 page.Phone = input.Phone;
 
                 var tagIds = new List<int>();
-                if (input.Tags != null && input.Tags.Count() > 0)
+                if (input.Tags?.Count() > 0)
                 {
                     foreach (var tag in input.Tags.Distinct())
                     {
                         var tagId = await this.tagsService.GetIdAsync(tag);
+                        tagIds.Add(tagId);
                         if (!this.pageTagsRepository.AllAsNoTracking().Any(x => x.TagId == tagId && x.PageId == page.Id))
                         {
                             await this.pageTagsRepository.AddAsync(new PageTag()
@@ -183,8 +188,9 @@
         }
 
         public IEnumerable<T> GetAllPages<T>()
-        {
-            return this.pagesRepository.AllAsNoTracking().To<T>().ToList();
-        }
+            => this.pagesRepository
+            .AllAsNoTracking()
+            .To<T>()
+            .ToList();
     }
 }

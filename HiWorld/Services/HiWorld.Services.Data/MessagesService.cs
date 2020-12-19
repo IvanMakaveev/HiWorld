@@ -46,13 +46,15 @@
         }
 
         public T GetById<T>(int id)
-        {
-            return this.messageRepository.AllAsNoTracking().Where(x => x.Id == id).To<T>().FirstOrDefault();
-        }
+        => this.messageRepository
+            .AllAsNoTracking()
+            .Where(x => x.Id == id)
+            .To<T>()
+            .FirstOrDefault();
 
         public bool IsOwner(int messageId, int profileId)
-        {
-            return this.messageRepository.AllAsNoTracking().Any(x => x.Id == messageId && x.ProfileId == profileId);
-        }
+            => this.messageRepository
+            .AllAsNoTracking()
+            .Any(x => x.Id == messageId && x.ProfileId == profileId);
     }
 }

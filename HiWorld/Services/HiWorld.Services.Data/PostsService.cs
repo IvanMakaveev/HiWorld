@@ -40,7 +40,7 @@
                 Text = input.Text,
             };
 
-            if (input.Image != null && input.Image.Length > 0)
+            if (input.Image?.Length > 0)
             {
                 post.ImageId = await this.imagesService.CreateAsync(input.Image, path);
             }
@@ -62,7 +62,7 @@
                 Text = input.Text,
             };
 
-            if (input.Image != null && input.Image.Length > 0)
+            if (input.Image?.Length > 0)
             {
                 post.ImageId = await this.imagesService.CreateAsync(input.Image, path);
             }
@@ -70,7 +70,7 @@
             await this.postsRepository.AddAsync(post);
             await this.postsRepository.SaveChangesAsync();
 
-            if (input.Tags != null && input.Tags.Count() > 0)
+            if (input.Tags?.Count() > 0)
             {
                 await this.AddTagsToPost(post.Id, input.Tags);
             }
@@ -140,43 +140,41 @@
         }
 
         public bool IsLiked(int postId, int accessorId)
-        {
-            return this.postLikesRepository.AllAsNoTracking().Any(x => x.PostId == postId && x.ProfileId == accessorId);
-        }
+            => this.postLikesRepository
+            .AllAsNoTracking()
+            .Any(x => x.PostId == postId && x.ProfileId == accessorId);
 
         public IEnumerable<T> GetProfilePosts<T>(int profileId, int pageNumber, int count = 20)
-        {
-            return this.postsRepository.AllAsNoTracking()
-                .Where(x => x.ProfileId == profileId)
-                .OrderByDescending(x => x.CreatedOn)
-                .Skip((pageNumber - 1) * count)
-                .Take(count)
-                .To<T>()
-                .ToList();
-        }
+            => this.postsRepository
+            .AllAsNoTracking()
+            .Where(x => x.ProfileId == profileId)
+            .OrderByDescending(x => x.CreatedOn)
+            .Skip((pageNumber - 1) * count)
+            .Take(count)
+            .To<T>()
+            .ToList();
 
         public IEnumerable<T> GetPagePosts<T>(int pageId, int pageNumber, int count = 20)
-        {
-            return this.postsRepository.AllAsNoTracking()
-                .Where(x => x.PageId == pageId)
-                .OrderByDescending(x => x.CreatedOn)
-                .Skip((pageNumber - 1) * count)
-                .Take(count)
-                .To<T>()
-                .ToList();
-        }
+            => this.postsRepository
+            .AllAsNoTracking()
+            .Where(x => x.PageId == pageId)
+            .OrderByDescending(x => x.CreatedOn)
+            .Skip((pageNumber - 1) * count)
+            .Take(count)
+            .To<T>()
+            .ToList();
 
         public int GetProfileTotalPosts(int profileId)
-        {
-            return this.postsRepository.AllAsNoTracking()
-                .Where(x => x.ProfileId == profileId).Count();
-        }
+            => this.postsRepository
+            .AllAsNoTracking()
+            .Where(x => x.ProfileId == profileId)
+            .Count();
 
         public int GetPageTotalPosts(int pageId)
-        {
-            return this.postsRepository.AllAsNoTracking()
-                .Where(x => x.PageId == pageId).Count();
-        }
+            => this.postsRepository
+            .AllAsNoTracking()
+            .Where(x => x.PageId == pageId)
+            .Count();
 
         public bool IsOwner(int postId, bool isProfile, int accessorId)
         {
@@ -201,9 +199,10 @@
         }
 
         public IEnumerable<T> GetAllPosts<T>()
-        {
-            return this.postsRepository.AllAsNoTracking().To<T>().ToList();
-        }
+            => this.postsRepository
+            .AllAsNoTracking()
+            .To<T>()
+            .ToList();
 
         private async Task AddTagsToPost(int postId, IEnumerable<string> tags)
         {

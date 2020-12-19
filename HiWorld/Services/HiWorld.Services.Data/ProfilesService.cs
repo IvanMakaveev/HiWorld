@@ -39,12 +39,11 @@
         }
 
         public int GetId(string userId)
-        {
-            return this.profileRepository.AllAsNoTracking()
-                .Where(x => x.User.Id == userId)
-                .Select(x => x.Id)
-                .FirstOrDefault();
-        }
+            => this.profileRepository
+            .AllAsNoTracking()
+            .Where(x => x.User.Id == userId)
+            .Select(x => x.Id)
+            .FirstOrDefault();
 
         public async Task<int> CreateAsync(BaseInfoInputModel input)
         {
@@ -68,23 +67,23 @@
         }
 
         public bool IsFriend(int profileId, int accessorId)
-        {
-            return this.profileRepository.AllAsNoTracking().Any(x => x.Id == profileId &&
+            => this.profileRepository
+            .AllAsNoTracking()
+            .Any(x => x.Id == profileId &&
                 (x.FriendsRecieved.Any(y => y.ProfileId == accessorId && y.IsAccepted == true) ||
                  x.FriendsSent.Any(y => y.FriendId == accessorId && y.IsAccepted == true)));
-        }
 
         public bool IsPending(int profileId, int accessorId)
-        {
-            return this.profileRepository.AllAsNoTracking().Any(x => x.Id == profileId &&
+            => this.profileRepository
+            .AllAsNoTracking()
+            .Any(x => x.Id == profileId &&
                 (x.FriendsRecieved.Any(y => y.ProfileId == accessorId && y.IsAccepted == false) ||
                  x.FriendsSent.Any(y => y.FriendId == accessorId && y.IsAccepted == false)));
-        }
 
         public bool IsFollowing(int profileId, int accessorId)
-        {
-            return this.followersRepository.All().Any(x => x.ProfileId == profileId && x.FollowerId == accessorId);
-        }
+            => this.followersRepository
+            .AllAsNoTracking()
+            .Any(x => x.ProfileId == profileId && x.FollowerId == accessorId);
 
         public async Task FollowProfileAsync(int profileId, int senderId)
         {
@@ -109,14 +108,18 @@
         }
 
         public T GetById<T>(int id)
-        {
-            return this.profileRepository.All().Where(x => x.Id == id).To<T>().FirstOrDefault();
-        }
+            => this.profileRepository
+            .AllAsNoTracking()
+            .Where(x => x.Id == id)
+            .To<T>()
+            .FirstOrDefault();
 
         public T GetByUserId<T>(string id)
-        {
-            return this.profileRepository.All().Where(x => x.User.Id == id).To<T>().FirstOrDefault();
-        }
+            => this.profileRepository
+            .AllAsNoTracking()
+            .Where(x => x.User.Id == id)
+            .To<T>()
+            .FirstOrDefault();
 
         public async Task UpdateAsync(string id, EditProfileInputModel input, string path)
         {
@@ -135,7 +138,7 @@
                 profile.About = input.About;
                 profile.CountryId = input.CountryId;
 
-                if (input.Image != null && input.Image.Length > 0)
+                if (input.Image?.Length > 0)
                 {
                     profile.ImageId = await this.imagesService.CreateAsync(input.Image, path);
                 }

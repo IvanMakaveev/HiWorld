@@ -33,10 +33,18 @@
 
             var viewModel = model.ToList();
 
-            viewModel.ForEach(x => x.IsOwner = this.postsService.IsOwner(x.Id, x.IsProfilePost, profileId));
-            viewModel.ForEach(x => x.IsLiked = this.postsService.IsLiked(x.Id, profileId));
-            viewModel.ForEach(x => x.Comments.ForEach(y => y.IsLiked = this.commentsService.IsLiked(y.Id, profileId)));
-            viewModel.ForEach(x => x.Comments.OrderByDescending(x => x.CreatedOn));
+            foreach (var post in viewModel)
+            {
+                post.IsOwner = this.postsService.IsOwner(post.Id, post.IsProfilePost, profileId);
+                post.IsLiked = this.postsService.IsLiked(post.Id, profileId);
+
+                foreach (var comment in post.Comments)
+                {
+                    comment.IsLiked = this.commentsService.IsLiked(comment.Id, profileId);
+                }
+
+                post.Comments.OrderByDescending(x => x.CreatedOn);
+            }
 
             return this.View(viewModel);
         }

@@ -20,7 +20,7 @@
         public async Task<int> GetIdAsync(string name)
         {
             name = name.Trim().ToLower().Replace(" ", string.Empty);
-            var tag = this.tagsRepository.All().FirstOrDefault(x => x.Name == name);
+            var tag = this.tagsRepository.AllAsNoTracking().FirstOrDefault(x => x.Name == name);
             if (tag == null)
             {
                 tag = new Tag()
@@ -36,46 +36,50 @@
         }
 
         public string GetName(int id)
-        {
-            return this.tagsRepository.AllAsNoTracking().Where(x => x.Id == id).Select(x => x.Name).FirstOrDefault();
-        }
+            => this.tagsRepository
+            .AllAsNoTracking()
+            .Where(x => x.Id == id)
+            .Select(x => x.Name)
+            .FirstOrDefault();
 
         public IEnumerable<T> SearchPagesByTag<T>(int id, int pageNumber, int count = 20)
-        {
-            return this.tagsRepository.AllAsNoTracking()
-                .Where(x => x.Id == id)
-                .SelectMany(x => x.PageTags.Select(x => x.Page))
-                .OrderByDescending(x => x.PageFollowers.Count)
-                .Skip((pageNumber - 1) * count)
-                .Take(count)
-                .To<T>()
-                .ToList();
-        }
+            => this.tagsRepository
+            .AllAsNoTracking()
+            .Where(x => x.Id == id)
+            .SelectMany(x => x.PageTags
+                .Select(x => x.Page))
+            .OrderByDescending(x => x.PageFollowers.Count)
+            .Skip((pageNumber - 1) * count)
+            .Take(count)
+            .To<T>()
+            .ToList();
 
         public int SearchPagesByTagCount(int id)
-        {
-            return this.tagsRepository.AllAsNoTracking()
-                .Where(x => x.Id == id)
-                .SelectMany(x => x.PageTags.Select(x => x.Page)).Count();
-        }
+            => this.tagsRepository
+            .AllAsNoTracking()
+            .Where(x => x.Id == id)
+            .SelectMany(x => x.PageTags
+               .Select(x => x.Page))
+            .Count();
 
         public IEnumerable<T> SearchPostsByTag<T>(int id, int pageNumber, int count = 20)
-        {
-            return this.tagsRepository.AllAsNoTracking()
-                .Where(x => x.Id == id)
-                .SelectMany(x => x.PostTags.Select(x => x.Post))
-                .OrderByDescending(x => x.CreatedOn)
-                .Skip((pageNumber - 1) * count)
-                .Take(count)
-                .To<T>()
-                .ToList();
-        }
+            => this.tagsRepository
+            .AllAsNoTracking()
+            .Where(x => x.Id == id)
+            .SelectMany(x => x.PostTags
+                .Select(x => x.Post))
+            .OrderByDescending(x => x.CreatedOn)
+            .Skip((pageNumber - 1) * count)
+            .Take(count)
+            .To<T>()
+            .ToList();
 
         public int SearchPostsByTagCount(int id)
-        {
-            return this.tagsRepository.AllAsNoTracking()
-                .Where(x => x.Id == id)
-                .SelectMany(x => x.PostTags.Select(x => x.Post)).Count();
-        }
+            => this.tagsRepository
+            .AllAsNoTracking()
+            .Where(x => x.Id == id)
+            .SelectMany(x => x.PostTags
+                .Select(x => x.Post))
+            .Count();
     }
 }
